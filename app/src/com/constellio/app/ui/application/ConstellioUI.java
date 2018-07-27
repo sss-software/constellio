@@ -279,21 +279,14 @@ public class ConstellioUI extends UI implements SessionContextProvider, UIContex
 							if (((BaseViewImpl) newView).isBackgroundViewMonitor()) {
 								// Important to allow update of components in current UI from another Thread
 								setPollInterval(POLL_INTERVAL);
+							} else {
+								stopPollingIfNoWindowPolling();
 							}
 						} else if (newView instanceof PollListener) {
 							// Important to allow update of components in current UI from another Thread
 							setPollInterval(POLL_INTERVAL);
 						} else {
-							boolean pollListenerWindow = false;
-							for (Window window : getWindows()) {
-								if (window instanceof PollListener) {
-									pollListenerWindow = true;
-									break;
-								}
-							}
-							if (!pollListenerWindow) {
-								setPollInterval(-1);
-							}
+							stopPollingIfNoWindowPolling();
 						}
 						ConstellioUI.this.currentView = newView;
 						
@@ -302,6 +295,19 @@ public class ConstellioUI extends UI implements SessionContextProvider, UIContex
 						List<EnterViewListener> enterViewListeners = appLayerFactory.getEnterViewListeners();
 						for (EnterViewListener enterViewListener : enterViewListeners) {
 							enterViewListener.enterView(newView);
+						}
+					}
+					
+					private void stopPollingIfNoWindowPolling() {
+						boolean pollListenerWindow = false;
+						for (Window window : getWindows()) {
+							if (window instanceof PollListener) {
+								pollListenerWindow = true;
+								break;
+							}
+						}
+						if (!pollListenerWindow) {
+							setPollInterval(-1);
 						}
 					}
 				});
