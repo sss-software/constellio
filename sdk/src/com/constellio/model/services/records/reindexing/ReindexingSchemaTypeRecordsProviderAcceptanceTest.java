@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReindexingSchemaTypeRecordsProviderAcceptanceTest extends ConstellioTest {

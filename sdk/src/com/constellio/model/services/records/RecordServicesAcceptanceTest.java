@@ -83,7 +83,6 @@ import static com.constellio.model.services.records.cache.CacheConfig.permanentC
 import static com.constellio.model.services.schemas.validators.MetadataUnmodifiableValidator.UNMODIFIABLE_METADATA;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQuery.query;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.assertThatRecord;
 import static com.constellio.sdk.tests.TestUtils.assertThatRecords;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.limitedTo50Characters;
@@ -96,6 +95,7 @@ import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsEncrypte
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsMultivalue;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsScripted;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsUnmodifiable;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.Assert.fail;
@@ -293,7 +293,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		recordServices.add(record);
 		record = recordServices.getDocumentById(record.getId());
 
-		assertThat(record.get(zeSchema.enumMetadata())).isEqualTo(asList(AValidEnum.SECOND_VALUE, AValidEnum.FIRST_VALUE));
+		assertThat(record.<List<Object>>get(zeSchema.enumMetadata())).isEqualTo(asList(AValidEnum.SECOND_VALUE, AValidEnum.FIRST_VALUE));
 	}
 
 	@Test(expected = RecordServicesException.ValidationException.class)
@@ -470,8 +470,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isNull();
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isNull();
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isNull();
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isNull();
 
 		record.set(TITLE, "Ze title");
 
@@ -481,8 +481,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isEqualTo("1");
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F1.00");
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isEqualTo("1");
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F1.00");
 
 		record = recordServices.newRecordWithSchema(zeSchema.instance());
 		record.set(TITLE, "Ze title");
@@ -492,8 +492,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isEqualTo("2");
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F2.00");
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isEqualTo("2");
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F2.00");
 
 	}
 
@@ -540,8 +540,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(zeSchemaRecord.get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isNull();
-		assertThat(zeSchemaRecord.get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isNull();
+		assertThat(zeSchemaRecord.<String>get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isNull();
+		assertThat(zeSchemaRecord.<String>get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isNull();
 
 		// whenFirstReferenceThenSequentialNumber
 
@@ -553,9 +553,9 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		recordServices.update(anotherSchemaRecord);
 		recordServices.update(zeSchemaRecord);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadata(UNIT_CODE_METADATA))).isEqualTo(DEFAULT_REFEREE_CODE);
-		assertThat(zeSchemaRecord.get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
-		assertThat(zeSchemaRecord.get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("1");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadata(UNIT_CODE_METADATA))).isEqualTo(DEFAULT_REFEREE_CODE);
+		assertThat(zeSchemaRecord.<String>get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
+		assertThat(zeSchemaRecord.<String>get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("1");
 
 		// whenSecondReferenceThenIncrementedSequentialNumber
 
@@ -568,8 +568,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("2");
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("2");
 
 		// whenNewReferralThenResettedSequentialNumber
 
@@ -588,17 +588,17 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		recordServices.update(zeSchemaRecord2);
 
-		assertThat(anotherSchemaRecord2.get(anotherSchema.metadata(UNIT_CODE_METADATA))).isEqualTo(DEFAULT_REFEREE_CODE_2);
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord2.getId());
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("1");
+		assertThat(anotherSchemaRecord2.<String>get(anotherSchema.metadata(UNIT_CODE_METADATA))).isEqualTo(DEFAULT_REFEREE_CODE_2);
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord2.getId());
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("1");
 
 		// whenOldReferralThenIncrementedSequentialNumber
 
 		zeSchemaRecord2.set(zeSchema.metadata(REFERENCED_CODE_METADATA), anotherSchemaRecord.getId());
 		recordServices.update(zeSchemaRecord2);
 
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
-		assertThat(zeSchemaRecord2.get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("3");
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(REFERENCED_CODE_METADATA))).isEqualTo(anotherSchemaRecord.getId());
+		assertThat(zeSchemaRecord2.<String>get(zeSchema.metadata(DYNAMIC_SEQUENCE_METADATA))).isEqualTo("3");
 
 		// whenOperationsDoneOnSequentialTablesThenGoodIncrementations
 
@@ -634,8 +634,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isNull();
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isNull();
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isNull();
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isNull();
 
 		record.set(TITLE, "Ze title");
 
@@ -645,8 +645,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isEqualTo("00001");
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F00001.00");
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isEqualTo("00001");
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F00001.00");
 
 		record = recordServices.newRecordWithSchema(zeSchema.instance());
 		record.set(TITLE, "Ze title");
@@ -656,8 +656,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			//OK
 		}
 
-		assertThat(record.get(zeSchema.fixedSequenceMetadata())).isEqualTo("00002");
-		assertThat(record.get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F00002.00");
+		assertThat(record.<String>get(zeSchema.fixedSequenceMetadata())).isEqualTo("00002");
+		assertThat(record.<String>get(zeSchema.metadata("calculatedOnFixedSequence"))).isEqualTo("F00002.00");
 
 	}
 
@@ -679,19 +679,19 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		recordServices.add(record);
 
-		assertThat(record.get(zeSchema.dynamicSequenceMetadata())).isNull();
+		assertThat(record.<String>get(zeSchema.dynamicSequenceMetadata())).isNull();
 
 		recordServices.update(record.set(zeSchema.metadataDefiningSequenceNumber(), "sequence1"));
-		assertThat(record.get(zeSchema.dynamicSequenceMetadata())).isEqualTo("43");
+		assertThat(record.<String>get(zeSchema.dynamicSequenceMetadata())).isEqualTo("43");
 
 		recordServices.update(record.set(zeSchema.metadataDefiningSequenceNumber(), "sequence2"));
-		assertThat(record.get(zeSchema.dynamicSequenceMetadata())).isEqualTo("667");
+		assertThat(record.<String>get(zeSchema.dynamicSequenceMetadata())).isEqualTo("667");
 
 		recordServices.update(record.set(zeSchema.metadataDefiningSequenceNumber(), "sequence1"));
-		assertThat(record.get(zeSchema.dynamicSequenceMetadata())).isEqualTo("44");
+		assertThat(record.<String>get(zeSchema.dynamicSequenceMetadata())).isEqualTo("44");
 
 		recordServices.update(record.set(TITLE, "zeTitle"));
-		assertThat(record.get(zeSchema.dynamicSequenceMetadata())).isEqualTo("44");
+		assertThat(record.<String>get(zeSchema.dynamicSequenceMetadata())).isEqualTo("44");
 
 	}
 
@@ -708,7 +708,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		recordServices.add(record);
 
-		assertThat(record.get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo("Banana");
+		assertThat(record.<String>get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo("Banana");
 	}
 
 	@Test()
@@ -724,7 +724,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		recordServices.add(record);
 
-		assertThat(record.get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo(Arrays.asList("Banana", "Apple"));
+		assertThat(record.<List<String>>get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo(Arrays.asList("Banana", "Apple"));
 	}
 
 	@Test()
@@ -742,7 +742,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.firstReferenceToAnotherSchema(), null);
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isNull();
+		assertThat(record.<String>get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isNull();
 	}
 
 	@Test()
@@ -760,7 +760,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.firstReferenceToAnotherSchema(), null);
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo(new ArrayList<>());
+		assertThat(record.<List<String>>get(zeSchema.stringCopiedFromFirstReferenceStringMeta())).isEqualTo(new ArrayList<>());
 	}
 
 	@Test()
@@ -774,7 +774,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.secondReferenceToAnotherSchema(), anotherRecord.getId());
 		recordServices.add(record);
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 	}
 
 	@Test()
@@ -787,12 +787,12 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.dateTimeMetadata(), january2);
 		record.set(zeSchema.secondReferenceToAnotherSchema(), anotherRecord.getId());
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 
 		record.set(zeSchema.dateTimeMetadata(), january1);
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(0.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(0.0);
 	}
 
 	@Test()
@@ -805,12 +805,12 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.dateTimeMetadata(), january2);
 		record.set(zeSchema.secondReferenceToAnotherSchema(), anotherRecord.getId());
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 
 		record.set(zeSchema.dateTimeMetadata(), null);
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
 	}
 
 	private Record reloadRecord(String id) {
@@ -825,13 +825,13 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		Record record = new TestRecord(zeSchema, "zeUltimateRecord");
 		recordServices.add(record.set(zeSchema.title(), "title").set(zeSchema.largeTextMetadata(), "firstValue"));
 		record = reloadRecord(record.getId());
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo("firstValue");
+		assertThat(reloadRecord(record.getId()).<String>get(zeSchema.largeTextMetadata())).isEqualTo("firstValue");
 
 		recordServices.update(reloadRecord(record.getId()).set(zeSchema.largeTextMetadata(), "secondValue"));
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo("secondValue");
+		assertThat(reloadRecord(record.getId()).<String>get(zeSchema.largeTextMetadata())).isEqualTo("secondValue");
 
 		recordServices.update(reloadRecord(record.getId()).set(zeSchema.largeTextMetadata(), null));
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo(null);
+		assertThat(reloadRecord(record.getId()).<String>get(zeSchema.largeTextMetadata())).isEqualTo(null);
 	}
 
 	@Test
@@ -842,10 +842,10 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		Record record = new TestRecord(zeSchema, "zeUltimateRecord");
 		recordServices.add(record.set(zeSchema.title(), "title")
 				.set(zeSchema.largeTextMetadata(), asList("firstValue", "secondValue")));
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo(asList("firstValue", "secondValue"));
+		assertThat(reloadRecord(record.getId()).<List<String>>get(zeSchema.largeTextMetadata())).isEqualTo(asList("firstValue", "secondValue"));
 
 		recordServices.update(reloadRecord(record.getId()).set(zeSchema.largeTextMetadata(), asList("secondValue", "thirdValue")));
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo(asList("secondValue", "thirdValue"));
+		assertThat(reloadRecord(record.getId()).<List<String>>get(zeSchema.largeTextMetadata())).isEqualTo(asList("secondValue", "thirdValue"));
 
 		recordServices.update(reloadRecord(record.getId()).set(zeSchema.largeTextMetadata(), null));
 		assertThat(reloadRecord(record.getId()).getList(zeSchema.largeTextMetadata())).isEqualTo(new ArrayList<>());
@@ -854,7 +854,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		assertThat(reloadRecord(record.getId()).getList(zeSchema.largeTextMetadata())).isEqualTo(new ArrayList<>());
 
 		recordServices.update(reloadRecord(record.getId()).set(zeSchema.largeTextMetadata(), asList("zeValue")));
-		assertThat(reloadRecord(record.getId()).get(zeSchema.largeTextMetadata())).isEqualTo(asList("zeValue"));
+		assertThat(reloadRecord(record.getId()).<List<String>>get(zeSchema.largeTextMetadata())).isEqualTo(asList("zeValue"));
 	}
 
 	@Test
@@ -870,8 +870,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.title(), "anOtherValue");
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.title())).isEqualTo("anOtherValue");
-		assertThat(record.get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(true, false, true));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("anOtherValue");
+		assertThat(record.<List<Boolean>>get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(true, false, true));
 		assertThat(record.getVersion()).isNotEqualTo(initialVersion);
 	}
 
@@ -884,11 +884,11 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		Record record = new TestRecord(zeSchema, "zeUltimateRecord");
 		record.set(zeSchema.dateMetadata(), shishDay);
 		recordServices.add(record);
-		assertThat(recordServices.getDocumentById(record.getId()).get(zeSchema.dateMetadata())).isEqualTo(shishDay);
+		assertThat(recordServices.getDocumentById(record.getId()).<LocalDate>get(zeSchema.dateMetadata())).isEqualTo(shishDay);
 
 		record.set(zeSchema.dateMetadata(), tockDay);
 		recordServices.update(record);
-		assertThat(recordServices.getDocumentById(record.getId()).get(zeSchema.dateMetadata())).isEqualTo(tockDay);
+		assertThat(recordServices.getDocumentById(record.getId()).<LocalDate>get(zeSchema.dateMetadata())).isEqualTo(tockDay);
 	}
 
 	@Test
@@ -905,8 +905,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		record.set(zeSchema.booleanMetadata(), Arrays.asList(false, true, false));
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.title())).isEqualTo("aValue");
-		assertThat(record.get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(false, true, false));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("aValue");
+		assertThat(record.<List<Boolean>>get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(false, true, false));
 		assertThat(record.getVersion()).isNotEqualTo(initialVersion);
 	}
 
@@ -923,8 +923,8 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.title())).isEqualTo("aValue");
-		assertThat(record.get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(true, false, true));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("aValue");
+		assertThat(record.<List<Boolean>>get(zeSchema.booleanMetadata())).isEqualTo(Arrays.asList(true, false, true));
 		assertThat(record.getVersion()).isEqualTo(initialVersion);
 	}
 
@@ -945,14 +945,14 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 				.set(zeSchema.stringMetadata(), "decryptedValue1")
 				.set(zeSchema.anotherStringMetadata(), asList("decryptedValue2", "decryptedValue3")));
 
-		assertThat(record.get(zeSchema.title())).isEqualTo("neverEncryptedValue");
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("decryptedValue1");
-		assertThat(record.get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue2", "decryptedValue3"));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("neverEncryptedValue");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("decryptedValue1");
+		assertThat(record.<List<String>>get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue2", "decryptedValue3"));
 
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.title())).isEqualTo("neverEncryptedValue");
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("decryptedValue1");
-		assertThat(record.get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue2", "decryptedValue3"));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("neverEncryptedValue");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("decryptedValue1");
+		assertThat(record.<List<String>>get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue2", "decryptedValue3"));
 
 		RecordDTO recordDTO = recordDao.get(record.getId());
 		assertThat(recordDTO.getFields().get(zeSchema.title().getDataStoreCode())).isEqualTo("neverEncryptedValue");
@@ -962,19 +962,19 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 
 		record.set(zeSchema.stringMetadata(), "decryptedValue2")
 				.set(zeSchema.anotherStringMetadata(), asList("decryptedValue3", "decryptedValue4"));
-		assertThat(record.get(zeSchema.title())).isEqualTo("neverEncryptedValue");
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
-		assertThat(record.get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("neverEncryptedValue");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
+		assertThat(record.<List<String>>get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
 
 		recordServices.update(record);
 
-		assertThat(record.get(zeSchema.title())).isEqualTo("neverEncryptedValue");
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
-		assertThat(record.get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("neverEncryptedValue");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
+		assertThat(record.<List<String>>get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.title())).isEqualTo("neverEncryptedValue");
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
-		assertThat(record.get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
+		assertThat(record.<String>get(zeSchema.title())).isEqualTo("neverEncryptedValue");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("decryptedValue2");
+		assertThat(record.<List<String>>get(zeSchema.anotherStringMetadata())).isEqualTo(asList("decryptedValue3", "decryptedValue4"));
 
 		recordDTO = recordDao.get(record.getId());
 		assertThat(recordDTO.getFields().get(zeSchema.title().getDataStoreCode())).isEqualTo("neverEncryptedValue");
@@ -1006,13 +1006,13 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		verify(recordServices, times(1)).saveContentsAndRecords(any(Transaction.class),
 				any(RecordModificationImpactHandler.class), anyInt());
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("a");
-		assertThat(thirdSchemaRecord.get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("a");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("a");
+		assertThat(thirdSchemaRecord.<String>get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("a");
 
 		recordServices.refresh(asList(anotherSchemaRecord, thirdSchemaRecord));
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
-		assertThat(thirdSchemaRecord.get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(thirdSchemaRecord.<String>get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
 	}
 
 	@Test
@@ -1046,19 +1046,19 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		assertThat(firstNestedTransaction.getRecords()).hasSize(2);
 		assertThat(firstNestedTransaction.getRecords().get(0)).isEqualTo(zeSchemaRecord);
 		assertThat(firstNestedTransaction.getRecords().get(1).getId()).isEqualTo(anotherSchemaRecord.getId());
-		assertThat(firstNestedTransaction.getRecords().get(1).get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(firstNestedTransaction.getRecords().get(1).<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
 
 		assertThat(secondNestedTransaction).isNotSameAs(transaction);
 		assertThat(secondNestedTransaction.getRecords()).hasSize(3);
 		assertThat(secondNestedTransaction.getRecords().get(0)).isEqualTo(zeSchemaRecord);
 		assertThat(secondNestedTransaction.getRecords().get(1).getId()).isEqualTo(anotherSchemaRecord.getId());
-		assertThat(secondNestedTransaction.getRecords().get(1).get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(secondNestedTransaction.getRecords().get(1).<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
 		assertThat(secondNestedTransaction.getRecords().get(2).getId()).isEqualTo(thirdSchemaRecord.getId());
-		assertThat(secondNestedTransaction.getRecords().get(2).get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(secondNestedTransaction.getRecords().get(2).<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
 
 		recordServices.refresh(asList(anotherSchemaRecord, thirdSchemaRecord));
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
-		assertThat(thirdSchemaRecord.get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(thirdSchemaRecord.<String>get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
 	}
 
 	@Test
@@ -1092,9 +1092,9 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		transaction.update(zeSchemaRecord);
 		recordServices.execute(transaction);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
-		assertThat(thirdSchemaRecord.get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
-		assertThat(anotherThirdSchemaRecord.get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(thirdSchemaRecord.<String>get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
+		assertThat(anotherThirdSchemaRecord.<String>get(thirdSchema.metadataWithCopiedEntry())).isEqualTo("b");
 
 		verify(recordServices, times(1)).saveContentsAndRecords(savedTransaction.capture(),
 				(RecordModificationImpactHandler) isNull(), anyInt());
@@ -1117,7 +1117,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord1.getId());
 		recordServices.add(anotherSchemaRecord);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
 
 		Transaction initialTransaction = new Transaction();
 		initialTransaction.addUpdate(anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord2.getId()));
@@ -1125,7 +1125,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		initialTransaction.addUpdate(zeSchemaRecord2.set(zeSchema.getCopiedMeta(), "2.2"));
 		recordServices.execute(initialTransaction);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
 	}
 
 	@Test
@@ -1145,7 +1145,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord1.getId());
 		recordServices.add(anotherSchemaRecord);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
 
 		Transaction initialTransaction = new Transaction();
 		initialTransaction.addUpdate(zeSchemaRecord1.set(zeSchema.getCopiedMeta(), "1.2"));
@@ -1153,7 +1153,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		initialTransaction.addUpdate(anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord2.getId()));
 		recordServices.execute(initialTransaction);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
 	}
 
 	@Test
@@ -1173,7 +1173,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord1.getId());
 		recordServices.add(anotherSchemaRecord);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("1.1");
 
 		Transaction initialTransaction = new Transaction();
 		initialTransaction.addUpdate(anotherSchemaRecord.set(anotherSchema.referenceToZeSchema(), zeSchemaRecord2.getId()));
@@ -1181,7 +1181,7 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		initialTransaction.addUpdate(zeSchemaRecord2.set(zeSchema.getCopiedMeta(), "2.2"));
 		recordServices.executeHandlingImpactsAsync(initialTransaction);
 
-		assertThat(anotherSchemaRecord.get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
+		assertThat(anotherSchemaRecord.<String>get(anotherSchema.metadataWithCopiedEntry())).isEqualTo("2.2");
 	}
 
 	@Test
@@ -1189,13 +1189,13 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 			throws Exception {
 		defineSchemasManager().using(schemas.withAStringMetadata(whichIsUnmodifiable));
 		RecordImpl record = saveZeSchemaRecordAndReload();
-		assertThat(record.get(zeSchema.stringMetadata())).isNull();
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isNull();
 
 		record = updateAndReload(record.set(zeSchema.stringMetadata(), "ze value"));
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("ze value");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("ze value");
 
 		record = updateAndReload(record.set(zeSchema.stringMetadata(), "ze value"));
-		assertThat(record.get(zeSchema.stringMetadata())).isEqualTo("ze value");
+		assertThat(record.<String>get(zeSchema.stringMetadata())).isEqualTo("ze value");
 
 		try {
 			recordServices.update(record.set(zeSchema.stringMetadata(), "another value"));
@@ -1563,30 +1563,30 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		//Save a record, it keeps the transient metadatas
 		Record record = new TestRecord(zeSchema).set(TITLE, "Vodka Framboise");
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(15.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(15.0);
 
 		//The record is obtained from the datastore, there is no value
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.numberMetadata())).isNull();
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isNull();
 
 		//The record is recalculated, the value is loaded
 		recordServices.recalculate(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(15.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(15.0);
 
 		record = new TestRecord(zeSchema).set(TITLE, "Vodka Canneberge");
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(16.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(16.0);
 
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.numberMetadata())).isNull();
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isNull();
 
 		//The record is recalculated, the value is loaded
 		recordServices.recalculate(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(16.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(16.0);
 
 		getModelLayerFactory().getRecordsCaches().getCache(zeCollection).configureCache(permanentCache(zeSchema.type()));
 		Record recordInCache = getModelLayerFactory().getRecordsCaches().getCache(zeCollection).get(record.getId());
-		assertThat(recordInCache.get(zeSchema.numberMetadata())).isNull();
+		assertThat(recordInCache.<Double>get(zeSchema.numberMetadata())).isNull();
 
 	}
 
@@ -1603,22 +1603,22 @@ public class RecordServicesAcceptanceTest extends ConstellioTest {
 		//Save a record, it keeps the transient metadatas
 		Record record = new TestRecord(zeSchema).set(TITLE, "Vodka Framboise");
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(15.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(15.0);
 
 		//The record is obtained from the datastore, there is no value
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(15.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(15.0);
 
 		record = new TestRecord(zeSchema).set(TITLE, "Vodka Canneberge");
 		recordServices.add(record);
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(16.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(16.0);
 
 		record = recordServices.getDocumentById(record.getId());
-		assertThat(record.get(zeSchema.numberMetadata())).isEqualTo(16.0);
+		assertThat(record.<Double>get(zeSchema.numberMetadata())).isEqualTo(16.0);
 
 		getModelLayerFactory().getRecordsCaches().getCache(zeCollection).configureCache(permanentCache(zeSchema.type()));
 		Record recordInCache = getModelLayerFactory().getRecordsCaches().getCache(zeCollection).get(record.getId());
-		assertThat(recordInCache.get(zeSchema.numberMetadata())).isEqualTo(16.0);
+		assertThat(recordInCache.<Double>get(zeSchema.numberMetadata())).isEqualTo(16.0);
 
 	}
 

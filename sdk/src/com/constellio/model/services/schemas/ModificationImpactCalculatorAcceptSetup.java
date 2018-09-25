@@ -26,7 +26,7 @@ import static com.constellio.model.entities.schemas.MetadataValueType.DATE_TIME;
 import static com.constellio.model.entities.schemas.MetadataValueType.NUMBER;
 import static com.constellio.model.entities.schemas.MetadataValueType.REFERENCE;
 import static com.constellio.model.entities.schemas.MetadataValueType.STRING;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 
 public class ModificationImpactCalculatorAcceptSetup extends TestsSchemasSetup {
 

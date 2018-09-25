@@ -52,7 +52,7 @@ import java.util.Map;
 import static com.constellio.data.dao.dto.records.RecordsFlushing.NOW;
 import static com.constellio.sdk.tests.SDKConstellioFactoriesInstanceProvider.DEFAULT_NAME;
 import static com.constellio.sdk.tests.SaveStateFeature.loadStateFrom;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.spy;
 
 public class FactoriesTestFeatures {
@@ -124,6 +124,8 @@ public class FactoriesTestFeatures {
 					@Override
 					public void run() {
 						deleteServerRecords(server);
+						server.getSolrServerFactory().clear();
+						CloseableUtils.closeQuietly(server.getNestedSolrServer());
 					}
 				});
 			}
@@ -237,10 +239,6 @@ public class FactoriesTestFeatures {
 		try {
 			vaultServer
 					.addAll(new BigVaultServerTransaction(NOW).addDeletedQuery("*:*"));
-		} catch (BigVaultException e) {
-			throw new RuntimeException("Cannot deleteLogically by query *:*");
-		}
-		try {
 
 			if (!vaultServer.query(allRecordsSolrParams).getResults().isEmpty()) {
 				if (attempt < 10) {
@@ -254,9 +252,13 @@ public class FactoriesTestFeatures {
 					throw new RuntimeException("Invalid solr core initial state ");
 				}
 			}
-
 		} catch (CouldNotExecuteQuery couldNotExecuteQuery) {
 			throw new RuntimeException(couldNotExecuteQuery);
+		} catch (BigVaultException e) {
+			throw new RuntimeException("Cannot deleteLogically by query *:*");
+		} finally {
+			vaultServer.getSolrServerFactory().clear();
+			CloseableUtils.closeQuietly(vaultServer.getNestedSolrServer());
 		}
 	}
 
@@ -285,9 +287,9 @@ public class FactoriesTestFeatures {
 					dataLayerFactory.getExtensions().getSystemWideExtensions().getTransactionLogExtensions()
 							.add(new TransactionLogExtension() {
 								@Override
-								public ExtensionBooleanResult isDocumentFieldLoggedInTransactionLog(
-										String field, String schema,
-										String collection) {
+								public ExtensionBooleanResult isDocumentFieldLoggedInTransactionLog(String field,
+																									String schema,
+																									String collection) {
 									return ExtensionBooleanResult.FORCE_TRUE;
 								}
 							});

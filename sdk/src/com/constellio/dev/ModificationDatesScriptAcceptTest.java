@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 
 public class ModificationDatesScriptAcceptTest extends ConstellioTest {
 	public static final LocalDate DEFAULT_OPENING_DATE = new LocalDate(2001, 01, 05);

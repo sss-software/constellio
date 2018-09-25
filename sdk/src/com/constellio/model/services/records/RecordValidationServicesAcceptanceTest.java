@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.mockito.MockitoAnnotations.Mock;
+import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -620,7 +620,7 @@ public class RecordValidationServicesAcceptanceTest extends ConstellioTest {
 
 		record = recordServices.newRecordWithSchema(zeSchema.instance());
 		record.set(Schemas.TITLE, "4156664242");
-		assertThat(record.get(zeSchema.metadata(Schemas.TITLE_CODE))).isEqualTo("4156664242");
+		assertThat(record.<String>get(zeSchema.metadata(Schemas.TITLE_CODE))).isEqualTo("4156664242");
 
 		recordServices.add(record);
 

@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.constellio.model.services.records.RecordServicesAgregatedMetadatasMechanicAcceptTest.clearAggregateMetadatasThenReindexReturningQtyOfQueriesOf;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.assertThatRecord;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AggregatedCalculatorAcceptanceTest extends ConstellioTest {
@@ -71,7 +71,7 @@ public class AggregatedCalculatorAcceptanceTest extends ConstellioTest {
 				.isEqualTo(asList("Abeille - Crocodile - Dauphin - Dindon"));
 
 		recordServices.update(records.getFolder_A42().setTitle("new Title"));
-		assertThat(fetchBac13FromSolr().get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
+		assertThat(fetchBac13FromSolr().<Boolean>get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
 		waitForBatchProcess();
 		assertThatRecord(records.getContainerBac13()).extracting(AGGREGATED_METADATA)
 				.isEqualTo(asList("Abeille - Dauphin - Dindon - new Title"));
@@ -109,7 +109,7 @@ public class AggregatedCalculatorAcceptanceTest extends ConstellioTest {
 		recordServices.update(records.getFolder_A42().setLinearSize(3D));
 		recordServices.update(records.getFolder_A43().setLinearSize(2D));
 		recordServices.update(records.getFolder_A44().setLinearSize(1D));
-		assertThat(fetchBac13FromSolr().get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
+		assertThat(fetchBac13FromSolr().<Boolean>get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
 		waitForBatchProcess();
 		assertThatRecord(records.getContainerBac13()).extracting(AGGREGATED_METADATA).isEqualTo(asList(1D));
 
@@ -146,7 +146,7 @@ public class AggregatedCalculatorAcceptanceTest extends ConstellioTest {
 		recordServices.update(records.getFolder_A42().setLinearSize(3D));
 		recordServices.update(records.getFolder_A43().setLinearSize(2D));
 		recordServices.update(records.getFolder_A44().setLinearSize(1D));
-		assertThat(fetchBac13FromSolr().get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
+		assertThat(fetchBac13FromSolr().<Boolean>get(Schemas.MARKED_FOR_REINDEXING)).isEqualTo(Boolean.TRUE);
 		waitForBatchProcess();
 		assertThatRecord(records.getContainerBac13()).extracting(AGGREGATED_METADATA).isEqualTo(asList(3D));
 

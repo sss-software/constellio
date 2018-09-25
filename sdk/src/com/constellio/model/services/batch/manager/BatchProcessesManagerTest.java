@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.constellio.model.services.batch.manager.BatchProcessesManager.BATCH_PROCESS_LIST_PATH;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

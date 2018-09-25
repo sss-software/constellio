@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.assertThatToEqualsAndToStringThrowNoException;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.constellio.model.entities.schemas.MetadataValueType.NUMBER;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -121,9 +121,9 @@ public class RecordServicesOptimisticLockingHandlingAcceptanceTest extends Const
 		transactionModifyingSecondNumber.setOptimisticLockingResolution(OptimisticLockingResolution.TRY_MERGE);
 		recordServices.execute(transactionModifyingSecondNumber);
 
-		assertThat(getRecord1().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord2().get(zeSchema.calculatedNumber())).isEqualTo(222.0);
-		assertThat(getRecord3().get(zeSchema.calculatedNumber())).isEqualTo(212.0);
+		assertThat(getRecord1().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord2().<Double>get(zeSchema.calculatedNumber())).isEqualTo(222.0);
+		assertThat(getRecord3().<Double>get(zeSchema.calculatedNumber())).isEqualTo(212.0);
 
 	}
 
@@ -169,9 +169,9 @@ public class RecordServicesOptimisticLockingHandlingAcceptanceTest extends Const
 		transactionModifyingSecondNumber.setOptimisticLockingResolution(OptimisticLockingResolution.KEEP_OLDER);
 		recordServices.execute(transactionModifyingSecondNumber);
 
-		assertThat(getRecord1().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord2().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord3().get(zeSchema.calculatedNumber())).isEqualTo(211.0);
+		assertThat(getRecord1().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord2().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord3().<Double>get(zeSchema.calculatedNumber())).isEqualTo(211.0);
 
 	}
 
@@ -223,9 +223,9 @@ public class RecordServicesOptimisticLockingHandlingAcceptanceTest extends Const
 			// OK
 		}
 
-		assertThat(getRecord1().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord2().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord3().get(zeSchema.calculatedNumber())).isEqualTo(211.0);
+		assertThat(getRecord1().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord2().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord3().<Double>get(zeSchema.calculatedNumber())).isEqualTo(211.0);
 
 	}
 
@@ -499,9 +499,9 @@ public class RecordServicesOptimisticLockingHandlingAcceptanceTest extends Const
 			// OK
 		}
 
-		assertThat(getRecord1().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord2().get(zeSchema.calculatedNumber())).isEqualTo(221.0);
-		assertThat(getRecord3().get(zeSchema.calculatedNumber())).isEqualTo(211.0);
+		assertThat(getRecord1().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord2().<Double>get(zeSchema.calculatedNumber())).isEqualTo(221.0);
+		assertThat(getRecord3().<Double>get(zeSchema.calculatedNumber())).isEqualTo(211.0);
 	}
 
 	private Transaction modifySecondNumber() {

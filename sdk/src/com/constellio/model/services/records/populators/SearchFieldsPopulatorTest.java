@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

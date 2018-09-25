@@ -208,7 +208,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		List<Record> taxonomy1RootRecords = services.getRootConcept(records.taxo1_firstTypeItem1.getCollection(), "taxo1",
 				options);
@@ -224,7 +224,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.ACTIVES);
 		List<Record> taxonomy1RootRecords = services.getRootConcept(records.taxo1_firstTypeItem1.getCollection(), "taxo1",
@@ -242,7 +242,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.DELETED);
 		List<Record> taxonomy1RootRecords = services.getRootConcept(records.taxo1_firstTypeItem1.getCollection(), "taxo1",
@@ -260,7 +260,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.ALL);
 		List<Record> taxonomy1RootRecords = services.getRootConcept(records.taxo1_firstTypeItem1.getCollection(), "taxo1",
@@ -303,7 +303,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		List<Record> taxonomy1FirstTypeItem2RecordChildren = services.getChildConcept(records.taxo1_firstTypeItem2,
 				options);
@@ -321,7 +321,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.ALL);
 		List<Record> taxonomy1FirstTypeItem2RecordChildren = services.getChildConcept(records.taxo1_firstTypeItem2,
@@ -341,7 +341,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem1;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.DELETED);
 		List<Record> taxonomy1FirstTypeItem2RecordChildren = services.getChildConcept(records.taxo1_firstTypeItem2,
@@ -360,7 +360,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		givenAuthorizationsToChuck(recordToDelete);
 
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(10, 0, StatusFilter.ALL);
 		List<Record> taxonomy1FirstTypeItem2RecordChildren = services.getChildConcept(records.taxo1_firstTypeItem2,
@@ -381,7 +381,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(2, 0, StatusFilter.ALL);
 		List<Record> taxonomy1FirstTypeItem2RecordChildren = services.getChildConcept(records.taxo1_firstTypeItem2,
@@ -398,7 +398,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = subFolder;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		List<Record> folderRecordChildren = services.getChildConcept(folder, options);
 
@@ -414,7 +414,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = subFolder;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options.setIncludeStatus(StatusFilter.ALL);
 		List<Record> folderRecordChildren = services.getChildConcept(folder, options);
@@ -431,7 +431,7 @@ public class ConceptNodesTaxonomiesSearchServicesAcceptanceTest extends Constell
 		Record recordToDelete = subFolder;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options.setIncludeStatus(StatusFilter.DELETED);
 		List<Record> folderRecordChildren = services.getChildConcept(folder, options);

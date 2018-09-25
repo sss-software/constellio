@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.constellio.app.modules.es.model.connectors.ldap.enums.DirectoryType.ACTIVE_DIRECTORY;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorLDAPInstanceAcceptanceTest extends ConstellioTest {

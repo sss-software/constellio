@@ -89,7 +89,6 @@ import static com.constellio.model.entities.schemas.entries.DataEntryType.COPIED
 import static com.constellio.model.entities.schemas.entries.DataEntryType.MANUAL;
 import static com.constellio.model.entities.schemas.entries.DataEntryType.SEQUENCE;
 import static com.constellio.model.services.schemas.builders.MetadataPopulateConfigsBuilder.create;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.getElementsClasses;
 import static com.constellio.sdk.tests.TestUtils.onlyElementsOfClass;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.ANOTHER_SCHEMA_TYPE_CODE;
@@ -118,6 +117,7 @@ import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsProvidin
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsSchemaAutocomplete;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsTaxonomyRelationship;
 import static com.constellio.sdk.tests.schemas.TestsSchemasSetup.whichIsUndeletable;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.Assert.fail;

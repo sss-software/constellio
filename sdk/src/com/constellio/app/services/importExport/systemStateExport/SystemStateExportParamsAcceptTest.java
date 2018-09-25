@@ -24,8 +24,8 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static java.io.File.separator;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SlowTest

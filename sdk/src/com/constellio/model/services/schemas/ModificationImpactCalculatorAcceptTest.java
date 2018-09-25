@@ -195,10 +195,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat").set(TITLE, "Vodka Framboise"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.referenceFromAnotherSchemaToZeSchema(), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(17.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(17.0);
 
 		recordServices.update(record("chat").set(TITLE, "Édouard"));
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(9.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(9.0);
 	}
 
 	@Test
@@ -210,10 +210,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat").set(TITLE, "Vodka Framboise"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.referenceFromAnotherSchemaToZeSchema(), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(17.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(17.0);
 
 		recordServices.update(record("chat").set(TITLE, "Édouard"));
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(9.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.calculatedZeSchemaTitleLengthPlusTwo())).isEqualTo(9.0);
 	}
 
 	@Test
@@ -225,10 +225,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat").set(TITLE, "Vodka Framboise"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.referenceFromAnotherSchemaToZeSchema(), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
 
 		recordServices.update(record("chat").set(TITLE, "Édouard"));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
 	}
 
 	@Test
@@ -240,10 +240,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat").set(TITLE, "Vodka Framboise"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.referenceFromAnotherSchemaToZeSchema(), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
 
 		recordServices.update(record("chat").set(TITLE, "Édouard"));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -257,10 +257,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat2").set(TITLE, "Édouard"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), "chat2"));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -274,10 +274,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat2").set(TITLE, "Édouard"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), "chat"));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(15.0);
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), "chat2"));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
+		assertThat(record("record").<Double>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(7.0);
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -291,10 +291,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat3").set(TITLE, "Tomcat"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), asList("chat", "chat2")));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(15.0, 7.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(15.0, 7.0));
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), asList("chat2", "chat3")));
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(7.0, 6.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(7.0, 6.0));
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -308,10 +308,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat3").set(TITLE, "Tomcat"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), asList("chat", "chat2")));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(15.0, 7.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(15.0, 7.0));
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), asList("chat2", "chat3")));
-		assertThat(record("record").get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(7.0, 6.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.calculatedZeSchemaTitlesLength())).isEqualTo(asList(7.0, 6.0));
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -325,10 +325,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat3").set(TITLE, "Tomcat"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), asList("chat", "chat2")));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(15.0, 7.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(15.0, 7.0));
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), asList("chat2", "chat3")));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(7.0, 6.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(7.0, 6.0));
 	}
 
 	//TODO Disabled test  since the impact modification do a search on the reference metadata @Test
@@ -342,10 +342,10 @@ public class ModificationImpactCalculatorAcceptTest extends ConstellioTest {
 		tx.add(new TestRecord(zeSchema, "chat3").set(TITLE, "Tomcat"));
 		tx.add(new TestRecord(anotherSchemaType, "record").set(anotherSchemaType.metadata("aString"), asList("chat", "chat2")));
 		recordServices.execute(tx);
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(15.0, 7.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(15.0, 7.0));
 
 		recordServices.update(record("record").set(anotherSchemaType.metadata("aString"), asList("chat2", "chat3")));
-		assertThat(record("record").get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(7.0, 6.0));
+		assertThat(record("record").<List<Double>>get(anotherSchemaType.copiedZeSchemaTitleLength())).isEqualTo(asList(7.0, 6.0));
 	}
 
 	private Record newAnotherSchemaRecordUsing(Record record) {

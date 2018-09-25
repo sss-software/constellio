@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.constellio.model.entities.schemas.Schemas.TITLE;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.extractingSimpleCode;
 import static com.constellio.sdk.tests.TestUtils.frenchMessages;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 

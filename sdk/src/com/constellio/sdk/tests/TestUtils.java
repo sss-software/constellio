@@ -72,6 +72,7 @@ import static com.constellio.app.ui.i18n.i18n.$;
 import static com.constellio.model.entities.records.LocalisedRecordMetadataRetrieval.PREFERRING;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQuery.query;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -248,12 +249,7 @@ public class TestUtils {
 	}
 
 	public static String[] idsArray(Record... records) {
-		return ids(Arrays.asList(records)).toArray(new String[0]);
-	}
-
-	@SafeVarargs
-	public static <T> List<T> asList(T... elements) {
-		return Arrays.asList(elements);
+		return ids(asList(records)).toArray(new String[0]);
 	}
 
 	public static <K, V> Map<K, V> asMap(K key1, V value1) {
@@ -633,7 +629,7 @@ public class TestUtils {
 			} else {
 				throw new RuntimeException("Unsupported object of class '" + actual.getClass());
 			}
-			return assertThat(asList(objects));
+			return assertThat(Arrays.asList(objects));
 		}
 
 		public void exists() {
@@ -902,7 +898,7 @@ public class TestUtils {
 			} else {
 				throw new RuntimeException("Unsupported object of class '" + actual.getClass());
 			}
-			return assertThat(asList(objects));
+			return assertThat(Arrays.asList(objects));
 		}
 
 	}
@@ -1088,10 +1084,7 @@ public class TestUtils {
 				&& !link.getFromMetadata().getCode().startsWith("user_")
 				&& !link.getFromMetadata().getCode().startsWith("user_")
 				&& !link.getFromMetadata().getCode().startsWith("temporaryRecord_")) {
-				Tuple tuple = new Tuple();
-				tuple.addData(link.getFromMetadata().getCode());
-				tuple.addData(link.getToMetadata().getCode());
-				tuple.addData(link.getLevel());
+				Tuple tuple = new Tuple(link.getFromMetadata().getCode(), link.getToMetadata().getCode(), link.getLevel());
 				tuples.add(tuple);
 			}
 

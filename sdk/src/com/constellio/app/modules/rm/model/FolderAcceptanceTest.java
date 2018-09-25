@@ -38,7 +38,6 @@ import com.constellio.model.services.records.RecordServicesException.ValidationE
 import com.constellio.model.services.schemas.MetadataSchemaTypesAlteration;
 import com.constellio.model.services.schemas.builders.MetadataSchemaTypesBuilder;
 import com.constellio.sdk.tests.ConstellioTest;
-import com.constellio.sdk.tests.TestUtils;
 import com.constellio.sdk.tests.setups.Users;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -66,6 +65,7 @@ import static com.constellio.sdk.tests.TestUtils.assertThatRecord;
 import static com.constellio.sdk.tests.TestUtils.extractingSimpleCodeAndParameters;
 import static com.constellio.sdk.tests.TestUtils.frenchMessages;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.Assert.fail;
@@ -3275,7 +3275,7 @@ public class FolderAcceptanceTest extends ConstellioTest {
 
 		@Override
 		public List<? extends Dependency> getDependencies() {
-			return TestUtils.asList(codeParam);
+			return singletonList(codeParam);
 		}
 	}
 

@@ -23,7 +23,7 @@ import static com.constellio.app.modules.es.connectors.ldap.ConnectorLDAPDocumen
 import static com.constellio.app.modules.es.model.connectors.ldap.ConnectorLDAPUserDocument.EMAIL;
 import static com.constellio.model.entities.schemas.Schemas.IDENTIFIER;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.where;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 
 public class ConnectorLDAPCrawlerJobAcceptanceTest extends ConstellioTest {
 	Server server;

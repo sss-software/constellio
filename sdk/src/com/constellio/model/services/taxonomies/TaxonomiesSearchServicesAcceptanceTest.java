@@ -400,7 +400,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions();
 		assertThat(services.getVisibleChildConcept(chuck, TAXO1, records.taxo1_firstTypeItem2, options)).isEmpty();
@@ -414,7 +414,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.ALL);
 		assertThat(services.getVisibleChildConcept(chuck, TAXO1, records.taxo1_firstTypeItem2, options)).isNotEmpty();
@@ -428,7 +428,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		options = new TaxonomiesSearchOptions(StatusFilter.ACTIVES);
 		assertThat(services.getVisibleChildConcept(chuck, TAXO1, records.taxo1_firstTypeItem2, options)).isEmpty();
@@ -442,7 +442,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		addAuthorizationWithoutDetaching(asList(Role.READ), asList(bob.getId()),
 				asList(records.taxo1_firstTypeItem2_secondTypeItem2.getId(), folder.getId()));
@@ -463,7 +463,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2_secondTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		addAuthorizationWithoutDetaching(asList(Role.READ), asList(bob.getId()),
 				asList(records.taxo1_firstTypeItem2_secondTypeItem2.getId(), folder.getId()));
@@ -487,7 +487,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		addAuthorizationWithoutDetaching(asList(Role.READ), asList(bob.getId()),
 				asList(records.taxo1_firstTypeItem2.getId(), folder.getId()));
@@ -510,7 +510,7 @@ public class TaxonomiesSearchServicesAcceptanceTest extends ConstellioTest {
 		Record recordToDelete = records.taxo1_firstTypeItem2;
 		givenAuthorizationsToChuck(recordToDelete);
 		recordServices.logicallyDelete(recordToDelete, chuck);
-		assertThat(recordToDelete.get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
+		assertThat(recordToDelete.<Boolean>get(Schemas.LOGICALLY_DELETED_STATUS)).isEqualTo(true);
 
 		addAuthorizationWithoutDetaching(asList(Role.READ), asList(bob.getId()),
 				asList(records.taxo1_firstTypeItem2.getId(), folder.getId()));

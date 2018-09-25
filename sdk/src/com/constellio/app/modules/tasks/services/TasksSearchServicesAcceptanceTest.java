@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.constellio.app.modules.tasks.model.wrappers.types.TaskStatus.CLOSED_CODE;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.assertThatRecord;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TasksSearchServicesAcceptanceTest extends ConstellioTest {

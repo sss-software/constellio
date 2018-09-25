@@ -11,7 +11,7 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 
 public class DummyCalculator implements MetadataValueCalculator<LocalDate> {
 	LocalDependency<String> titleDependency = LocalDependency.toAString(Schemas.TITLE.getLocalCode());

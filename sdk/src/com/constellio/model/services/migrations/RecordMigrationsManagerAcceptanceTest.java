@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.constellio.model.entities.schemas.Schemas.MIGRATION_DATA_VERSION;
-import static com.constellio.sdk.tests.TestUtils.asList;
 import static com.constellio.sdk.tests.TestUtils.assertThatAllRecordsOf;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.Assert.fail;

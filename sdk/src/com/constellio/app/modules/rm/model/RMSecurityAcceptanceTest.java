@@ -20,7 +20,7 @@ import static com.constellio.app.modules.rm.constants.RMPermissionsTo.MANAGE_CON
 import static com.constellio.app.modules.rm.constants.RMPermissionsTo.MANAGE_STORAGE_SPACES;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQuery.query;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RMSecurityAcceptanceTest extends ConstellioTest {

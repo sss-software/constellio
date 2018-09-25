@@ -61,8 +61,6 @@ import com.constellio.app.services.migrations.scripts.CoreMigrationTo_7_7_6;
 import com.constellio.app.services.migrations.scripts.CoreMigrationTo_7_7_7;
 import com.constellio.app.services.migrations.scripts.CoreMigrationTo_8_0_1;
 import com.constellio.app.services.migrations.scripts.CoreMigrationTo_8_0_2;
-import com.constellio.app.services.migrations.scripts.CoreMigrationTo_8_1;
-import com.constellio.app.services.migrations.scripts.CoreMigrationTo_8_1_0_1;
 import com.constellio.app.services.schemasDisplay.SchemaTypesDisplayTransactionBuilder;
 import com.constellio.app.services.schemasDisplay.SchemasDisplayManager;
 import com.constellio.model.entities.records.Transaction;
@@ -75,6 +73,7 @@ import com.constellio.model.services.records.RecordServices;
 import com.constellio.model.services.records.SchemasRecordsServices;
 import com.constellio.model.services.schemas.builders.MetadataSchemaTypesBuilder;
 import com.constellio.model.services.search.entities.SearchBoost;
+import com.constellio.model.services.security.roles.RolesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,8 +142,6 @@ public class CoreMigrationCombo implements ComboMigrationScript {
 		scripts.add(new CoreMigrationTo_7_7_7());
 		scripts.add(new CoreMigrationTo_8_0_1());
 		scripts.add(new CoreMigrationTo_8_0_2());
-		scripts.add(new CoreMigrationTo_8_1());
-		scripts.add(new CoreMigrationTo_8_1_0_1());
 
 		return scripts;
 	}
@@ -199,16 +196,16 @@ public class CoreMigrationCombo implements ComboMigrationScript {
 		appLayerFactory.getModelLayerFactory().getSystemConfigurationsManager()
 				.setValue(ConstellioEIMConfigs.TRASH_PURGE_DELAI, 90);
 
-		//	changeAdminRoleNameIfMultilingualCollection(appLayerFactory, collection);
+		changeAdminRoleNameIfMultilingualCollection(appLayerFactory, collection);
 	}
 
-	//	private void changeAdminRoleNameIfMultilingualCollection(AppLayerFactory appLayerFactory, String collection) {
-	//		RolesManager rolesManager = appLayerFactory.getModelLayerFactory().getRolesManager();
-	//		if (appLayerFactory.getCollectionsManager().getCollectionInfo(collection).getCollectionLanguages().size() > 1) {
-	//			rolesManager.updateRole(rolesManager.getRole(collection, CoreRoles.ADMINISTRATOR)
-	//					.withTitle("Administrateur / Administrator"));
-	//		}
-	//	}
+	private void changeAdminRoleNameIfMultilingualCollection(AppLayerFactory appLayerFactory, String collection) {
+		RolesManager rolesManager = appLayerFactory.getModelLayerFactory().getRolesManager();
+		if (appLayerFactory.getCollectionsManager().getCollectionInfo(collection).getCollectionLanguages().size() > 1) {
+			rolesManager.updateRole(rolesManager.getRole(collection, CoreRoles.ADMINISTRATOR)
+					.withTitle("Administrateur / Administrator"));
+		}
+	}
 
 	private void adjustRoles(String collection, ModelLayerFactory modelLayerFactory) {
 		//			RolesManager rolesManager = modelLayerFactory.getRolesManager();

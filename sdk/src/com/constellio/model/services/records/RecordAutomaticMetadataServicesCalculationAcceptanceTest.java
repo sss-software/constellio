@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -74,7 +74,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(2.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(2.0);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
 	}
 
 	@Test
@@ -113,7 +113,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
 		assertThat(DaysBetweenSingleLocalDateAndAnotherSchemaRequiredDateCalculator.invokationCounter.get()).isEqualTo(1);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(2.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(2.0);
 		verifyZeroInteractions(recordServices);
 	}
 
@@ -145,7 +145,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
 		assertThat(DaysBetweenSingleLocalDateAndAnotherSchemaRequiredDateCalculator.invokationCounter.get()).isEqualTo(2);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
 		assertThat(DaysBetweenSingleLocalDateAndAnotherSchemaRequiredDateCalculator.invokationCounter.get()).isEqualTo(2);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(1.0);
 	}
 
 	@Test
@@ -177,7 +177,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
 		assertThat(DaysBetweenSingleLocalDateAndAnotherSchemaRequiredDateCalculator.invokationCounter.get()).isEqualTo(1);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
 		verifyZeroInteractions(recordServices);
 
 	}
@@ -195,7 +195,7 @@ public class RecordAutomaticMetadataServicesCalculationAcceptanceTest extends Co
 		services.updateAutomaticMetadatas(record, recordProvider, reindexedMetadata, new Transaction(options));
 
 		assertThat(DaysBetweenSingleLocalDateAndAnotherSchemaRequiredDateCalculator.invokationCounter.get()).isEqualTo(1);
-		assertThat(record.get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
+		assertThat(record.<Double>get(zeSchema.calculatedDaysBetween())).isEqualTo(-1.0);
 
 	}
 

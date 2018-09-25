@@ -33,7 +33,7 @@ public class AutocompleteFieldCalculator implements MetadataValueCalculator<List
 	public static void splitInLowerCasedTermsRemovingAccents(Set<String> words,
 															 DynamicDependencyValues autocompleteMetadatasValues) {
 		for (Metadata metadata : autocompleteMetadatasValues.getAvailableMetadatasWithAValue().onlySchemaAutocomplete()) {
-			splitInLowerCasedTermsRemovingAccents(words, autocompleteMetadatasValues.getValue(metadata));
+			splitInLowerCasedTermsRemovingAccents(words, autocompleteMetadatasValues.<Object>getValue(metadata));
 		}
 	}
 
@@ -42,7 +42,6 @@ public class AutocompleteFieldCalculator implements MetadataValueCalculator<List
 			for (String item : (List<String>) value) {
 				splitInLowerCasedTermsRemovingAccents(words, item);
 			}
-
 		} else if (value instanceof String) {
 			splitInLowerCasedTermsRemovingAccents(words, (String) value);
 

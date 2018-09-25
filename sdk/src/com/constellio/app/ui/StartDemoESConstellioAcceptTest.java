@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.constellio.app.modules.es.connectors.http.utils.WebsitesUtils.startWebsite;
-import static com.constellio.sdk.tests.TestUtils.asList;
+import static java.util.Arrays.asList;
 
 @UiTest
 @MainTest
