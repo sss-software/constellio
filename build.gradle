@@ -1,6 +1,6 @@
 plugins {
     id "application"
-    //id "org.ajoberstar.grgit" version "2.3.0"
+    id "org.ajoberstar.grgit" version "3.0.0-rc.2"
 }
 
 apply plugin: 'war'
@@ -98,7 +98,6 @@ subprojects {
 }
 
 ext {
-    /*
     // Open the 2 Git repository
     gitConstellio = org.ajoberstar.grgit.Grgit.open(dir: project(":constellio").projectDir)
     gitPlugins = org.ajoberstar.grgit.Grgit.open(dir: project(":constellio-plugins").projectDir)
@@ -107,7 +106,6 @@ ext {
     revisionPlugins = gitConstellio.head().abbreviatedId
     branchConstellio = gitConstellio.branch.current()
     branchPlugins = gitPlugins.branch.current()
-    */
 }
 
 war {
@@ -115,10 +113,10 @@ war {
         manifest {
             attributes("Implementation-Title": project.name,
                     "Implementation-Version": project.VERSION,
-                    "Implementation-Timestamp": new Date())
-                    //"Implementation-Revision-Constellio": revisionConstellio,
-                    //"Implementation-Branch-Constellio": branchConstellio)
-                    //"Implementation-Branch-Plugins": branchPlugins.fullName)
+                    "Implementation-Timestamp": new Date(),
+                    "Implementation-Revision-Constellio": revisionConstellio,
+                    "Implementation-Branch-Constellio": branchConstellio,
+                    "Implementation-Branch-Plugins": branchPlugins.fullName)
         }
     }
 
