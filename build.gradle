@@ -1,6 +1,7 @@
 plugins {
     id "application"
     id "org.ajoberstar.grgit" version "3.0.0-rc.2"
+    id "com.devsoap.plugin.vaadin" version "1.4.1" apply false
 }
 
 apply plugin: 'war'
