@@ -48,7 +48,8 @@ public class FoldersLocator {
 		} else {
 			File classFolder = new File(fullPath);
 
-			if (classFolder.getParentFile().getParentFile().getParentFile().getParentFile().getName().equals("bin")) {
+			if (classFolder.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getName()
+					.equals("bin")) {
 				finalPath = classFolder.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile()
 						.getParentFile().getAbsoluteFile();
 			} else {
