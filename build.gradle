@@ -121,7 +121,7 @@ war {
         }
     }
 
-    baseName = "constellio"
+    archivesBaseName = "constellio"
     version = project.VERSION
 
     webInf {
