@@ -27,7 +27,7 @@ public interface DisplayDocumentView extends BaseView, RecordsManagementViewGrou
 
 	void setEvents(RecordVODataProvider tasksDataProvider);
 
-	void setPublishButtons(boolean published);
+	//	void setPublishButtons(boolean published);
 
 	void setTaxonomyCode(String taxonomyCode);
 

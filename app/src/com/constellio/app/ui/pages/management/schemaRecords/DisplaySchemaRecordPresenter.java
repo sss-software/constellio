@@ -171,9 +171,9 @@ public class DisplaySchemaRecordPresenter extends SingleSchemaBasePresenter<Disp
 		return isEditButtonVisible(recordVO);
 	}
 
-	public boolean isDeleteButtonVisible() {
-		return isDeleteButtonVisible(recordVO);
-	}
+	//	public boolean isDeleteButtonVisible() {
+	//		return isDeleteButtonVisible(recordVO);
+	//	}
 
 	public void addSubRecordButtonClicked() {
 		view.navigate().to().addSchemaRecord(recordVO.getSchema().getCode(), recordVO.getId());

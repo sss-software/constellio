@@ -6,7 +6,6 @@ import com.constellio.app.modules.rm.ui.pages.document.AddEditDocumentWindow;
 import com.constellio.app.modules.rm.ui.pages.document.DisplayDocumentViewImpl;
 import com.constellio.app.modules.rm.ui.pages.document.DisplayDocumentWindow;
 import com.constellio.app.modules.rm.ui.pages.document.DocumentViewWindow;
-import com.constellio.app.modules.rm.ui.util.ConstellioAgentUtils;
 import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.services.factories.ConstellioFactories;
 import com.constellio.app.ui.application.ConstellioUI;
@@ -15,34 +14,21 @@ import com.constellio.app.ui.application.Navigation;
 import com.constellio.app.ui.entities.ContentVersionVO;
 import com.constellio.app.ui.entities.MetadataVO;
 import com.constellio.app.ui.entities.RecordVO;
-import com.constellio.app.ui.framework.buttons.ConfirmDialogButton.DialogMode;
-import com.constellio.app.ui.framework.buttons.DownloadLink;
-import com.constellio.app.ui.framework.components.ComponentState;
-import com.constellio.app.ui.framework.components.ReportTabButton;
-import com.constellio.app.ui.framework.components.content.ContentVersionVOResource;
 import com.constellio.app.ui.framework.components.content.UpdateContentVersionWindowImpl;
 import com.constellio.app.ui.framework.components.menuBar.BaseMenuBar;
-import com.constellio.app.ui.framework.components.menuBar.ConfirmDialogMenuBarItemCommand;
 import com.constellio.app.ui.framework.components.viewers.panel.ViewableRecordVOTablePanel;
 import com.constellio.app.ui.framework.containers.RefreshableContainer;
-import com.constellio.app.ui.pages.base.BaseView;
 import com.constellio.app.ui.pages.base.SessionContext;
 import com.constellio.app.ui.pages.base.UIContext;
-import com.constellio.app.ui.params.ParamUtils;
 import com.constellio.app.ui.util.ComponentTreeUtils;
-import com.constellio.app.ui.util.FileIconUtils;
 import com.vaadin.data.Container;
-import com.vaadin.navigator.View;
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
-import com.vaadin.server.Resource;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 import org.apache.commons.lang3.StringUtils;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,24 +43,24 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 	private ContentVersionVO contentVersionVO;
 	private UpdateContentVersionWindowImpl updateWindow;
 	private String borrowedMessage;
-	private boolean displayDocumentButtonVisible;
-	private boolean openDocumentButtonVisible;
-	private boolean downloadDocumentButtonVisible;
-	private boolean editDocumentButtonVisible;
-	private boolean deleteDocumentButtonVisible;
-	private boolean addAuthorizationButtonVisible;
-	private boolean shareDocumentButtonVisible;
-	private boolean createPDFAButtonVisible;
-	private boolean uploadButtonVisible;
-	private boolean checkInButtonVisible;
-	private boolean alertWhenAvailableButtonVisible;
-	private boolean checkOutButtonVisible;
-	//private boolean cancelCheckOutButtonVisible;
-	private boolean finalizeButtonVisible;
-	private boolean metadataReportButtonVisible;
-	private boolean addToOrRemoveFromSelectionButtonVisible;
-	private boolean addToCartButtonVisible;
-	private boolean publishButtonVisible;
+	//	private boolean displayDocumentButtonVisible;
+	//	private boolean openDocumentButtonVisible;
+	//	private boolean downloadDocumentButtonVisible;
+	//	private boolean editDocumentButtonVisible;
+	//	private boolean deleteDocumentButtonVisible;
+	//	private boolean addAuthorizationButtonVisible;
+	//	private boolean shareDocumentButtonVisible;
+	//	private boolean createPDFAButtonVisible;
+	//	private boolean uploadButtonVisible;
+	//	private boolean checkInButtonVisible;
+	//	private boolean alertWhenAvailableButtonVisible;
+	//	private boolean checkOutButtonVisible;
+	//	//private boolean cancelCheckOutButtonVisible;
+	//	private boolean finalizeButtonVisible;
+	//	private boolean metadataReportButtonVisible;
+	//	private boolean addToOrRemoveFromSelectionButtonVisible;
+	//	private boolean addToCartButtonVisible;
+	//	private boolean publishButtonVisible;
 
 	protected DocumentMenuBarPresenter presenter;
 
@@ -105,211 +91,211 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 	@Override
 	public void buildMenuItems() {
 		removeItems();
-
-		MenuItem rootItem = addItem("", FontAwesome.ELLIPSIS_V, null);
-
-		if (StringUtils.isNotBlank(borrowedMessage)) {
-			rootItem.addItem(borrowedMessage, null);
-		}
-
-		if (displayDocumentButtonVisible) {
-			MenuItem displayDocumentItem = rootItem.addItem($("DocumentContextMenu.displayDocument"), FontAwesome.FILE_O, null);
-			displayDocumentItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.displayDocumentButtonClicked();
-				}
-			});
-		}
-
-		if (openDocumentButtonVisible) {
-			String fileName = contentVersionVO.getFileName();
-			Resource icon = FileIconUtils.getIcon(fileName);
-			MenuItem openDocumentItem = rootItem.addItem($("DocumentContextMenu.openDocument"), icon, null);
-			openDocumentItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					String agentURL = ConstellioAgentUtils.getAgentURL(recordVO, contentVersionVO);
-					openAgentURL(agentURL);
-					presenter.logOpenDocument(recordVO);
-				}
-			});
-		}
-
-		if (downloadDocumentButtonVisible) {
-			MenuItem downloadDocumentItem = rootItem
-					.addItem($("DocumentContextMenu.downloadDocument"), FontAwesome.DOWNLOAD, null);
-			downloadDocumentItem.setCommand(new Command() {
-				@SuppressWarnings("deprecation")
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					ContentVersionVOResource contentVersionResource = new ContentVersionVOResource(contentVersionVO);
-					Resource downloadedResource = DownloadLink.wrapForDownload(contentVersionResource);
-					Page.getCurrent().open(downloadedResource, null, false);
-					presenter.logDownload(recordVO);
-				}
-			});
-		}
-
-		if (editDocumentButtonVisible) {
-			MenuItem editDocumentItem = rootItem.addItem($("DocumentContextMenu.editDocument"), FontAwesome.EDIT, null);
-			editDocumentItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.editDocumentButtonClicked(ParamUtils.getCurrentParams());
-				}
-			});
-		}
-
-		if (deleteDocumentButtonVisible) {
-			MenuItem deleteDocumentItem = rootItem.addItem($("DocumentContextMenu.deleteDocument"), FontAwesome.TRASH_O, null);
-			deleteDocumentItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
-				@Override
-				protected String getConfirmDialogMessage() {
-					return $("ConfirmDialog.confirmDelete");
-				}
-
-				@Override
-				protected void confirmButtonClick(ConfirmDialog dialog) {
-					presenter.deleteDocumentButtonClicked(ParamUtils.getCurrentParams());
-				}
-			});
-		}
-
-		if (addAuthorizationButtonVisible) {
-			MenuItem addAuthorizationItem = rootItem.addItem($("DocumentContextMenu.addAuthorization"), FontAwesome.KEY, null);
-			addAuthorizationItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.addAuthorizationButtonClicked();
-				}
-			});
-		}
-
-		if (createPDFAButtonVisible) {
-			MenuItem createPDFAItem = rootItem.addItem($("DocumentContextMenu.createPDFA"), FontAwesome.FILE_PDF_O, null);
-			createPDFAItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
-				@Override
-				protected String getConfirmDialogMessage() {
-					return $("ConfirmDialog.confirmCreatePDFA");
-				}
-
-				@Override
-				protected void confirmButtonClick(ConfirmDialog dialog) {
-					presenter.createPDFA(ParamUtils.getCurrentParams());
-				}
-			});
-		}
-
-		if (shareDocumentButtonVisible) {
-			MenuItem shareDocumentItem = rootItem
-					.addItem($("DocumentContextMenu.shareDocument"), FontAwesome.PAPER_PLANE_O, null);
-			shareDocumentItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.shareDocumentButtonClicked();
-				}
-			});
-		}
-
-		if (uploadButtonVisible) {
-			MenuItem uploadItem = rootItem.addItem($("DocumentContextMenu.upload"), FontAwesome.UPLOAD, null);
-			uploadItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.uploadButtonClicked();
-				}
-			});
-		}
-
-		if (checkInButtonVisible) {
-			MenuItem checkInItem = rootItem.addItem($("DocumentContextMenu.checkIn"), FontAwesome.UNLOCK, null);
-			checkInItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.checkInButtonClicked();
-				}
-			});
-		}
-
-		if (alertWhenAvailableButtonVisible) {
-			MenuItem alertWhenAvailableItem = rootItem
-					.addItem($("DocumentContextMenu.alertWhenAvailable"), FontAwesome.BELL_O, null);
-			alertWhenAvailableItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.alertWhenAvailable();
-				}
-			});
-		}
-
-		if (checkOutButtonVisible) {
-			MenuItem checkOutItem = rootItem.addItem($("DocumentContextMenu.checkOut"), FontAwesome.LOCK, null);
-			checkOutItem.setCommand(new Command() {
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					presenter.checkOutButtonClicked(getSessionContext());
-					refreshParent();
-				}
-			});
-		}
-
-		if (finalizeButtonVisible) {
-			MenuItem finalizeItem = rootItem.addItem($("DocumentContextMenu.finalize"), FontAwesome.LEVEL_UP, null);
-			finalizeItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
-				@Override
-				protected String getConfirmDialogMessage() {
-					return $("DocumentActionsComponent.finalize.confirm");
-				}
-
-				@Override
-				protected void confirmButtonClick(ConfirmDialog dialog) {
-					presenter.finalizeButtonClicked();
-				}
-			});
-		}
-
-		if(presenter.hasPermissionToUserCart()) {
-			if (presenter.documentInDefaultFavorites()) {
-				MenuItem addToDefaultCartItem = rootItem
-						.addItem($("DocumentContextMenu.removeFromDefaultCart"), FontAwesome.STAR, null);
-				addToDefaultCartItem.setCommand(new Command() {
-					@Override
-					public void menuSelected(MenuItem selectedItem) {
-						presenter.removeDocumentFromDefaultFavorites();
-						refreshParent();
-						showMessage($("DisplayDocumentView.documentRemovedFromDefaultFavorites"));
-					}
-				});
-			} else {
-				MenuItem addToDefaultCartItem = rootItem
-						.addItem($("DocumentContextMenu.addToDefaultCart"), FontAwesome.STAR_O, null);
-				addToDefaultCartItem.setCommand(new Command() {
-					@Override
-					public void menuSelected(MenuItem selectedItem) {
-						presenter.addDocumentToDefaultFavorite();
-						refreshParent();
-						showMessage($("DisplayDocumentView.documentAddedToDefaultFavorites"));
-					}
-				});
-			}
-		}
-
-		if (presenter.hasMetadataReport()) {
-			MenuItem metadataReportGenerator = rootItem
-					.addItem($("DocumentActionsComponent.printMetadataReportWithoutIcon"), FontAwesome.LIST_ALT, null);
-			metadataReportGenerator.setCommand(new Command() {
-
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					View parentView = ConstellioUI.getCurrent().getCurrentView();
-					ReportTabButton button = new ReportTabButton($("DocumentActionsComponent.printMetadataReport"),
-							$("DocumentActionsComponent.printMetadataReport"), (BaseView) parentView, true);
-					button.setRecordVoList(presenter.getDocumentVO());
-					button.click();
-				}
-			});
-		}
+		//
+		//		MenuItem rootItem = addItem("", FontAwesome.ELLIPSIS_V, null);
+		//
+		//		if (StringUtils.isNotBlank(borrowedMessage)) {
+		//			rootItem.addItem(borrowedMessage, null);
+		//		}
+		//
+		//		if (displayDocumentButtonVisible) {
+		//			MenuItem displayDocumentItem = rootItem.addItem($("DocumentContextMenu.displayDocument"), FontAwesome.FILE_O, null);
+		//			displayDocumentItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.displayDocumentButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (openDocumentButtonVisible) {
+		//			String fileName = contentVersionVO.getFileName();
+		//			Resource icon = FileIconUtils.getIcon(fileName);
+		//			MenuItem openDocumentItem = rootItem.addItem($("DocumentContextMenu.openDocument"), icon, null);
+		//			openDocumentItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					String agentURL = ConstellioAgentUtils.getAgentURL(recordVO, contentVersionVO);
+		//					openAgentURL(agentURL);
+		//					presenter.logOpenDocument(recordVO);
+		//				}
+		//			});
+		//		}
+		//
+		//		if (downloadDocumentButtonVisible) {
+		//			MenuItem downloadDocumentItem = rootItem
+		//					.addItem($("DocumentContextMenu.downloadDocument"), FontAwesome.DOWNLOAD, null);
+		//			downloadDocumentItem.setCommand(new Command() {
+		//				@SuppressWarnings("deprecation")
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					ContentVersionVOResource contentVersionResource = new ContentVersionVOResource(contentVersionVO);
+		//					Resource downloadedResource = DownloadLink.wrapForDownload(contentVersionResource);
+		//					Page.getCurrent().open(downloadedResource, null, false);
+		//					presenter.logDownload(recordVO);
+		//				}
+		//			});
+		//		}
+		//
+		//		if (editDocumentButtonVisible) {
+		//			MenuItem editDocumentItem = rootItem.addItem($("DocumentContextMenu.editDocument"), FontAwesome.EDIT, null);
+		//			editDocumentItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.editDocumentButtonClicked(ParamUtils.getCurrentParams());
+		//				}
+		//			});
+		//		}
+		//
+		//		if (deleteDocumentButtonVisible) {
+		//			MenuItem deleteDocumentItem = rootItem.addItem($("DocumentContextMenu.deleteDocument"), FontAwesome.TRASH_O, null);
+		//			deleteDocumentItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
+		//				@Override
+		//				protected String getConfirmDialogMessage() {
+		//					return $("ConfirmDialog.confirmDelete");
+		//				}
+		//
+		//				@Override
+		//				protected void confirmButtonClick(ConfirmDialog dialog) {
+		//					presenter.deleteDocumentButtonClicked(ParamUtils.getCurrentParams());
+		//				}
+		//			});
+		//		}
+		//
+		//		if (addAuthorizationButtonVisible) {
+		//			MenuItem addAuthorizationItem = rootItem.addItem($("DocumentContextMenu.addAuthorization"), FontAwesome.KEY, null);
+		//			addAuthorizationItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.addAuthorizationButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (createPDFAButtonVisible) {
+		//			MenuItem createPDFAItem = rootItem.addItem($("DocumentContextMenu.createPDFA"), FontAwesome.FILE_PDF_O, null);
+		//			createPDFAItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
+		//				@Override
+		//				protected String getConfirmDialogMessage() {
+		//					return $("ConfirmDialog.confirmCreatePDFA");
+		//				}
+		//
+		//				@Override
+		//				protected void confirmButtonClick(ConfirmDialog dialog) {
+		//					presenter.createPDFA(ParamUtils.getCurrentParams());
+		//				}
+		//			});
+		//		}
+		//
+		//		if (shareDocumentButtonVisible) {
+		//			MenuItem shareDocumentItem = rootItem
+		//					.addItem($("DocumentContextMenu.shareDocument"), FontAwesome.PAPER_PLANE_O, null);
+		//			shareDocumentItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.shareDocumentButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (uploadButtonVisible) {
+		//			MenuItem uploadItem = rootItem.addItem($("DocumentContextMenu.upload"), FontAwesome.UPLOAD, null);
+		//			uploadItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.uploadButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (checkInButtonVisible) {
+		//			MenuItem checkInItem = rootItem.addItem($("DocumentContextMenu.checkIn"), FontAwesome.UNLOCK, null);
+		//			checkInItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.checkInButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (alertWhenAvailableButtonVisible) {
+		//			MenuItem alertWhenAvailableItem = rootItem
+		//					.addItem($("DocumentContextMenu.alertWhenAvailable"), FontAwesome.BELL_O, null);
+		//			alertWhenAvailableItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.alertWhenAvailable();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (checkOutButtonVisible) {
+		//			MenuItem checkOutItem = rootItem.addItem($("DocumentContextMenu.checkOut"), FontAwesome.LOCK, null);
+		//			checkOutItem.setCommand(new Command() {
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					presenter.checkOutButtonClicked(getSessionContext());
+		//					refreshParent();
+		//				}
+		//			});
+		//		}
+		//
+		//		if (finalizeButtonVisible) {
+		//			MenuItem finalizeItem = rootItem.addItem($("DocumentContextMenu.finalize"), FontAwesome.LEVEL_UP, null);
+		//			finalizeItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
+		//				@Override
+		//				protected String getConfirmDialogMessage() {
+		//					return $("DocumentActionsComponent.finalize.confirm");
+		//				}
+		//
+		//				@Override
+		//				protected void confirmButtonClick(ConfirmDialog dialog) {
+		//					presenter.finalizeButtonClicked();
+		//				}
+		//			});
+		//		}
+		//
+		//		if(presenter.hasPermissionToUserCart()) {
+		//			if (presenter.documentInDefaultFavorites()) {
+		//				MenuItem addToDefaultCartItem = rootItem
+		//						.addItem($("DocumentContextMenu.removeFromDefaultCart"), FontAwesome.STAR, null);
+		//				addToDefaultCartItem.setCommand(new Command() {
+		//					@Override
+		//					public void menuSelected(MenuItem selectedItem) {
+		//						presenter.removeDocumentFromDefaultFavorites();
+		//						refreshParent();
+		//						showMessage($("DisplayDocumentView.documentRemovedFromDefaultFavorites"));
+		//					}
+		//				});
+		//			} else {
+		//				MenuItem addToDefaultCartItem = rootItem
+		//						.addItem($("DocumentContextMenu.addToDefaultCart"), FontAwesome.STAR_O, null);
+		//				addToDefaultCartItem.setCommand(new Command() {
+		//					@Override
+		//					public void menuSelected(MenuItem selectedItem) {
+		//						presenter.addDocumentToDefaultFavorite();
+		//						refreshParent();
+		//						showMessage($("DisplayDocumentView.documentAddedToDefaultFavorites"));
+		//					}
+		//				});
+		//			}
+		//		}
+		//
+		//		if (presenter.hasMetadataReport()) {
+		//			MenuItem metadataReportGenerator = rootItem
+		//					.addItem($("DocumentActionsComponent.printMetadataReportWithoutIcon"), FontAwesome.LIST_ALT, null);
+		//			metadataReportGenerator.setCommand(new Command() {
+		//
+		//				@Override
+		//				public void menuSelected(MenuItem selectedItem) {
+		//					View parentView = ConstellioUI.getCurrent().getCurrentView();
+		//					ReportTabButton button = new ReportTabButton($("DocumentActionsComponent.printMetadataReport"),
+		//							$("DocumentActionsComponent.printMetadataReport"), (BaseView) parentView, true);
+		//					button.setRecordVoList(presenter.getDocumentVO());
+		//					button.click();
+		//				}
+		//			});
+		//		}
 	}
 
 	@Override
@@ -379,90 +365,90 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 		updateWindow.open(checkingIn);
 	}
 
-	@Override
-	public void setCopyDocumentButtonState(ComponentState state) {
+	//	@Override
+	//	public void setCopyDocumentButtonState(ComponentState state) {
+	//
+	//	}
+	//
+	//	@Override
+	//	public void setStartWorkflowButtonState(ComponentState state) {
+	//
+	//	}
+	//
+	//	@Override
+	//	public void setEditDocumentButtonState(ComponentState state) {
+	//		editDocumentButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setAddDocumentButtonState(ComponentState state) {
+	//		//not supported
+	//	}
+	//
+	//	@Override
+	//	public void setDeleteDocumentButtonState(ComponentState state) {
+	//		deleteDocumentButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setAddAuthorizationButtonState(ComponentState state) {
+	//		addAuthorizationButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setCreatePDFAButtonState(ComponentState state) {
+	//		createPDFAButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setShareDocumentButtonState(ComponentState state) {
+	//		shareDocumentButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setUploadButtonState(ComponentState state) {
+	//		uploadButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setCheckInButtonState(ComponentState state) {
+	//		checkInButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setAlertWhenAvailableButtonState(ComponentState state) {
+	//		alertWhenAvailableButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setCheckOutButtonState(ComponentState state) {
+	//		checkOutButtonVisible = state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setCartButtonState(ComponentState state) {
+	//		addToCartButtonVisible = state.isVisible();
+	//	}
+	//
+	//	@Override
+	//	public void setAddToOrRemoveFromSelectionButtonState(ComponentState state) {
+	//		addAuthorizationButtonVisible = state.isVisible();
+	//	}
 
-	}
-
-	@Override
-	public void setStartWorkflowButtonState(ComponentState state) {
-
-	}
-
-	@Override
-	public void setEditDocumentButtonState(ComponentState state) {
-		editDocumentButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setAddDocumentButtonState(ComponentState state) {
-		//not supported
-	}
-
-	@Override
-	public void setDeleteDocumentButtonState(ComponentState state) {
-		deleteDocumentButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setAddAuthorizationButtonState(ComponentState state) {
-		addAuthorizationButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setCreatePDFAButtonState(ComponentState state) {
-		createPDFAButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setShareDocumentButtonState(ComponentState state) {
-		shareDocumentButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setUploadButtonState(ComponentState state) {
-		uploadButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setCheckInButtonState(ComponentState state) {
-		checkInButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setAlertWhenAvailableButtonState(ComponentState state) {
-		alertWhenAvailableButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setCheckOutButtonState(ComponentState state) {
-		checkOutButtonVisible = state.isEnabled();
-	}
-
-	@Override
-	public void setCartButtonState(ComponentState state) {
-		addToCartButtonVisible = state.isVisible();
-	}
-
-	@Override
-	public void setAddToOrRemoveFromSelectionButtonState(ComponentState state) {
-		addAuthorizationButtonVisible = state.isVisible();
-	}
-
-	@Override
-	public void setGenerateMetadataButtonState(ComponentState state) {
-		metadataReportButtonVisible = presenter.hasMetadataReport();
-	}
-
-	@Override
-	public void setPublishButtonState(ComponentState state) {
-		publishButtonVisible = state.isVisible();
-	}
-
-	@Override
-	public void setFinalizeButtonState(ComponentState state) {
-		finalizeButtonVisible = state.isVisible();
-	}
+	//	@Override
+	//	public void setGenerateMetadataButtonState(ComponentState state) {
+	//		metadataReportButtonVisible = presenter.hasMetadataReport();
+	//	}
+	//
+	//	@Override
+	//	public void setPublishButtonState(ComponentState state) {
+	//		publishButtonVisible = state.isVisible();
+	//	}
+	//
+	//	@Override
+	//	public void setFinalizeButtonState(ComponentState state) {
+	//		finalizeButtonVisible = state.isVisible();
+	//	}
 
 	@Override
 	public void setContentVersionVO(ContentVersionVO contentVersionVO) {
@@ -478,20 +464,20 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 		}
 	}
 
-	@Override
-	public void setDisplayDocumentButtonState(ComponentState state) {
-		this.displayDocumentButtonVisible = state.isVisible() && state.isEnabled();
-	}
-
-	@Override
-	public void setOpenDocumentButtonState(ComponentState state) {
-		this.openDocumentButtonVisible = state.isVisible() && state.isEnabled();
-	}
-
-	@Override
-	public void setDownloadDocumentButtonState(ComponentState state) {
-		this.downloadDocumentButtonVisible = state.isVisible() && state.isEnabled();
-	}
+	//	@Override
+	//	public void setDisplayDocumentButtonState(ComponentState state) {
+	//		this.displayDocumentButtonVisible = state.isVisible() && state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setOpenDocumentButtonState(ComponentState state) {
+	//		this.openDocumentButtonVisible = state.isVisible() && state.isEnabled();
+	//	}
+	//
+	//	@Override
+	//	public void setDownloadDocumentButtonState(ComponentState state) {
+	//		this.downloadDocumentButtonVisible = state.isVisible() && state.isEnabled();
+	//	}
 
 	@Override
 	public void openAgentURL(String agentURL) {

@@ -92,70 +92,70 @@ public class DisplayDocumentPresenterAcceptTest extends ConstellioTest {
 		presenter = new DisplayDocumentPresenter(displayDocumentView, null, false, false);
 	}
 
-	@Test
-	public void givenDocumentWithContentWhenCreatePDFAThenOk()
-			throws Exception {
+	//	@Test
+	//	public void givenDocumentWithContentWhenCreatePDFAThenOk()
+	//			throws Exception {
+	//
+	//		Content initialContent = rmRecords.getDocumentWithContent_A19().getContent();
+	//		String initialHash = initialContent.getCurrentVersion().getHash();
+	//		String initialOlderVersionHash = initialContent.getHistoryVersions().get(0).getHash();
+	//		assertThat(rmRecords.getDocumentWithContent_A19().getContent().getHistoryVersions()).hasSize(1);
+	//
+	//		presenter.forParams(rmRecords.document_A19);
+	////		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isTrue();
+	//
+	//		presenter.createPDFAButtonClicked();
+	//
+	//		Content modifiedContent = rmRecords.getDocumentWithContent_A19().getContent();
+	//
+	//		assertThat(modifiedContent.getCurrentVersion().getMimetype())
+	//				.isEqualTo("application/pdf");
+	//		assertThat(modifiedContent.getCurrentVersion().getHash())
+	//				.isNotEqualTo(initialHash)
+	//				.isNotEqualTo(initialOlderVersionHash);
+	//		assertThat(modifiedContent.getCurrentVersion().getFilename())
+	//				.isEqualTo("Chevreuil.pdf");
+	//
+	//		assertThat(modifiedContent.getHistoryVersions()).hasSize(2);
+	//		assertThat(modifiedContent.getHistoryVersions().get(0).getMimetype())
+	//				.isEqualTo("application/vnd.oasis.opendocument.text");
+	//		assertThat(modifiedContent.getHistoryVersions().get(0).getHash())
+	//				.isEqualTo(initialOlderVersionHash);
+	//		assertThat(modifiedContent.getHistoryVersions().get(0).getFilename())
+	//				.isEqualTo("Chevreuil.odt");
+	//		assertThat(modifiedContent.getHistoryVersions().get(1).getMimetype())
+	//				.isEqualTo("application/vnd.oasis.opendocument.text");
+	//		assertThat(modifiedContent.getHistoryVersions().get(1).getHash())
+	//				.isEqualTo(initialHash);
+	//		assertThat(modifiedContent.getHistoryVersions().get(1).getFilename())
+	//				.isEqualTo("Chevreuil.odt");
+	//	}
 
-		Content initialContent = rmRecords.getDocumentWithContent_A19().getContent();
-		String initialHash = initialContent.getCurrentVersion().getHash();
-		String initialOlderVersionHash = initialContent.getHistoryVersions().get(0).getHash();
-		assertThat(rmRecords.getDocumentWithContent_A19().getContent().getHistoryVersions()).hasSize(1);
+	//	@Test
+	//	public void givenDocumentWithoutContentWhenCreatePDFAThenItIsNotVisible()
+	//			throws Exception {
+	//
+	//		String docId = "docNoContent";
+	//		String docTitle = "Document Without Content";
+	//		Document document = schemasRecordsServices.newDocumentWithId(docId);
+	//		document.setFolder(rmRecords.folder_C30);
+	//		document.setTitle(docTitle);
+	//		recordServices.add(document);
+	//
+	//		presenter.forParams(docId);
+	//		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isFalse();
+	//	}
 
-		presenter.forParams(rmRecords.document_A19);
-		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isTrue();
-
-		presenter.createPDFAButtonClicked();
-
-		Content modifiedContent = rmRecords.getDocumentWithContent_A19().getContent();
-
-		assertThat(modifiedContent.getCurrentVersion().getMimetype())
-				.isEqualTo("application/pdf");
-		assertThat(modifiedContent.getCurrentVersion().getHash())
-				.isNotEqualTo(initialHash)
-				.isNotEqualTo(initialOlderVersionHash);
-		assertThat(modifiedContent.getCurrentVersion().getFilename())
-				.isEqualTo("Chevreuil.pdf");
-
-		assertThat(modifiedContent.getHistoryVersions()).hasSize(2);
-		assertThat(modifiedContent.getHistoryVersions().get(0).getMimetype())
-				.isEqualTo("application/vnd.oasis.opendocument.text");
-		assertThat(modifiedContent.getHistoryVersions().get(0).getHash())
-				.isEqualTo(initialOlderVersionHash);
-		assertThat(modifiedContent.getHistoryVersions().get(0).getFilename())
-				.isEqualTo("Chevreuil.odt");
-		assertThat(modifiedContent.getHistoryVersions().get(1).getMimetype())
-				.isEqualTo("application/vnd.oasis.opendocument.text");
-		assertThat(modifiedContent.getHistoryVersions().get(1).getHash())
-				.isEqualTo(initialHash);
-		assertThat(modifiedContent.getHistoryVersions().get(1).getFilename())
-				.isEqualTo("Chevreuil.odt");
-	}
-
-	@Test
-	public void givenDocumentWithoutContentWhenCreatePDFAThenItIsNotVisible()
-			throws Exception {
-
-		String docId = "docNoContent";
-		String docTitle = "Document Without Content";
-		Document document = schemasRecordsServices.newDocumentWithId(docId);
-		document.setFolder(rmRecords.folder_C30);
-		document.setTitle(docTitle);
-		recordServices.add(document);
-
-		presenter.forParams(docId);
-		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isFalse();
-	}
-
-	@Test
-	public void givenCheckedOutDocumentWhenCreatePDFAThenItIsNotVisible()
-			throws Exception {
-
-		assertThat(rmRecords.getDocumentWithContent_A19().getContent().getHistoryVersions()).hasSize(1);
-
-		presenter.forParams(rmRecords.document_A19);
-		presenter.checkOutButtonClicked();
-		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isFalse();
-	}
+	//	@Test
+	//	public void givenCheckedOutDocumentWhenCreatePDFAThenItIsNotVisible()
+	//			throws Exception {
+	//
+	//		assertThat(rmRecords.getDocumentWithContent_A19().getContent().getHistoryVersions()).hasSize(1);
+	//
+	//		presenter.forParams(rmRecords.document_A19);
+	//		presenter.checkOutButtonClicked();
+	//		assertThat(presenter.presenterUtils.getCreatePDFAState().isVisible()).isFalse();
+	//	}
 
 	@Test
 	public void givenDeletedDocumentThenIsLogicallyDeletedTrue() {

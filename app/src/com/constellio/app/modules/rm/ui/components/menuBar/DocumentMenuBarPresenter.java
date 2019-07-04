@@ -10,7 +10,6 @@ import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.ui.entities.ContentVersionVO;
 import com.constellio.app.ui.entities.RecordVO;
 import com.constellio.app.ui.entities.RecordVO.VIEW_MODE;
-import com.constellio.app.ui.framework.components.ComponentState;
 import com.constellio.app.ui.pages.management.Report.PrintableReportListPossibleType;
 import com.constellio.app.ui.params.ParamUtils;
 import com.constellio.app.utils.ReportGeneratorUtils;
@@ -46,17 +45,17 @@ public class DocumentMenuBarPresenter extends DocumentActionsPresenterUtils<Docu
 	@Override
 	public void updateActionsComponent() {
 		super.updateActionsComponent();
-		menuBar.setDisplayDocumentButtonState(ComponentState.ENABLED);
+		//		menuBar.setDisplayDocumentButtonState(ComponentState.ENABLED);
 		Content content = getContent();
 		if (content != null) {
 			ContentVersionVO contentVersionVO = contentVersionVOBuilder.build(content);
 			menuBar.setContentVersionVO(contentVersionVO);
-			menuBar.setDownloadDocumentButtonState(ComponentState.ENABLED);
+			//			menuBar.setDownloadDocumentButtonState(ComponentState.ENABLED);
 			String agentURL = ConstellioAgentUtils.getAgentURL(documentVO, contentVersionVO);
-			menuBar.setOpenDocumentButtonState(agentURL != null ? ComponentState.ENABLED : ComponentState.INVISIBLE);
+			//			menuBar.setOpenDocumentButtonState(agentURL != null ? ComponentState.ENABLED : ComponentState.INVISIBLE);
 		} else {
-			menuBar.setDownloadDocumentButtonState(ComponentState.INVISIBLE);
-			menuBar.setOpenDocumentButtonState(ComponentState.INVISIBLE);
+			//			menuBar.setDownloadDocumentButtonState(ComponentState.INVISIBLE);
+			//			menuBar.setOpenDocumentButtonState(ComponentState.INVISIBLE);
 		}
 		menuBar.buildMenuItems();
 	}

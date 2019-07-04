@@ -6,7 +6,6 @@ import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.ui.entities.ContentVersionVO;
 import com.constellio.app.ui.entities.RecordVO;
 import com.constellio.app.ui.entities.RecordVO.VIEW_MODE;
-import com.constellio.app.ui.framework.components.ComponentState;
 import com.constellio.app.ui.pages.management.Report.PrintableReportListPossibleType;
 import com.constellio.app.ui.params.ParamUtils;
 import com.constellio.app.utils.ReportGeneratorUtils;
@@ -35,18 +34,18 @@ public class DocumentContextMenuPresenter extends DocumentActionsPresenterUtils<
 	@Override
 	public void updateActionsComponent() {
 		super.updateActionsComponent();
-		contextMenu.setDisplayDocumentButtonState(ComponentState.ENABLED);
+		//		contextMenu.setDisplayDocumentButtonState(ComponentState.ENABLED);
 		Content content = getContent();
 		if (content != null) {
 			ContentVersionVO contentVersionVO = contentVersionVOBuilder.build(content);
 			contextMenu.setContentVersionVO(contentVersionVO);
-			contextMenu.setDownloadDocumentButtonState(ComponentState.ENABLED);
+			//			contextMenu.setDownloadDocumentButtonState(ComponentState.ENABLED);
 			String agentURL = ConstellioAgentUtils.getAgentURL(documentVO, contentVersionVO);
-			contextMenu.setOpenDocumentButtonState(agentURL != null ? ComponentState.ENABLED : ComponentState.INVISIBLE);
+			//			contextMenu.setOpenDocumentButtonState(agentURL != null ? ComponentState.ENABLED : ComponentState.INVISIBLE);
 		} else {
 			contextMenu.setContentVersionVO(null);
-			contextMenu.setDownloadDocumentButtonState(ComponentState.INVISIBLE);
-			contextMenu.setOpenDocumentButtonState(ComponentState.INVISIBLE);
+			//			contextMenu.setDownloadDocumentButtonState(ComponentState.INVISIBLE);
+			//			contextMenu.setOpenDocumentButtonState(ComponentState.INVISIBLE);
 		}
 		contextMenu.buildMenuItems();
 	}

@@ -2,7 +2,6 @@ package com.constellio.app.modules.rm.ui.components.document;
 
 import com.constellio.app.api.extensions.params.NavigateToFromAPageParams;
 import com.constellio.app.modules.rm.ConstellioRMModule;
-import com.constellio.app.modules.rm.RMConfigs;
 import com.constellio.app.modules.rm.constants.RMPermissionsTo;
 import com.constellio.app.modules.rm.extensions.api.RMModuleExtensions;
 import com.constellio.app.modules.rm.model.enums.FolderStatus;
@@ -360,9 +359,9 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 		return true;
 	}
 
-	private ComponentState getShareDocumentState() {
-		return ComponentState.visibleIf(isShareDocumentPossible());
-	}
+	//	private ComponentState getShareDocumentState() {
+	//		return ComponentState.visibleIf(isShareDocumentPossible());
+	//	}
 
 	protected boolean isShareDocumentPossible() {
 		FolderStatus archivisticStatus = rmSchemasRecordsServices.wrapDocument(currentDocument()).getArchivisticStatus();
@@ -689,15 +688,15 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 		return !email && (getContent() != null && !isContentCheckedOut());
 	}
 
-	private ComponentState getCheckOutState() {
-		if (getAuthorizationServices().canWrite(getCurrentUser(), currentDocument())) {
-			if (isCheckOutPossible() && extensions.isRecordModifiableBy(currentDocument(), getCurrentUser()) && !extensions
-					.isModifyBlocked(currentDocument(), getCurrentUser())) {
-				return ComponentState.ENABLED;
-			}
-		}
-		return ComponentState.INVISIBLE;
-	}
+	//	private ComponentState getCheckOutState() {
+	//		if (getAuthorizationServices().canWrite(getCurrentUser(), currentDocument())) {
+	//			if (isCheckOutPossible() && extensions.isRecordModifiableBy(currentDocument(), getCurrentUser()) && !extensions
+	//					.isModifyBlocked(currentDocument(), getCurrentUser())) {
+	//				return ComponentState.ENABLED;
+	//			}
+	//		}
+	//		return ComponentState.INVISIBLE;
+	//	}
 
 	public ComponentState getAlertWhenAvailableButtonState() {
 		if (!isEmail() && getContent() != null && isContentCheckedOut() && !isCurrentUserBorrower()) {
@@ -712,9 +711,9 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 		return !email && (getContent() != null && isContentCheckedOut());
 	}
 
-	private ComponentState getFinalizeButtonState() {
-		return ComponentState.visibleIf(isFinalizePossible());
-	}
+	//	private ComponentState getFinalizeButtonState() {
+	//		return ComponentState.visibleIf(isFinalizePossible());
+	//	}
 
 	protected boolean isFinalizePossible() {
 		boolean borrowed = isContentCheckedOut();
@@ -731,9 +730,9 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 		return true;
 	}
 
-	private ComponentState getPublishButtonState() {
-		return ComponentState.visibleIf(isPublishPossible());
-	}
+	//	private ComponentState getPublishButtonState() {
+	//		return ComponentState.visibleIf(isPublishPossible());
+	//	}
 
 	protected boolean isPublishPossible() {
 		if (!rmModuleExtensions.isPublishActionPossibleOnDocument(rmSchemasRecordsServices.wrapDocument(currentDocument()), currentUser)) {
@@ -743,48 +742,48 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 	}
 
 	public void updateActionsComponent() {
-		RMConfigs configs = new RMConfigs(getModelLayerFactory().getSystemConfigurationsManager());
+		//		RMConfigs configs = new RMConfigs(getModelLayerFactory().getSystemConfigurationsManager());
 
 		updateBorrowedMessage();
 		DocumentVO documentVO = getDocumentVO();
 		actionsComponent.setDocumentVO(documentVO);
-		Boolean isLogicallyDeleted = documentVO.get(Schemas.LOGICALLY_DELETED_STATUS.getLocalCode());
-		if (Boolean.TRUE.equals(isLogicallyDeleted)) {
-			actionsComponent.setEditDocumentButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setAddDocumentButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setDeleteDocumentButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setAddAuthorizationButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setCreatePDFAButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setShareDocumentButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setUploadButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setCheckInButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setCheckOutButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setAlertWhenAvailableButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setFinalizeButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setStartWorkflowButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setCartButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setAddToOrRemoveFromSelectionButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setPublishButtonState(ComponentState.INVISIBLE);
-			actionsComponent.setCopyDocumentButtonState(ComponentState.INVISIBLE);
-			return;
-		}
+		//		Boolean isLogicallyDeleted = documentVO.get(Schemas.LOGICALLY_DELETED_STATUS.getLocalCode());
+		//		if (Boolean.TRUE.equals(isLogicallyDeleted)) {
+		//			actionsComponent.setEditDocumentButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setAddDocumentButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setDeleteDocumentButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setAddAuthorizationButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setCreatePDFAButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setShareDocumentButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setUploadButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setCheckInButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setCheckOutButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setAlertWhenAvailableButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setFinalizeButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setStartWorkflowButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setCartButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setAddToOrRemoveFromSelectionButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setPublishButtonState(ComponentState.INVISIBLE);
+		//			actionsComponent.setCopyDocumentButtonState(ComponentState.INVISIBLE);
+		//			return;
+		//		}
 
-		actionsComponent.setEditDocumentButtonState(getEditButtonState());
+		//		actionsComponent.setEditDocumentButtonState(getEditButtonState());
 		// THIS IS WHERE I SHOULD USE THE ADD DOCUMENT PERMISSION INSTEAD
 		// OH MY GOD WHY ARE WE YELLING LIKE THAT ?
-		actionsComponent.setAddDocumentButtonState(getCreateDocumentState());
-		actionsComponent.setDeleteDocumentButtonState(getDeleteButtonState());
-		actionsComponent.setAddAuthorizationButtonState(getAddAuthorizationState());
-		actionsComponent.setCreatePDFAButtonState(getCreatePDFAState());
-		actionsComponent.setShareDocumentButtonState(getShareDocumentState());
-		actionsComponent.setUploadButtonState(getUploadButtonState());
-		actionsComponent.setCheckInButtonState(getCheckInState());
-		actionsComponent.setCheckOutButtonState(getCheckOutState());
-		actionsComponent.setAlertWhenAvailableButtonState(getAlertWhenAvailableButtonState());
-		actionsComponent.setFinalizeButtonState(getFinalizeButtonState());
-		actionsComponent.setStartWorkflowButtonState(ComponentState.visibleIf(configs.areWorkflowsEnabled()));
-		actionsComponent.setCopyDocumentButtonState(getCopyDocumentState());
-		actionsComponent.setPublishButtonState(getPublishButtonState());
+		//		actionsComponent.setAddDocumentButtonState(getCreateDocumentState());
+		//		actionsComponent.setDeleteDocumentButtonState(getDeleteButtonState());
+		//		actionsComponent.setAddAuthorizationButtonState(getAddAuthorizationState());
+		//		actionsComponent.setCreatePDFAButtonState(getCreatePDFAState());
+		//		actionsComponent.setShareDocumentButtonState(getShareDocumentState());
+		//		actionsComponent.setUploadButtonState(getUploadButtonState());
+		//		actionsComponent.setCheckInButtonState(getCheckInState());
+		//		actionsComponent.setCheckOutButtonState(getCheckOutState());
+		//		actionsComponent.setAlertWhenAvailableButtonState(getAlertWhenAvailableButtonState());
+		//		actionsComponent.setFinalizeButtonState(getFinalizeButtonState());
+		//		actionsComponent.setStartWorkflowButtonState(ComponentState.visibleIf(configs.areWorkflowsEnabled()));
+		//		actionsComponent.setCopyDocumentButtonState(getCopyDocumentState());
+		//		actionsComponent.setPublishButtonState(getPublishButtonState());
 	}
 
 	protected void updateBorrowedMessage() {

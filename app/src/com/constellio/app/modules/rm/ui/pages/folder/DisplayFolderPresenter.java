@@ -2,45 +2,35 @@ package com.constellio.app.modules.rm.ui.pages.folder;
 
 import com.constellio.app.api.extensions.params.DocumentFolderBreadCrumbParams;
 import com.constellio.app.api.extensions.params.NavigateToFromAPageParams;
-import com.constellio.app.api.extensions.taxonomies.FolderDeletionEvent;
 import com.constellio.app.modules.rm.ConstellioRMModule;
 import com.constellio.app.modules.rm.RMConfigs;
 import com.constellio.app.modules.rm.RMEmailTemplateConstants;
 import com.constellio.app.modules.rm.constants.RMPermissionsTo;
 import com.constellio.app.modules.rm.extensions.api.RMModuleExtensions;
 import com.constellio.app.modules.rm.model.enums.DefaultTabInFolderDisplay;
-import com.constellio.app.modules.rm.model.labelTemplate.LabelTemplate;
 import com.constellio.app.modules.rm.navigation.RMNavigationConfiguration;
 import com.constellio.app.modules.rm.navigation.RMViews;
 import com.constellio.app.modules.rm.services.RMSchemasRecordsServices;
 import com.constellio.app.modules.rm.services.borrowingServices.BorrowingServices;
-import com.constellio.app.modules.rm.services.borrowingServices.BorrowingType;
-import com.constellio.app.modules.rm.services.decommissioning.DecommissioningService;
 import com.constellio.app.modules.rm.services.decommissioning.SearchType;
 import com.constellio.app.modules.rm.services.events.RMEventsSearchServices;
 import com.constellio.app.modules.rm.ui.builders.DocumentToVOBuilder;
 import com.constellio.app.modules.rm.ui.builders.FolderToVOBuilder;
 import com.constellio.app.modules.rm.ui.components.breadcrumb.FolderDocumentContainerBreadcrumbTrail;
-import com.constellio.app.modules.rm.ui.components.content.ConstellioAgentClickHandler;
 import com.constellio.app.modules.rm.ui.entities.DocumentVO;
 import com.constellio.app.modules.rm.ui.entities.FolderVO;
 import com.constellio.app.modules.rm.ui.pages.decommissioning.DecommissioningBuilderViewImpl;
 import com.constellio.app.modules.rm.ui.pages.decommissioning.breadcrumb.DecommissionBreadcrumbTrail;
-import com.constellio.app.modules.rm.ui.util.ConstellioAgentUtils;
 import com.constellio.app.modules.rm.util.DecommissionNavUtil;
-import com.constellio.app.modules.rm.util.RMNavigationUtils;
 import com.constellio.app.modules.rm.wrappers.Cart;
-import com.constellio.app.modules.rm.wrappers.ContainerRecord;
 import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.modules.rm.wrappers.Folder;
 import com.constellio.app.modules.rm.wrappers.RMTask;
-import com.constellio.app.modules.tasks.TasksPermissionsTo;
 import com.constellio.app.modules.tasks.model.wrappers.BetaWorkflow;
 import com.constellio.app.modules.tasks.model.wrappers.Task;
 import com.constellio.app.modules.tasks.navigation.TaskViews;
 import com.constellio.app.modules.tasks.services.BetaWorkflowServices;
 import com.constellio.app.modules.tasks.services.TasksSchemasRecordsServices;
-import com.constellio.app.services.factories.AppLayerFactory;
 import com.constellio.app.services.factories.ConstellioFactories;
 import com.constellio.app.ui.application.Navigation;
 import com.constellio.app.ui.entities.ContentVersionVO;
@@ -55,7 +45,6 @@ import com.constellio.app.ui.framework.builders.MetadataSchemaToVOBuilder;
 import com.constellio.app.ui.framework.builders.MetadataToVOBuilder;
 import com.constellio.app.ui.framework.builders.RecordToVOBuilder;
 import com.constellio.app.ui.framework.components.ComponentState;
-import com.constellio.app.ui.framework.components.RMSelectionPanelReportPresenter;
 import com.constellio.app.ui.framework.components.breadcrumb.BaseBreadcrumbTrail;
 import com.constellio.app.ui.framework.data.RecordVODataProvider;
 import com.constellio.app.ui.pages.base.SchemaPresenterUtils;
@@ -64,7 +53,6 @@ import com.constellio.app.ui.pages.base.SingleSchemaBasePresenter;
 import com.constellio.app.ui.pages.search.SearchPresenter.SortOrder;
 import com.constellio.app.ui.pages.search.SearchPresenterService;
 import com.constellio.app.ui.params.ParamUtils;
-import com.constellio.app.ui.util.MessageUtils;
 import com.constellio.data.dao.services.bigVault.SearchResponseIterator;
 import com.constellio.data.utils.KeySetMap;
 import com.constellio.data.utils.TimeProvider;
@@ -72,8 +60,6 @@ import com.constellio.model.entities.CorePermissions;
 import com.constellio.model.entities.records.Content;
 import com.constellio.model.entities.records.ContentVersion;
 import com.constellio.model.entities.records.Record;
-import com.constellio.model.entities.records.RecordUpdateOptions;
-import com.constellio.model.entities.records.Transaction;
 import com.constellio.model.entities.records.wrappers.EmailToSend;
 import com.constellio.model.entities.records.wrappers.Facet;
 import com.constellio.model.entities.records.wrappers.User;
@@ -85,7 +71,6 @@ import com.constellio.model.entities.schemas.MetadataSchemaTypes;
 import com.constellio.model.entities.schemas.Schemas;
 import com.constellio.model.entities.structures.EmailAddress;
 import com.constellio.model.extensions.ModelLayerCollectionExtensions;
-import com.constellio.model.frameworks.validation.ValidationErrors;
 import com.constellio.model.services.configs.SystemConfigurationsManager;
 import com.constellio.model.services.contents.ContentFactory;
 import com.constellio.model.services.contents.icap.IcapException;
@@ -107,8 +92,6 @@ import com.constellio.model.services.search.query.logical.ScoreLogicalSearchQuer
 import com.constellio.model.services.search.query.logical.condition.LogicalSearchCondition;
 import com.constellio.model.services.security.AuthorizationsServices;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,7 +99,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -328,19 +310,19 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		query.sortAsc(Schemas.TITLE);
 		return query;
 	}
-
-	private LogicalSearchQuery getSubFoldersQuery() {
-		Record record = getRecord(folderVO.getId());
-		MetadataSchemaType foldersSchemaType = getFoldersSchemaType();
-		MetadataSchema foldersSchema = getFoldersSchema();
-		Metadata parentFolderMetadata = foldersSchema.getMetadata(Folder.PARENT_FOLDER);
-		LogicalSearchQuery query = new LogicalSearchQuery();
-		query.setCondition(from(foldersSchemaType).where(parentFolderMetadata).is(record));
-		query.filteredWithUser(getCurrentUser());
-		query.filteredByStatus(StatusFilter.ACTIVES);
-		query.sortAsc(Schemas.TITLE);
-		return query;
-	}
+	//
+	//	private LogicalSearchQuery getSubFoldersQuery() {
+	//		Record record = getRecord(folderVO.getId());
+	//		MetadataSchemaType foldersSchemaType = getFoldersSchemaType();
+	//		MetadataSchema foldersSchema = getFoldersSchema();
+	//		Metadata parentFolderMetadata = foldersSchema.getMetadata(Folder.PARENT_FOLDER);
+	//		LogicalSearchQuery query = new LogicalSearchQuery();
+	//		query.setCondition(from(foldersSchemaType).where(parentFolderMetadata).is(record));
+	//		query.filteredWithUser(getCurrentUser());
+	//		query.filteredByStatus(StatusFilter.ACTIVES);
+	//		query.sortAsc(Schemas.TITLE);
+	//		return query;
+	//	}
 
 	private LogicalSearchQuery getFolderContentQuery() {
 		Record record = getRecord(folderVO.getId());
@@ -519,58 +501,58 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 
 	private void disableMenuItems(Folder folder) {
 		if (!folder.isLogicallyDeletedStatus()) {
-			RMConfigs rmConfigs = new RMConfigs(modelLayerFactory.getSystemConfigurationsManager());
+			//			RMConfigs rmConfigs = new RMConfigs(modelLayerFactory.getSystemConfigurationsManager());
 
 			User user = getCurrentUser();
-			view.setLogicallyDeletable(getDeleteButtonState(user, folder));
-			view.setDisplayButtonState(getDisplayButtonState(user, folder));
-			view.setEditButtonState(getEditButtonState(user, folder));
-			view.setMoveInFolderState(getMoveInFolderButtonState(user, folder));
-			view.setAddSubFolderButtonState(getAddFolderButtonState(user, folder));
+			//			view.setLogicallyDeletable(getDeleteButtonState(user, folder));
+			//			view.setDisplayButtonState(getDisplayButtonState(user, folder));
+			//			view.setEditButtonState(getEditButtonState(user, folder));
+			//			view.setMoveInFolderState(getMoveInFolderButtonState(user, folder));
+			//			view.setAddSubFolderButtonState(getAddFolderButtonState(user, folder));
 			view.setAddDocumentButtonState(getAddDocumentButtonState(user, folder));
-			view.setDuplicateFolderButtonState(getDuplicateFolderButtonState(user, folder));
-			view.setAuthorizationButtonState(getAuthorizationButtonState(user, folder));
-			view.setShareFolderButtonState(getShareButtonState(user, folder));
-			view.setPrintButtonState(getPrintButtonState(user, folder));
-			view.setBorrowButtonState(getBorrowButtonState(user, folder));
-			view.setReturnFolderButtonState(getReturnFolderButtonState(user, folder));
-			view.setReminderReturnFolderButtonState(getReminderReturnFolderButtonState(user, folder));
-			view.setAlertWhenAvailableButtonState(getAlertWhenAvailableButtonState(user, folder));
-			view.setBorrowedMessage(getBorrowMessageState(folder));
+			//			view.setDuplicateFolderButtonState(getDuplicateFolderButtonState(user, folder));
+			//			view.setAuthorizationButtonState(getAuthorizationButtonState(user, folder));
+			//			view.setShareFolderButtonState(getShareButtonState(user, folder));
+			//			view.setPrintButtonState(getPrintButtonState(user, folder));
+			//			view.setBorrowButtonState(getBorrowButtonState(user, folder));
+			//			view.setReturnFolderButtonState(getReturnFolderButtonState(user, folder));
+			//			view.setReminderReturnFolderButtonState(getReminderReturnFolderButtonState(user, folder));
+			//			view.setAlertWhenAvailableButtonState(getAlertWhenAvailableButtonState(user, folder));
+			//			view.setBorrowedMessage(getBorrowMessageState(folder));
 			//view.setStartWorkflowButtonState(ComponentState.visibleIf(rmConfigs.areWorkflowsEnabled()));
 		}
 	}
 
-	String getBorrowMessageState(Folder folder) {
-		String borrowedMessage = null;
-		if (folder.getBorrowed() != null && folder.getBorrowed()) {
-			String borrowUserEntered = folder.getBorrowUserEntered();
-			if (borrowUserEntered != null) {
-				String userTitle = rmSchemasRecordsServices.getUser(borrowUserEntered).getTitle();
-				LocalDateTime borrowDateTime = folder.getBorrowDate();
-				LocalDate borrowDate = borrowDateTime != null ? borrowDateTime.toLocalDate() : null;
-				borrowedMessage = $("DisplayFolderView.borrowedFolder", userTitle, borrowDate);
-			} else {
-				borrowedMessage = $("DisplayFolderView.borrowedByNullUserFolder");
-			}
-		} else if (folder.getContainer() != null) {
-			try {
-				ContainerRecord containerRecord = rmSchemasRecordsServices.getContainerRecord(folder.getContainer());
-				boolean borrowed = Boolean.TRUE.equals(containerRecord.getBorrowed());
-				String borrower = containerRecord.getBorrower();
-				if (borrowed && borrower != null) {
-					String userTitle = rmSchemasRecordsServices.getUser(borrower).getTitle();
-					LocalDate borrowDate = containerRecord.getBorrowDate();
-					borrowedMessage = $("DisplayFolderView.borrowedContainer", userTitle, borrowDate);
-				} else if (borrowed) {
-					borrowedMessage = $("DisplayFolderView.borrowedByNullUserContainer");
-				}
-			} catch (Exception e) {
-				LOGGER.error("Could not find linked container");
-			}
-		}
-		return borrowedMessage;
-	}
+	//	String getBorrowMessageState(Folder folder) {
+	//		String borrowedMessage = null;
+	//		if (folder.getBorrowed() != null && folder.getBorrowed()) {
+	//			String borrowUserEntered = folder.getBorrowUserEntered();
+	//			if (borrowUserEntered != null) {
+	//				String userTitle = rmSchemasRecordsServices.getUser(borrowUserEntered).getTitle();
+	//				LocalDateTime borrowDateTime = folder.getBorrowDate();
+	//				LocalDate borrowDate = borrowDateTime != null ? borrowDateTime.toLocalDate() : null;
+	//				borrowedMessage = $("DisplayFolderView.borrowedFolder", userTitle, borrowDate);
+	//			} else {
+	//				borrowedMessage = $("DisplayFolderView.borrowedByNullUserFolder");
+	//			}
+	//		} else if (folder.getContainer() != null) {
+	//			try {
+	//				ContainerRecord containerRecord = rmSchemasRecordsServices.getContainerRecord(folder.getContainer());
+	//				boolean borrowed = Boolean.TRUE.equals(containerRecord.getBorrowed());
+	//				String borrower = containerRecord.getBorrower();
+	//				if (borrowed && borrower != null) {
+	//					String userTitle = rmSchemasRecordsServices.getUser(borrower).getTitle();
+	//					LocalDate borrowDate = containerRecord.getBorrowDate();
+	//					borrowedMessage = $("DisplayFolderView.borrowedContainer", userTitle, borrowDate);
+	//				} else if (borrowed) {
+	//					borrowedMessage = $("DisplayFolderView.borrowedByNullUserContainer");
+	//				}
+	//			} catch (Exception e) {
+	//				LOGGER.error("Could not find linked container");
+	//			}
+	//		}
+	//		return borrowedMessage;
+	//	}
 
 	protected ComponentState getBorrowButtonState(User user, Folder folder) {
 		try {
@@ -583,14 +565,14 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		}
 	}
 
-	private ComponentState getReturnFolderButtonState(User user, Folder folder) {
-		try {
-			borrowingServices.validateCanReturnFolder(user, folder);
-			return ComponentState.ENABLED;
-		} catch (Exception e) {
-			return ComponentState.INVISIBLE;
-		}
-	}
+	//	private ComponentState getReturnFolderButtonState(User user, Folder folder) {
+	//		try {
+	//			borrowingServices.validateCanReturnFolder(user, folder);
+	//			return ComponentState.ENABLED;
+	//		} catch (Exception e) {
+	//			return ComponentState.INVISIBLE;
+	//		}
+	//	}
 
 	protected ComponentState getReminderReturnFolderButtonState(User user, Folder folder) {
 		return isBorrowedByOtherUser(user, folder);
@@ -638,56 +620,56 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		return ComponentState.INVISIBLE;
 	}
 
-	private ComponentState getDuplicateFolderButtonState(User user, Folder folder) {
-		return ComponentState.visibleIf(isDuplicateFolderPossible(user, folder));
-	}
+	//	private ComponentState getDuplicateFolderButtonState(User user, Folder folder) {
+	//		return ComponentState.visibleIf(isDuplicateFolderPossible(user, folder));
+	//	}
 
-	private boolean isDuplicateFolderPossible(User user, Folder folder) {
-		AuthorizationsServices authorizationsServices = modelLayerFactory.newAuthorizationsServices();
-		if (!authorizationsServices.canWrite(user, folder.getWrappedRecord())) {
-			return false;
-		}
+	//	private boolean isDuplicateFolderPossible(User user, Folder folder) {
+	//		AuthorizationsServices authorizationsServices = modelLayerFactory.newAuthorizationsServices();
+	//		if (!authorizationsServices.canWrite(user, folder.getWrappedRecord())) {
+	//			return false;
+	//		}
+	//
+	//		if (folder.getPermissionStatus().isInactive() && !user.has(RMPermissionsTo.DUPLICATE_INACTIVE_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//		if (folder.getPermissionStatus().isSemiActive() && !user.has(RMPermissionsTo.DUPLICATE_SEMIACTIVE_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//
+	//		if (!rmModuleExtensions.isCopyActionPossibleOnFolder(folder, user)) {
+	//			return false;
+	//		}
+	//		return true;
+	//	}
 
-		if (folder.getPermissionStatus().isInactive() && !user.has(RMPermissionsTo.DUPLICATE_INACTIVE_FOLDER).on(folder)) {
-			return false;
-		}
-		if (folder.getPermissionStatus().isSemiActive() && !user.has(RMPermissionsTo.DUPLICATE_SEMIACTIVE_FOLDER).on(folder)) {
-			return false;
-		}
+	//	private ComponentState getAuthorizationButtonState(User user, Folder folder) {
+	//		return ComponentState.visibleIf(user.has(RMPermissionsTo.MANAGE_FOLDER_AUTHORIZATIONS).on(folder) && user.hasWriteAndDeleteAccess().on(folder));
+	//	}
 
-		if (!rmModuleExtensions.isCopyActionPossibleOnFolder(folder, user)) {
-			return false;
-		}
-		return true;
-	}
-
-	private ComponentState getAuthorizationButtonState(User user, Folder folder) {
-		return ComponentState.visibleIf(user.has(RMPermissionsTo.MANAGE_FOLDER_AUTHORIZATIONS).on(folder) && user.hasWriteAndDeleteAccess().on(folder));
-	}
-
-	ComponentState getShareButtonState(User user, Folder folder) {
-		return ComponentState.visibleIf(isShareFolderPossible(user, folder));
-	}
-
-	private boolean isShareFolderPossible(User user, Folder folder) {
-		if (!user.has(RMPermissionsTo.SHARE_FOLDER).on(folder)) {
-			return false;
-		}
-		if (folder.getPermissionStatus().isInactive() && !user.has(RMPermissionsTo.SHARE_A_INACTIVE_FOLDER).on(folder)) {
-			return false;
-		}
-		if (folder.getPermissionStatus().isSemiActive() && !user.has(RMPermissionsTo.SHARE_A_SEMIACTIVE_FOLDER).on(folder)) {
-			return false;
-		}
-		if (isNotBlank(folder.getLegacyId()) && !user.has(RMPermissionsTo.SHARE_A_IMPORTED_FOLDER).on(folder)) {
-			return false;
-		}
-
-		if (!rmModuleExtensions.isShareActionPossibleOnFolder(folder, user)) {
-			return false;
-		}
-		return true;
-	}
+	//	ComponentState getShareButtonState(User user, Folder folder) {
+	//		return ComponentState.visibleIf(isShareFolderPossible(user, folder));
+	//	}
+	//
+	//	private boolean isShareFolderPossible(User user, Folder folder) {
+	//		if (!user.has(RMPermissionsTo.SHARE_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//		if (folder.getPermissionStatus().isInactive() && !user.has(RMPermissionsTo.SHARE_A_INACTIVE_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//		if (folder.getPermissionStatus().isSemiActive() && !user.has(RMPermissionsTo.SHARE_A_SEMIACTIVE_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//		if (isNotBlank(folder.getLegacyId()) && !user.has(RMPermissionsTo.SHARE_A_IMPORTED_FOLDER).on(folder)) {
+	//			return false;
+	//		}
+	//
+	//		if (!rmModuleExtensions.isShareActionPossibleOnFolder(folder, user)) {
+	//			return false;
+	//		}
+	//		return true;
+	//	}
 
 	ComponentState getDeleteButtonState(User user, Folder folder) {
 		if (user.hasDeleteAccess().on(folder) && extensions.validateDeleteAuthorized(folder.getWrappedRecord(), user).isEmpty()) {
@@ -710,18 +692,18 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		return ComponentState.INVISIBLE;
 	}
 
-	ComponentState getMoveInFolderButtonState(User user, Folder folder) {
-		//		return getEditButtonState(user, folder);
-		return ComponentState.INVISIBLE;
-	}
-
-	ComponentState getDisplayButtonState(User user, Folder folder) {
-		if (view.isInWindow()) {
-			return ComponentState.INVISIBLE;
-		} else {
-			return ComponentState.visibleIf(nestedView && user.hasReadAccess().on(folder));
-		}
-	}
+	//	ComponentState getMoveInFolderButtonState(User user, Folder folder) {
+	//		//		return getEditButtonState(user, folder);
+	//		return ComponentState.INVISIBLE;
+	//	}
+	//
+	//	ComponentState getDisplayButtonState(User user, Folder folder) {
+	//		if (view.isInWindow()) {
+	//			return ComponentState.INVISIBLE;
+	//		} else {
+	//			return ComponentState.visibleIf(nestedView && user.hasReadAccess().on(folder));
+	//		}
+	//	}
 
 	ComponentState getEditButtonState(User user, Folder folder) {
 		if (isNotBlank(folder.getLegacyId()) && !user.has(RMPermissionsTo.MODIFY_IMPORTED_FOLDERS).on(folder)) {
@@ -830,57 +812,57 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 	public void backButtonClicked() {
 		navigate().to().previousView();
 	}
+	//
+	//	public void addDocumentButtonClicked() {
+	//		navigate().to(RMViews.class).addDocument(folderVO.getId());
+	//	}
+	//
+	//	public void addSubFolderButtonClicked() {
+	//		navigate().to(RMViews.class).addFolder(folderVO.getId());
+	//	}
 
-	public void addDocumentButtonClicked() {
-		navigate().to(RMViews.class).addDocument(folderVO.getId());
-	}
+	//	public void navigateToSelf() {
+	//		navigateToFolder(this.folderVO.getId());
+	//	}
+	//
+	//	public void displayFolderButtonClicked() {
+	//		navigateToSelf();
+	//	}
+	//
+	//	public void editFolderButtonClicked() {
+	//		RMNavigationUtils.navigateToEditFolder(folderVO.getId(), params, appLayerFactory, collection);
+	//	}
 
-	public void addSubFolderButtonClicked() {
-		navigate().to(RMViews.class).addFolder(folderVO.getId());
-	}
+	//	public void deleteFolderButtonClicked(String reason) {
+	//		String parentId = folderVO.get(Folder.PARENT_FOLDER);
+	//		Record record = toRecord(folderVO);
+	//		ValidationErrors validateLogicallyDeletable = recordServices.validateLogicallyDeletable(record, getCurrentUser());
+	//		if (validateLogicallyDeletable.isEmpty()) {
+	//			appLayerFactory.getExtensions().forCollection(collection)
+	//					.notifyFolderDeletion(new FolderDeletionEvent(rmSchemasRecordsServices.wrapFolder(record)));
+	//
+	//			boolean isDeleteSuccessful = delete(record, reason, false, WAIT_ONE_SECOND);
+	//			if (isDeleteSuccessful) {
+	//				if (parentId != null) {
+	//					navigateToFolder(parentId);
+	//				} else {
+	//					navigate().to().home();
+	//				}
+	//			}
+	//		} else {
+	//			MessageUtils.getCannotDeleteWindow(validateLogicallyDeletable).openWindow();
+	//		}
+	//	}
 
-	public void navigateToSelf() {
-		navigateToFolder(this.folderVO.getId());
-	}
-
-	public void displayFolderButtonClicked() {
-		navigateToSelf();
-	}
-
-	public void editFolderButtonClicked() {
-		RMNavigationUtils.navigateToEditFolder(folderVO.getId(), params, appLayerFactory, collection);
-	}
-
-	public void deleteFolderButtonClicked(String reason) {
-		String parentId = folderVO.get(Folder.PARENT_FOLDER);
-		Record record = toRecord(folderVO);
-		ValidationErrors validateLogicallyDeletable = recordServices.validateLogicallyDeletable(record, getCurrentUser());
-		if (validateLogicallyDeletable.isEmpty()) {
-			appLayerFactory.getExtensions().forCollection(collection)
-					.notifyFolderDeletion(new FolderDeletionEvent(rmSchemasRecordsServices.wrapFolder(record)));
-
-			boolean isDeleteSuccessful = delete(record, reason, false, WAIT_ONE_SECOND);
-			if (isDeleteSuccessful) {
-				if (parentId != null) {
-					navigateToFolder(parentId);
-				} else {
-					navigate().to().home();
-				}
-			}
-		} else {
-			MessageUtils.getCannotDeleteWindow(validateLogicallyDeletable).openWindow();
-		}
-	}
-
-	public void duplicateFolderButtonClicked() {
-		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
-		if (isDuplicateFolderPossible(getCurrentUser(), folder)) {
-			navigateToDuplicateFolder(folder, false);
-		}
-		if (!nestedView) {
-			view.closeAllWindows();
-		}
-	}
+	//	public void duplicateFolderButtonClicked() {
+	//		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
+	//		if (isDuplicateFolderPossible(getCurrentUser(), folder)) {
+	//			navigateToDuplicateFolder(folder, false);
+	//		}
+	//		if (!nestedView) {
+	//			view.closeAllWindows();
+	//		}
+	//	}
 
 	private void navigateToDuplicateFolder(Folder folder, boolean isStructure) {
 		boolean areTypeAndSearchIdPresent = DecommissionNavUtil.areTypeAndSearchIdPresent(params);
@@ -895,72 +877,72 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		}
 	}
 
-	public void duplicateStructureButtonClicked() {
-		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
-		if (isDuplicateFolderPossible(getCurrentUser(), folder)) {
-			try {
-				decommissioningService().validateDuplicateStructure(folder, getCurrentUser(), false);
-				navigateToDuplicateFolder(folder, true);
-			} catch (RecordServicesException.ValidationException e) {
-				view.showErrorMessage($(e.getErrors()));
-			} catch (Exception e) {
-				view.showErrorMessage(e.getMessage());
-			}
-		}
-		if (!nestedView) {
-			view.closeAllWindows();
-		}
-	}
+	//	public void duplicateStructureButtonClicked() {
+	//		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
+	//		if (isDuplicateFolderPossible(getCurrentUser(), folder)) {
+	//			try {
+	//				decommissioningService().validateDuplicateStructure(folder, getCurrentUser(), false);
+	//				navigateToDuplicateFolder(folder, true);
+	//			} catch (RecordServicesException.ValidationException e) {
+	//				view.showErrorMessage($(e.getErrors()));
+	//			} catch (Exception e) {
+	//				view.showErrorMessage(e.getMessage());
+	//			}
+	//		}
+	//		if (!nestedView) {
+	//			view.closeAllWindows();
+	//		}
+	//	}
 
-	public void linkToFolderButtonClicked() {
-		// TODO ZeroClipboardComponent
-		view.showMessage("Clipboard integration TODO!");
-	}
+	//	public void linkToFolderButtonClicked() {
+	//		// TODO ZeroClipboardComponent
+	//		view.showMessage("Clipboard integration TODO!");
+	//	}
+	//
+	//	public void addAuthorizationButtonClicked() {
+	//		navigate().to().listObjectAccessAndRoleAuthorizations(folderVO.getId());
+	//	}
+	//
+	//	public void shareFolderButtonClicked() {
+	//		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
+	//		if (!isShareFolderPossible(getCurrentUser(), folder)) {
+	//			return;
+	//		}
+	//
+	//		navigate().to().shareContent(folderVO.getId());
+	//	}
 
-	public void addAuthorizationButtonClicked() {
-		navigate().to().listObjectAccessAndRoleAuthorizations(folderVO.getId());
-	}
+	//	public void documentClicked(RecordVO recordVO) {
+	//		ContentVersionVO contentVersionVO = recordVO.get(Document.CONTENT);
+	//		if (contentVersionVO == null) {
+	//			navigateToDocument(recordVO);
+	//			return;
+	//		}
+	//		String agentURL = ConstellioAgentUtils.getAgentURL(recordVO, contentVersionVO);
+	//		if (agentURL != null) {
+	//			//			view.openAgentURL(agentURL);
+	//			new ConstellioAgentClickHandler().handleClick(agentURL, recordVO, contentVersionVO, params);
+	//		} else {
+	//			navigateToDocument(recordVO);
+	//		}
+	//	}
 
-	public void shareFolderButtonClicked() {
-		Folder folder = rmSchemasRecordsServices().getFolder(folderVO.getId());
-		if (!isShareFolderPossible(getCurrentUser(), folder)) {
-			return;
-		}
+	//	protected void navigateToDocument(RecordVO recordVO) {
+	//		RMNavigationUtils.navigateToDisplayDocument(recordVO.getId(), params, appLayerFactory,
+	//				collection);
+	//	}
 
-		navigate().to().shareContent(folderVO.getId());
-	}
-
-	public void documentClicked(RecordVO recordVO) {
-		ContentVersionVO contentVersionVO = recordVO.get(Document.CONTENT);
-		if (contentVersionVO == null) {
-			navigateToDocument(recordVO);
-			return;
-		}
-		String agentURL = ConstellioAgentUtils.getAgentURL(recordVO, contentVersionVO);
-		if (agentURL != null) {
-			//			view.openAgentURL(agentURL);
-			new ConstellioAgentClickHandler().handleClick(agentURL, recordVO, contentVersionVO, params);
-		} else {
-			navigateToDocument(recordVO);
-		}
-	}
-
-	protected void navigateToDocument(RecordVO recordVO) {
-		RMNavigationUtils.navigateToDisplayDocument(recordVO.getId(), params, appLayerFactory,
-				collection);
-	}
-
-	protected void navigateToFolder(String folderId) {
-		RMNavigationUtils.navigateToDisplayFolder(folderId, params, appLayerFactory, collection);
-	}
+	//	protected void navigateToFolder(String folderId) {
+	//		RMNavigationUtils.navigateToDisplayFolder(folderId, params, appLayerFactory, collection);
+	//	}
 
 	public void taskClicked(RecordVO taskVO) {
 		navigate().to(TaskViews.class).displayTask(taskVO.getId());
 	}
 
-	private DecommissioningService decommissioningService() {
-		return new DecommissioningService(getCurrentUser().getCollection(), appLayerFactory);
-	}
+	//	private DecommissioningService decommissioningService() {
+	//		return new DecommissioningService(getCurrentUser().getCollection(), appLayerFactory);
+	//	}
 
 	private RMSchemasRecordsServices rmSchemasRecordsServices() {
 		return new RMSchemasRecordsServices(getCurrentUser().getCollection(), appLayerFactory);
@@ -1100,57 +1082,57 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		}
 	}
 
-	public boolean borrowFolder(LocalDate borrowingDate, LocalDate previewReturnDate, String userId,
-								BorrowingType borrowingType,
-								LocalDate returnDate) {
-		boolean borrowed;
-		String errorMessage = borrowingServices
-				.validateBorrowingInfos(userId, borrowingDate, previewReturnDate, borrowingType, returnDate);
-		if (errorMessage != null) {
-			view.showErrorMessage($(errorMessage));
-			borrowed = false;
-		} else {
-			Record record = recordServices().getDocumentById(userId);
-			User borrowerEntered = wrapUser(record);
-			try {
-				borrowingServices
-						.borrowFolder(folderVO.getId(), borrowingDate, previewReturnDate, getCurrentUser(), borrowerEntered,
-								borrowingType, true);
-				navigateToFolder(folderVO.getId());
-				borrowed = true;
-			} catch (RecordServicesException e) {
-				LOGGER.error(e.getMessage(), e);
-				view.showErrorMessage($("DisplayFolderView.cannotBorrowFolder"));
-				borrowed = false;
-			}
-		}
-		if (returnDate != null) {
-			return returnFolder(returnDate, borrowingDate);
-		}
-		return borrowed;
-	}
+	//	public boolean borrowFolder(LocalDate borrowingDate, LocalDate previewReturnDate, String userId,
+	//								BorrowingType borrowingType,
+	//								LocalDate returnDate) {
+	//		boolean borrowed;
+	//		String errorMessage = borrowingServices
+	//				.validateBorrowingInfos(userId, borrowingDate, previewReturnDate, borrowingType, returnDate);
+	//		if (errorMessage != null) {
+	//			view.showErrorMessage($(errorMessage));
+	//			borrowed = false;
+	//		} else {
+	//			Record record = recordServices().getDocumentById(userId);
+	//			User borrowerEntered = wrapUser(record);
+	//			try {
+	//				borrowingServices
+	//						.borrowFolder(folderVO.getId(), borrowingDate, previewReturnDate, getCurrentUser(), borrowerEntered,
+	//								borrowingType, true);
+	//				navigateToFolder(folderVO.getId());
+	//				borrowed = true;
+	//			} catch (RecordServicesException e) {
+	//				LOGGER.error(e.getMessage(), e);
+	//				view.showErrorMessage($("DisplayFolderView.cannotBorrowFolder"));
+	//				borrowed = false;
+	//			}
+	//		}
+	//		if (returnDate != null) {
+	//			return returnFolder(returnDate, borrowingDate);
+	//		}
+	//		return borrowed;
+	//	}
+	//
+	//	public boolean returnFolder(LocalDate returnDate) {
+	//		LocalDateTime borrowDateTime = folderVO.getBorrowDate();
+	//		LocalDate borrowDate = borrowDateTime != null ? borrowDateTime.toLocalDate() : null;
+	//		return returnFolder(returnDate, borrowDate);
+	//	}
 
-	public boolean returnFolder(LocalDate returnDate) {
-		LocalDateTime borrowDateTime = folderVO.getBorrowDate();
-		LocalDate borrowDate = borrowDateTime != null ? borrowDateTime.toLocalDate() : null;
-		return returnFolder(returnDate, borrowDate);
-	}
-
-	protected boolean returnFolder(LocalDate returnDate, LocalDate borrowingDate) {
-		String errorMessage = borrowingServices.validateReturnDate(returnDate, borrowingDate);
-		if (errorMessage != null) {
-			view.showErrorMessage($(errorMessage));
-			return false;
-		}
-		try {
-			borrowingServices.returnFolder(folderVO.getId(), getCurrentUser(), returnDate, true);
-			navigateToFolder(folderVO.getId());
-			return true;
-		} catch (RecordServicesException e) {
-			view.showErrorMessage($("DisplayFolderView.cannotReturnFolder"));
-			return false;
-		}
-	}
+	//	protected boolean returnFolder(LocalDate returnDate, LocalDate borrowingDate) {
+	//		String errorMessage = borrowingServices.validateReturnDate(returnDate, borrowingDate);
+	//		if (errorMessage != null) {
+	//			view.showErrorMessage($(errorMessage));
+	//			return false;
+	//		}
+	//		try {
+	//			borrowingServices.returnFolder(folderVO.getId(), getCurrentUser(), returnDate, true);
+	//			navigateToFolder(folderVO.getId());
+	//			return true;
+	//		} catch (RecordServicesException e) {
+	//			view.showErrorMessage($("DisplayFolderView.cannotReturnFolder"));
+	//			return false;
+	//		}
+	//	}
 
 	private EmailToSend newEmailToSend() {
 		MetadataSchemaTypes types = metadataSchemasManager.getSchemaTypes(getCurrentUser().getCollection());
@@ -1204,138 +1186,138 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		}
 	}
 
-	public void alertWhenAvailable() {
-		try {
-			RMSchemasRecordsServices schemas = new RMSchemasRecordsServices(view.getCollection(), appLayerFactory);
-			Folder folder = schemas.getFolder(folderVO.getId());
-			List<String> usersToAlert = folder.getAlertUsersWhenAvailable();
-			String currentUserId = getCurrentUser().getId();
-			if (!currentUserId.equals(folder.getBorrowUser()) && !currentUserId.equals(folder.getBorrowUserEntered())) {
-				List<String> newUsersToAlert = new ArrayList<>();
-				newUsersToAlert.addAll(usersToAlert);
-				if (!newUsersToAlert.contains(currentUserId)) {
-					newUsersToAlert.add(currentUserId);
-					folder.setAlertUsersWhenAvailable(newUsersToAlert);
-					addOrUpdate(folder.getWrappedRecord());
-				}
-			}
-			view.showMessage($("RMObject.createAlert"));
-		} catch (Exception e) {
-			LOGGER.error("RMObject.cannotCreateAlert", e);
-			view.showErrorMessage($("RMObject.cannotCreateAlert"));
-		}
-	}
+	//	public void alertWhenAvailable() {
+	//		try {
+	//			RMSchemasRecordsServices schemas = new RMSchemasRecordsServices(view.getCollection(), appLayerFactory);
+	//			Folder folder = schemas.getFolder(folderVO.getId());
+	//			List<String> usersToAlert = folder.getAlertUsersWhenAvailable();
+	//			String currentUserId = getCurrentUser().getId();
+	//			if (!currentUserId.equals(folder.getBorrowUser()) && !currentUserId.equals(folder.getBorrowUserEntered())) {
+	//				List<String> newUsersToAlert = new ArrayList<>();
+	//				newUsersToAlert.addAll(usersToAlert);
+	//				if (!newUsersToAlert.contains(currentUserId)) {
+	//					newUsersToAlert.add(currentUserId);
+	//					folder.setAlertUsersWhenAvailable(newUsersToAlert);
+	//					addOrUpdate(folder.getWrappedRecord());
+	//				}
+	//			}
+	//			view.showMessage($("RMObject.createAlert"));
+	//		} catch (Exception e) {
+	//			LOGGER.error("RMObject.cannotCreateAlert", e);
+	//			view.showErrorMessage($("RMObject.cannotCreateAlert"));
+	//		}
+	//	}
 
-	public List<LabelTemplate> getCustomTemplates() {
-		return appLayerFactory.getLabelTemplateManager().listExtensionTemplates(Folder.SCHEMA_TYPE);
-	}
+	//	public List<LabelTemplate> getCustomTemplates() {
+	//		return appLayerFactory.getLabelTemplateManager().listExtensionTemplates(Folder.SCHEMA_TYPE);
+	//	}
 
-	public List<LabelTemplate> getDefaultTemplates() {
-		return appLayerFactory.getLabelTemplateManager().listTemplates(Folder.SCHEMA_TYPE);
-	}
+	//	public List<LabelTemplate> getDefaultTemplates() {
+	//		return appLayerFactory.getLabelTemplateManager().listTemplates(Folder.SCHEMA_TYPE);
+	//	}
 
-	public Date getPreviewReturnDate(Date borrowDate, Object borrowingTypeValue) {
-		BorrowingType borrowingType;
-		Date previewReturnDate = TimeProvider.getLocalDate().toDate();
-		if (borrowDate != null && borrowingTypeValue != null) {
-			borrowingType = (BorrowingType) borrowingTypeValue;
-			if (borrowingType == BorrowingType.BORROW) {
-				int addDays = rmConfigs.getBorrowingDurationDays();
-				previewReturnDate = LocalDate.fromDateFields(borrowDate).plusDays(addDays).toDate();
-			} else {
-				previewReturnDate = borrowDate;
-			}
-		}
-		return previewReturnDate;
-	}
+	//	public Date getPreviewReturnDate(Date borrowDate, Object borrowingTypeValue) {
+	//		BorrowingType borrowingType;
+	//		Date previewReturnDate = TimeProvider.getLocalDate().toDate();
+	//		if (borrowDate != null && borrowingTypeValue != null) {
+	//			borrowingType = (BorrowingType) borrowingTypeValue;
+	//			if (borrowingType == BorrowingType.BORROW) {
+	//				int addDays = rmConfigs.getBorrowingDurationDays();
+	//				previewReturnDate = LocalDate.fromDateFields(borrowDate).plusDays(addDays).toDate();
+	//			} else {
+	//				previewReturnDate = borrowDate;
+	//			}
+	//		}
+	//		return previewReturnDate;
+	//	}
+	//
+	//	boolean isDocument(RecordVO record) {
+	//		return record.getSchema().getCode().startsWith("document");
+	//	}
+	//
+	//	public boolean canModifyDocument(RecordVO record) {
+	//		boolean hasContent = record.get(Document.CONTENT) != null;
+	//		boolean hasAccess = getCurrentUser().hasWriteAccess().on(getRecord(record.getId()));
+	//		return hasContent && hasAccess;
+	//	}
 
-	boolean isDocument(RecordVO record) {
-		return record.getSchema().getCode().startsWith("document");
-	}
+	//	public void addToCartRequested(RecordVO recordVO) {
+	//		Cart cart = rmSchemasRecordsServices.getCart(recordVO.getId());
+	//		addToCartRequested(cart);
+	//	}
 
-	public boolean canModifyDocument(RecordVO record) {
-		boolean hasContent = record.get(Document.CONTENT) != null;
-		boolean hasAccess = getCurrentUser().hasWriteAccess().on(getRecord(record.getId()));
-		return hasContent && hasAccess;
-	}
+	//	public void addToCartRequested(Cart cart) {
+	//		if (rmSchemasRecordsServices.numberOfFoldersInFavoritesReachesLimit(cart.getId(), 1)) {
+	//			view.showMessage($("DisplayFolderViewImpl.cartCannotContainMoreThanAThousandFolders"));
+	//		} else {
+	//			Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
+	//			folder.addFavorite(cart.getId());
+	//			try {
+	//				recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
+	//				view.showMessage($("DisplayFolderView.addedToCart"));
+	//			} catch (RecordServicesException e) {
+	//				e.printStackTrace();
+	//				throw new RuntimeException(e);
+	//			}
+	//		}
+	//	}
 
-	public void addToCartRequested(RecordVO recordVO) {
-		Cart cart = rmSchemasRecordsServices.getCart(recordVO.getId());
-		addToCartRequested(cart);
-	}
+	//	public RecordVODataProvider getOwnedCartsDataProvider() {
+	//		final MetadataSchemaVO cartSchemaVO = schemaVOBuilder
+	//				.build(rmSchemasRecordsServices.cartSchema(), VIEW_MODE.TABLE, view.getSessionContext());
+	//		return new RecordVODataProvider(cartSchemaVO, new RecordToVOBuilder(), modelLayerFactory, view.getSessionContext()) {
+	//			@Override
+	//			public LogicalSearchQuery getQuery() {
+	//				return new LogicalSearchQuery(
+	//						from(rmSchemasRecordsServices.cartSchema()).where(rmSchemasRecordsServices.cartOwner())
+	//								.isEqualTo(getCurrentUser().getId())).sortAsc(Schemas.TITLE);
+	//			}
+	//		};
+	//	}
+	//
+	//	public RecordVODataProvider getSharedCartsDataProvider() {
+	//		final MetadataSchemaVO cartSchemaVO = schemaVOBuilder
+	//				.build(rmSchemasRecordsServices.cartSchema(), VIEW_MODE.TABLE, view.getSessionContext());
+	//		return new RecordVODataProvider(cartSchemaVO, new RecordToVOBuilder(), modelLayerFactory, view.getSessionContext()) {
+	//			@Override
+	//			public LogicalSearchQuery getQuery() {
+	//				return new LogicalSearchQuery(
+	//						from(rmSchemasRecordsServices.cartSchema()).where(rmSchemasRecordsServices.cartSharedWithUsers())
+	//								.isContaining(asList(getCurrentUser().getId()))).sortAsc(Schemas.TITLE);
+	//			}
+	//		};
+	//	}
 
-	public void addToCartRequested(Cart cart) {
-		if (rmSchemasRecordsServices.numberOfFoldersInFavoritesReachesLimit(cart.getId(), 1)) {
-			view.showMessage($("DisplayFolderViewImpl.cartCannotContainMoreThanAThousandFolders"));
-		} else {
-			Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
-			folder.addFavorite(cart.getId());
-			try {
-				recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
-				view.showMessage($("DisplayFolderView.addedToCart"));
-			} catch (RecordServicesException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-		}
-	}
+	//	public void parentFolderButtonClicked(String parentId)
+	//			throws RecordServicesException {
+	//		RMSchemasRecordsServices rmSchemas = new RMSchemasRecordsServices(collection, appLayerFactory);
+	//
+	//		String currentFolderId = folderVO.getId();
+	//		if (isNotBlank(parentId)) {
+	//			try {
+	//				recordServices.update(rmSchemas.getFolder(currentFolderId).setParentFolder(parentId));
+	//				navigate().to(RMViews.class).displayFolder(currentFolderId);
+	//			} catch (RecordServicesException.ValidationException e) {
+	//				view.showErrorMessage($(e.getErrors()));
+	//			}
+	//		}
+	//	}
 
-	public RecordVODataProvider getOwnedCartsDataProvider() {
-		final MetadataSchemaVO cartSchemaVO = schemaVOBuilder
-				.build(rmSchemasRecordsServices.cartSchema(), VIEW_MODE.TABLE, view.getSessionContext());
-		return new RecordVODataProvider(cartSchemaVO, new RecordToVOBuilder(), modelLayerFactory, view.getSessionContext()) {
-			@Override
-			public LogicalSearchQuery getQuery() {
-				return new LogicalSearchQuery(
-						from(rmSchemasRecordsServices.cartSchema()).where(rmSchemasRecordsServices.cartOwner())
-								.isEqualTo(getCurrentUser().getId())).sortAsc(Schemas.TITLE);
-			}
-		};
-	}
-
-	public RecordVODataProvider getSharedCartsDataProvider() {
-		final MetadataSchemaVO cartSchemaVO = schemaVOBuilder
-				.build(rmSchemasRecordsServices.cartSchema(), VIEW_MODE.TABLE, view.getSessionContext());
-		return new RecordVODataProvider(cartSchemaVO, new RecordToVOBuilder(), modelLayerFactory, view.getSessionContext()) {
-			@Override
-			public LogicalSearchQuery getQuery() {
-				return new LogicalSearchQuery(
-						from(rmSchemasRecordsServices.cartSchema()).where(rmSchemasRecordsServices.cartSharedWithUsers())
-								.isContaining(asList(getCurrentUser().getId()))).sortAsc(Schemas.TITLE);
-			}
-		};
-	}
-
-	public void parentFolderButtonClicked(String parentId)
-			throws RecordServicesException {
-		RMSchemasRecordsServices rmSchemas = new RMSchemasRecordsServices(collection, appLayerFactory);
-
-		String currentFolderId = folderVO.getId();
-		if (isNotBlank(parentId)) {
-			try {
-				recordServices.update(rmSchemas.getFolder(currentFolderId).setParentFolder(parentId));
-				navigate().to(RMViews.class).displayFolder(currentFolderId);
-			} catch (RecordServicesException.ValidationException e) {
-				view.showErrorMessage($(e.getErrors()));
-			}
-		}
-	}
-
-	public void createNewCartAndAddToItRequested(String title) {
-		Cart cart = rmSchemasRecordsServices.newCart();
-		Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
-		cart.setTitle(title);
-		cart.setOwner(getCurrentUser());
-		try {
-			folder.addFavorite(cart.getId());
-			recordServices().execute(new Transaction(cart.getWrappedRecord()).setUser(getCurrentUser()));
-			recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
-			view.showMessage($("DisplayFolderView.addedToCart"));
-		} catch (RecordServicesException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-	}
+	//	public void createNewCartAndAddToItRequested(String title) {
+	//		Cart cart = rmSchemasRecordsServices.newCart();
+	//		Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
+	//		cart.setTitle(title);
+	//		cart.setOwner(getCurrentUser());
+	//		try {
+	//			folder.addFavorite(cart.getId());
+	//			recordServices().execute(new Transaction(cart.getWrappedRecord()).setUser(getCurrentUser()));
+	//			recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
+	//			view.showMessage($("DisplayFolderView.addedToCart"));
+	//		} catch (RecordServicesException e) {
+	//			e.printStackTrace();
+	//			throw new RuntimeException(e);
+	//		}
+	//	}
 
 	public RecordVODataProvider getEventsDataProvider() {
 		final MetadataSchemaVO eventSchemaVO = schemaVOBuilder
@@ -1373,14 +1355,14 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		return getCurrentUser().has(RMPermissionsTo.USE_GROUP_CART).globally();
 	}
 
-
-	public boolean hasCurrentUserPermissionToUseMyCart() {
-		return getCurrentUser().has(RMPermissionsTo.USE_MY_CART).globally();
-	}
-
-	public boolean hasPermissionToStartWorkflow() {
-		return getCurrentUser().has(TasksPermissionsTo.START_WORKFLOWS).globally();
-	}
+	//
+	//	public boolean hasCurrentUserPermissionToUseMyCart() {
+	//		return getCurrentUser().has(RMPermissionsTo.USE_MY_CART).globally();
+	//	}
+	//
+	//	public boolean hasPermissionToStartWorkflow() {
+	//		return getCurrentUser().has(TasksPermissionsTo.START_WORKFLOWS).globally();
+	//	}
 
 	public boolean isSelected(RecordVO recordVO) {
 		return allItemsSelected || selectedRecordIds.contains(recordVO.getId());
@@ -1434,49 +1416,49 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 				"termfreq(" + metadata.getDataStoreCode() + ",\'" + getCurrentUser().getId() + "\')", false);
 		query.sortFirstOn(sortField);
 	}
+	//
+	//	public void addToDefaultFadvorite() {
+	//		if (rmSchemasRecordsServices.numberOfFoldersInFavoritesReachesLimit(getCurrentUser().getId(), 1)) {
+	//			view.showMessage($("DisplayFolderViewImpl.cartCannotContainMoreThanAThousandFolders"));
+	//		} else {
+	//			Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
+	//			folder.addFavorite(getCurrentUser().getId());
+	//			try {
+	//				recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
+	//				view.showMessage($("DisplayFolderViewImpl.folderAddedToDefaultFavorites"));
+	//			} catch (RecordServicesException e) {
+	//				e.printStackTrace();
+	//				throw new RuntimeException(e);
+	//			}
+	//		}
+	//	}
 
-	public void addToDefaultFavorite() {
-		if (rmSchemasRecordsServices.numberOfFoldersInFavoritesReachesLimit(getCurrentUser().getId(), 1)) {
-			view.showMessage($("DisplayFolderViewImpl.cartCannotContainMoreThanAThousandFolders"));
-		} else {
-			Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
-			folder.addFavorite(getCurrentUser().getId());
-			try {
-				recordServices().update(folder.getWrappedRecord(), RecordUpdateOptions.validationExceptionSafeOptions());
-				view.showMessage($("DisplayFolderViewImpl.folderAddedToDefaultFavorites"));
-			} catch (RecordServicesException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-		}
-	}
+	//	public boolean inDefaultFavorites() {
+	//		Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
+	//		return folder.getFavorites().contains(getCurrentUser().getId());
+	//	}
 
-	public boolean inDefaultFavorites() {
-		Folder folder = rmSchemasRecordsServices.wrapFolder(folderVO.getRecord());
-		return folder.getFavorites().contains(getCurrentUser().getId());
-	}
-
-	public RMSelectionPanelReportPresenter buildReportPresenter() {
-		return new RMSelectionPanelReportPresenter(appLayerFactory, collection, getCurrentUser()) {
-			@Override
-			public String getSelectedSchemaType() {
-				return Folder.SCHEMA_TYPE;
-			}
-
-			@Override
-			public List<String> getSelectedRecordIds() {
-				return asList(folderVO.getId());
-			}
-		};
-	}
-
-	public AppLayerFactory getApplayerFactory() {
-		return appLayerFactory;
-	}
-
-	public boolean isNeedingAReasonToDeleteFolder() {
-		return new RMConfigs(modelLayerFactory.getSystemConfigurationsManager()).isNeedingAReasonBeforeDeletingFolders();
-	}
+	//	public RMSelectionPanelReportPresenter buildReportPresenter() {
+	//		return new RMSelectionPanelReportPresenter(appLayerFactory, collection, getCurrentUser()) {
+	//			@Override
+	//			public String getSelectedSchemaType() {
+	//				return Folder.SCHEMA_TYPE;
+	//			}
+	//
+	//			@Override
+	//			public List<String> getSelectedRecordIds() {
+	//				return asList(folderVO.getId());
+	//			}
+	//		};
+	//	}
+	//
+	//	public AppLayerFactory getApplayerFactory() {
+	//		return appLayerFactory;
+	//	}
+	//
+	//	public boolean isNeedingAReasonToDeleteFolder() {
+	//		return new RMConfigs(modelLayerFactory.getSystemConfigurationsManager()).isNeedingAReasonBeforeDeletingFolders();
+	//	}
 
 	public void facetValueSelected(String facetId, String facetValue) {
 		facetSelections.get(facetId).add(facetValue);
@@ -1529,18 +1511,18 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 		}
 	}
 
-	public String getSortCriterion() {
-		return sortCriterion;
-	}
+	//	public String getSortCriterion() {
+	//		return sortCriterion;
+	//	}
 
 	public SortOrder getSortOrder() {
 		return sortOrder;
 	}
 
-	protected List<MetadataVO> getMetadataAllowedInSort(String schemaTypeCode) {
-		MetadataSchemaType schemaType = schemaType(schemaTypeCode);
-		return getMetadataAllowedInSort(schemaType);
-	}
+	//	protected List<MetadataVO> getMetadataAllowedInSort(String schemaTypeCode) {
+	//		MetadataSchemaType schemaType = schemaType(schemaTypeCode);
+	//		return getMetadataAllowedInSort(schemaType);
+	//	}
 
 	protected List<MetadataVO> getMetadataAllowedInSort(MetadataSchemaType schemaType) {
 		MetadataToVOBuilder builder = new MetadataToVOBuilder();
@@ -1592,10 +1574,10 @@ public class DisplayFolderPresenter extends SingleSchemaBasePresenter<DisplayFol
 	}
 
 
-	public List<Cart> getOwnedCarts() {
-		return rmSchemasRecordsServices().wrapCarts(searchServices().search(new LogicalSearchQuery(from(rmSchemasRecordsServices().cartSchema()).where(rmSchemasRecordsServices().cart.owner())
-				.isEqualTo(getCurrentUser().getId())).sortAsc(Schemas.TITLE)));
-	}
+	//	public List<Cart> getOwnedCarts() {
+	//		return rmSchemasRecordsServices().wrapCarts(searchServices().search(new LogicalSearchQuery(from(rmSchemasRecordsServices().cartSchema()).where(rmSchemasRecordsServices().cart.owner())
+	//				.isEqualTo(getCurrentUser().getId())).sortAsc(Schemas.TITLE)));
+	//	}
 
 	public MetadataSchemaVO getSchema() {
 		return new MetadataSchemaToVOBuilder().build(schema(Cart.DEFAULT_SCHEMA), RecordVO.VIEW_MODE.TABLE, view.getSessionContext());
