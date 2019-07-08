@@ -103,7 +103,7 @@ public class MenuItemServices {
 
 		for (String actionType : getMenuItemActionTypesForRecordList(filteredActionTypes)) {
 			MenuItemActionState state = getStateForAction(actionType, records, params);
-			adddMenuItemAction(actionType, state, menuItemActions);
+			addMenuItemAction(actionType, state, menuItemActions);
 		}
 
 		addMenuItemActionsFromExtensions(records, filteredActionTypes, params, menuItemActions);
@@ -145,7 +145,7 @@ public class MenuItemServices {
 			}
 
 			for (String actionType : actionStateByType.keySet()) {
-				adddMenuItemAction(actionType, actionStateByType.get(actionType), menuItemActions);
+				addMenuItemAction(actionType, actionStateByType.get(actionType), menuItemActions);
 			}
 		}
 
@@ -274,8 +274,8 @@ public class MenuItemServices {
 		return Collections.emptyList();
 	}
 
-	private void adddMenuItemAction(String actionType, MenuItemActionState state,
-									List<MenuItemAction> menuItemActions) {
+	private void addMenuItemAction(String actionType, MenuItemActionState state,
+								   List<MenuItemAction> menuItemActions) {
 	}
 
 	private MenuItemActionState computeActionStateForRecords(String actionType,

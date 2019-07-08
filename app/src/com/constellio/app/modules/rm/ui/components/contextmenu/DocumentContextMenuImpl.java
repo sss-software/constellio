@@ -77,12 +77,10 @@ public class DocumentContextMenuImpl extends RecordContextMenu implements Docume
 
 	public DocumentContextMenuImpl(DocumentVO documentVO) {
 		presenter = newPresenter();
-		setDocumentVO(documentVO);
+		setRecordVO(documentVO);
 		if (documentVO != null) {
 			presenter.setRecordVO(documentVO);
 		}
-
-
 	}
 
 	protected DocumentContextMenuPresenter newPresenter() {
@@ -153,12 +151,8 @@ public class DocumentContextMenuImpl extends RecordContextMenu implements Docume
 					public boolean isContextualMenu() {
 						return true;
 					}
-
-					@Override
-					public boolean isNestedView() {
-						return false;
-					}
 				});
+
 		new MenuItemFactory().buildContextMenu(this, menuItemActions);
 	}
 
@@ -202,7 +196,7 @@ public class DocumentContextMenuImpl extends RecordContextMenu implements Docume
 	}
 
 	@Override
-	public void setDocumentVO(DocumentVO documentVO) {
+	public void setRecordVO(RecordVO documentVO) {
 		this.recordVO = documentVO;
 	}
 

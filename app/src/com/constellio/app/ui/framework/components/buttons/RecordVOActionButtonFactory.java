@@ -107,17 +107,6 @@ public class RecordVOActionButtonFactory {
 					}
 
 					@Override
-					public boolean isContextualMenu() {
-						return false;
-					}
-
-					@Override
-					public boolean isNestedView() {
-						// FIXME how do we determine this?
-						return false;
-					}
-
-					@Override
 					public Object getObjectRecordVO() {
 						return objectRecordVO;
 					}

@@ -39,6 +39,9 @@ public class DocumentMenuBarPresenter extends DocumentActionsPresenterUtils<Docu
 	@Override
 	public void setRecordVO(RecordVO recordVO) {
 		super.setRecordVO(recordVO);
+	}
+
+	void lazyLoadingChildren() {
 		updateActionsComponent();
 	}
 
@@ -102,7 +105,7 @@ public class DocumentMenuBarPresenter extends DocumentActionsPresenterUtils<Docu
 
 		if (Document.SCHEMA_TYPE.equals(recordSchemaTypeCode)) {
 			this.documentVO = voBuilder.build(record, VIEW_MODE.DISPLAY, menuBar.getSessionContext());
-			menuBar.setDocumentVO(documentVO);
+			menuBar.setRecordVO(documentVO);
 			updateActionsComponent();
 			showContextMenu = true;
 		} else {
@@ -118,7 +121,7 @@ public class DocumentMenuBarPresenter extends DocumentActionsPresenterUtils<Docu
 
 	public boolean hasMetadataReport() {
 		return !ReportGeneratorUtils.getPrintableReportTemplate(presenterUtils.appLayerFactory(), presenterUtils.getCollection(),
-				getDocumentVO().getSchema().getCode(), PrintableReportListPossibleType.DOCUMENT).isEmpty();
+				getRecordVO().getSchema().getCode(), PrintableReportListPossibleType.DOCUMENT).isEmpty();
 	}
 
 }

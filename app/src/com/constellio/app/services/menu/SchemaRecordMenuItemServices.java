@@ -10,6 +10,7 @@ import com.vaadin.server.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.constellio.app.services.menu.MenuItemActionState.MenuItemActionStateStatus.HIDDEN;
 import static com.constellio.app.services.menu.MenuItemActionState.MenuItemActionStateStatus.VISIBLE;
@@ -36,13 +37,13 @@ public class SchemaRecordMenuItemServices {
 			menuItemActions.add(buildMenuItemAction(SCHEMA_RECORD_EDIT.name(),
 					isMenuItemActionPossible(SCHEMA_RECORD_EDIT.name(), record, user, params),
 					"editWithIcon", null, -1, 100,
-					() -> new SchemaRecordMenuItemActionBehaviors(collection, appLayerFactory).edit(record, params)));
+					(ids) -> new SchemaRecordMenuItemActionBehaviors(collection, appLayerFactory).edit(record, params)));
 		}
 		if (!filteredActionTypes.contains(SCHEMA_RECORD_DELETE.name())) {
 			menuItemActions.add(buildMenuItemAction(SCHEMA_RECORD_DELETE.name(),
 					isMenuItemActionPossible(SCHEMA_RECORD_DELETE.name(), record, user, params),
 					"deleteWithIcon", null, -1, 100,
-					() -> new SchemaRecordMenuItemActionBehaviors(collection, appLayerFactory).delete(record, params)));
+					(ids) -> new SchemaRecordMenuItemActionBehaviors(collection, appLayerFactory).delete(record, params)));
 		}
 
 		return menuItemActions;
@@ -62,7 +63,7 @@ public class SchemaRecordMenuItemServices {
 	}
 
 	private MenuItemAction buildMenuItemAction(String type, boolean possible, String caption,
-											   Resource icon, int group, int priority, Runnable command) {
+											   Resource icon, int group, int priority, Consumer<List<String>> command) {
 		return MenuItemAction.builder()
 				.type(type)
 				.state(new MenuItemActionState(possible ? VISIBLE : HIDDEN))

@@ -78,9 +78,9 @@ import static com.constellio.app.ui.i18n.i18n.$;
 public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocumentView, DropHandler {
 
 	private VerticalLayout mainLayout;
-	
+
 	private Label borrowedLabel;
-	private DocumentVO documentVO;
+	private RecordVO documentVO;
 	private String taxonomyCode;
 	private TabSheet tabSheet;
 	private ContentViewer contentViewer;
@@ -142,7 +142,7 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	}
 
 	@Override
-	public void setDocumentVO(DocumentVO documentVO) {
+	public void setRecordVO(RecordVO documentVO) {
 		this.documentVO = documentVO;
 		if (recordDisplay != null) {
 			recordDisplay.setRecordVO(documentVO);
@@ -160,7 +160,12 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	}
 
 	private ContentViewer newContentViewer() {
-		ContentViewer contentViewer = new ContentViewer(documentVO, Document.CONTENT, documentVO.getContent());
+		ContentVersionVO contentVersionVO = documentVO.get(Document.CONTENT);
+		ContentViewer contentViewer = new ContentViewer(documentVO, Document.CONTENT, contentVersionVO);
+		if (nestedView) {
+			// FIXME CSS bug when displayed in window, hiding for now.
+			contentViewer.setVisible(false);
+		}
 		return contentViewer;
 	}
 
@@ -519,316 +524,315 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 
 	@Override
 	protected List<Button> buildActionMenuButtons(ViewChangeEvent event) {
-		//		List<Button> actionMenuButtons = new ArrayList<>();
-		//
-		//		displayDocumentButton = new DisplayButton($("DisplayDocumentView.displayDocument"), false) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.displayDocumentButtonClicked();
-		//			}
-		//		};
-		//		displayDocumentButton.addStyleName(ValoTheme.BUTTON_LINK);
-		//		displayDocumentButton.addStyleName("display-document-link");
-		//
-		//		openDocumentButton = new LinkButton($("DisplayDocumentView.openDocument")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.openDocumentButtonClicked();
-		//			}
-		//		};
-		//		openDocumentButton.addStyleName(ValoTheme.BUTTON_LINK);
-		//		openDocumentButton.addStyleName("open-document-link");
-		//
-		//		if (documentVO.getContent() != null) {
-		//			downloadDocumentButton = new DownloadContentVersionLink(documentVO.getContent(), $("DisplayDocumentView.downloadDocument"));
-		//			downloadDocumentButton.addStyleName("download-document-link");
-		//
-		//			openDocumentButton.setIcon(downloadDocumentButton.getIcon());
-		//			downloadDocumentButton.setIcon(new ThemeResource("images/icons/actions/download.png"));
-		//		}
-		//
-		//		editDocumentButton = new EditButton($("DisplayDocumentView.editDocument")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.editDocumentButtonClicked();
-		//			}
-		//		};
-		//
-		//		deleteDocumentButton = new DeleteButton($("DisplayDocumentView.deleteDocument")) {
-		//			@Override
-		//			protected void confirmButtonClick(ConfirmDialog dialog) {
-		//				presenter.deleteDocumentButtonClicked();
-		//			}
-		//		};
-		//
-		//		linkToDocumentButton = new LinkButton($("DocumentActionsComponent.linkToDocument")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.linkToDocumentButtonClicked();
-		//			}
-		//		};
-		//		linkToDocumentButton.setVisible(false);
-		//
-		//		addAuthorizationButton = new LinkButton($("DocumentActionsComponent.addAuthorization")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.addAuthorizationButtonClicked();
-		//			}
-		//		};
-		//
-		//		createPDFAButton = new ConfirmDialogButton($("DocumentActionsComponent.createPDFA")) {
-		//			@Override
-		//			protected void confirmButtonClick(ConfirmDialog dialog) {
-		//				presenter.createPDFAButtonClicked();
-		//			}
-		//
-		//			@Override
-		//			protected String getConfirmDialogMessage() {
-		//				return $("ConfirmDialog.confirmCreatePDFA");
-		//			}
-		//		};
-		//		((ConfirmDialogButton) createPDFAButton).setDialogMode(DialogMode.WARNING);
-		//
-		//		shareDocumentButton = new LinkButton($("DocumentActionsComponent.shareDocument")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.shareDocumentButtonClicked();
-		//			}
-		//		};
-		//
-		//		Factory<List<LabelTemplate>> customLabelTemplatesFactory = new Factory<List<LabelTemplate>>() {
-		//			@Override
-		//			public List<LabelTemplate> get() {
-		//				return presenter.getCustomTemplates();
-		//			}
-		//		};
-		//
-		//		Factory<List<LabelTemplate>> defaultLabelTemplatesFactory = new Factory<List<LabelTemplate>>() {
-		//			@Override
-		//			public List<LabelTemplate> get() {
-		//				return presenter.getDefaultTemplates();
-		//			}
-		//		};
-		//
-		//		Button labels = new LabelButtonV2($("DisplayFolderView.printLabel"),
-		//				$("DisplayFolderView.printLabel"), customLabelTemplatesFactory,
-		//				defaultLabelTemplatesFactory, getConstellioFactories().getAppLayerFactory(),
-		//				getSessionContext().getCurrentCollection(), getSessionContext().getCurrentUser(), presenter.getDocumentVO());
-		//
-		//		addToCartButton = buildAddToCartButton();
-		//		addToCartMyCartButton = buildAddToMyCartButton();
-		//
-		//		addToOrRemoveFromSelectionButton = new AddToOrRemoveFromSelectionButton(documentVO, getSessionContext().getSelectedRecordIds().contains(documentVO.getId()));
-		//
+	//		List<Button> actionMenuButtons = new ArrayList<>();
+	//
+	//		displayDocumentButton = new DisplayButton($("DisplayDocumentView.displayDocument"), false) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.displayDocumentButtonClicked();
+	//			}
+	//		};
+	//		displayDocumentButton.addStyleName(ValoTheme.BUTTON_LINK);
+	//		displayDocumentButton.addStyleName("display-document-link");
+	//
+	//		openDocumentButton = new LinkButton($("DisplayDocumentView.openDocument")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.openDocumentButtonClicked();
+	//			}
+	//		};
+	//		openDocumentButton.addStyleName(ValoTheme.BUTTON_LINK);
+	//		openDocumentButton.addStyleName("open-document-link");
+	//
+	//		if (((DocumentVO) documentVO).getContent() != null) {
+	//			downloadDocumentButton = new DownloadContentVersionLink(((DocumentVO) documentVO).getContent(),
+	//					$("DisplayDocumentView.downloadDocument"));
+	//			downloadDocumentButton.addStyleName("download-document-link");
+	//
+	//			openDocumentButton.setIcon(downloadDocumentButton.getIcon());
+	//			downloadDocumentButton.setIcon(new ThemeResource("images/icons/actions/download.png"));
+	//		}
+	//
+	//		editDocumentButton = new EditButton($("DisplayDocumentView.editDocument")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.editDocumentButtonClicked();
+	//			}
+	//		};
+	//
+	//		deleteDocumentButton = new DeleteButton($("DisplayDocumentView.deleteDocument")) {
+	//			@Override
+	//			protected void confirmButtonClick(ConfirmDialog dialog) {
+	//				presenter.deleteDocumentButtonClicked();
+	//			}
+	//		};
+	//
+	//		linkToDocumentButton = new LinkButton($("DocumentActionsComponent.linkToDocument")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.linkToDocumentButtonClicked();
+	//			}
+	//		};
+	//		linkToDocumentButton.setVisible(false);
+	//
+	//		addAuthorizationButton = new LinkButton($("DocumentActionsComponent.addAuthorization")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.addAuthorizationButtonClicked();
+	//			}
+	//		};
+	//
+	//		createPDFAButton = new ConfirmDialogButton($("DocumentActionsComponent.createPDFA")) {
+	//			@Override
+	//			protected void confirmButtonClick(ConfirmDialog dialog) {
+	//				presenter.createPDFAButtonClicked();
+	//			}
+	//
+	//			@Override
+	//			protected String getConfirmDialogMessage() {
+	//				return $("ConfirmDialog.confirmCreatePDFA");
+	//			}
+	//		};
+	//		((ConfirmDialogButton) createPDFAButton).setDialogMode(DialogMode.WARNING);
+	//
+	//		shareDocumentButton = new LinkButton($("DocumentActionsComponent.shareDocument")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.shareDocumentButtonClicked();
+	//			}
+	//		};
+	//
+	//		Factory<List<LabelTemplate>> customLabelTemplatesFactory = new Factory<List<LabelTemplate>>() {
+	//			@Override
+	//			public List<LabelTemplate> get() {
+	//				return presenter.getCustomTemplates();
+	//			}
+	//		};
+	//
+	//		Factory<List<LabelTemplate>> defaultLabelTemplatesFactory = new Factory<List<LabelTemplate>>() {
+	//			@Override
+	//			public List<LabelTemplate> get() {
+	//				return presenter.getDefaultTemplates();
+	//			}
+	//		};
+	//
+	//		Button labels = new LabelButtonV2($("DisplayFolderView.printLabel"),
+	//				$("DisplayFolderView.printLabel"), customLabelTemplatesFactory,
+	//				defaultLabelTemplatesFactory, getConstellioFactories().getAppLayerFactory(),
+	//				getSessionContext().getCurrentCollection(), getSessionContext().getCurrentUser(), presenter.getDocumentVO());
+	//
+	//		addToCartButton = buildAddToCartButton();
+	//		addToCartMyCartButton = buildAddToMyCartButton();
+	//
+	//		addToOrRemoveFromSelectionButton = new AddToOrRemoveFromSelectionButton(documentVO, getSessionContext().getSelectedRecordIds().contains(documentVO.getId()));
+	//
 		uploadButton = new LinkButton($("DocumentActionsComponent.upload")) {
 			@Override
 			protected void buttonClick(ClickEvent event) {
 				presenter.uploadButtonClicked();
 			}
 		};
-		//
-		//		checkInButton = new LinkButton($("DocumentActionsComponent.checkIn")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.checkInButtonClicked();
-		//			}
-		//		};
-		//
-		//		alertWhenAvailableButton = new LinkButton($("RMObject.alertWhenAvailable")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.alertWhenAvailableClicked();
-		//			}
-		//		};
-		//
-		//		checkOutButton = new LinkButton($("DocumentActionsComponent.checkOut")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.checkOutButtonClicked();
-		//			}
-		//		};
-		//
-		//		finalizeButton = new ConfirmDialogButton(null, $("DocumentActionsComponent.finalize")) {
-		//			@Override
-		//			protected String getConfirmDialogMessage() {
-		//				return $("DocumentActionsComponent.finalize.confirm");
-		//			}
-		//
-		//			@Override
-		//			protected void confirmButtonClick(ConfirmDialog dialog) {
-		//				presenter.finalizeButtonClicked();
-		//			}
-		//		};
-		//		finalizeButton.addStyleName(ValoTheme.BUTTON_LINK);
-		//
-		//		//		actionMenuButtons.add(editDocumentButton);
-		//
-		//		copyContentButton = new LinkButton($("DocumentContextMenu.copyContent")) {
-		//			@Override
-		//			protected void buttonClick(ClickEvent event) {
-		//				presenter.copyContentButtonClicked();
-		//			}
-		//		};
-		//
-		//		actionMenuButtons.add(copyContentButton);
-		//
-		//		reportGeneratorButton = new ReportTabButton($("SearchView.metadataReportTitle"), $("SearchView.metadataReportTitle"), presenter.getApplayerFactory(), getCollection(), false, false, presenter.buildReportPresenter(), getSessionContext()) {
-		//			@Override
-		//			public void buttonClick(ClickEvent event) {
-		//				setRecordVoList(  getDocumentVO());super.buttonClick(event);
-		//			}
-		//		};
-		//
-		//		if (presenter.hasContent()) {
-		//			renameContentButton = new WindowButton($("DocumentContextMenu.renameContent"), $("DocumentContextMenu.renameContent"),
-		//					WindowConfiguration.modalDialog("40%", "100px")) {
-		//				@Override
-		//				protected Component buildWindowContent() {
-		//					final TextField title = new BaseTextField();
-		//					title.setValue(presenter.getContentTitle());
-		//					title.setWidth("100%");
-		//
-		//					Button save = new BaseButton($("DisplayDocumentView.renameContentConfirm")) {
-		//						@Override
-		//						protected void buttonClick(ClickEvent event) {
-		//							presenter.renameContentButtonClicked(title.getValue());
-		//							getWindow().close();
-		//						}
-		//					};
-		//					save.addStyleName(ValoTheme.BUTTON_PRIMARY);
-		//					save.addStyleName(BaseForm.SAVE_BUTTON);
-		//
-		//					Button cancel = new BaseButton($("DisplayDocumentView.renameContentCancel")) {
-		//						@Override
-		//						protected void buttonClick(ClickEvent event) {
-		//							getWindow().close();
-		//						}
-		//					};
-		//
-		//					HorizontalLayout form = new HorizontalLayout(title, save, cancel);
-		//					form.setExpandRatio(title, 1);
-		//					form.setSpacing(true);
-		//					form.setWidth("95%");
-		//
-		//					VerticalLayout layout = new VerticalLayout(form);
-		//					layout.setSizeFull();
-		//
-		//					return layout;
-		//				}
-		//			};
-		//
-		//			signButton = new WindowButton($("DocumentContextMenu.sign"), $("DocumentContextMenu.sign"),
-		//					WindowConfiguration.modalDialog("40%", "300px")) {
-		//				@Override
-		//				protected Component buildWindowContent() {
-		//					final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		//
-		//					final Upload certificate = new Upload($("DisplayDocumentWindow.sign.certificate"), new Receiver() {
-		//						@Override
-		//						public OutputStream receiveUpload(String filename, String mimeType) {
-		//							return stream;
-		//						}
-		//					});
-		//					certificate.addSucceededListener(new SucceededListener() {
-		//						@Override
-		//						public void uploadSucceeded(SucceededEvent event) {
-		//
-		//						}
-		//					});
-		//
-		//					final PasswordField password = new PasswordField($("DisplayDocumentWindow.sign.password"));
-		//
-		//					Button sign = new Button($("DisplayDocumentViewImpl.sign.sign"));
-		//					sign.addClickListener(new ClickListener() {
-		//						@Override
-		//						public void buttonClick(ClickEvent event) {
-		//							getWindow().close();
-		//						}
-		//					});
-		//
-		//					FileDownloader downloader = new FileDownloader(new StreamResource(new StreamSource() {
-		//						@Override
-		//						public InputStream getStream() {
-		//							return presenter.getSignatureInputStream(stream.toString(), password.getValue());
-		//						}
-		//					}, "signature.pdf"));
-		//					downloader.extend(sign);
-		//
-		//					VerticalLayout layout = new VerticalLayout(certificate, password, sign);
-		//					layout.setSpacing(true);
-		//					return layout;
-		//				}
-		//			};
-		//
-		//			actionMenuButtons.add(actionMenuButtons.indexOf(copyContentButton), renameContentButton);
-		//
-		//			publishButton = new LinkButton($("DocumentContextMenu.publish")) {
-		//				@Override
-		//				protected void buttonClick(ClickEvent event) {
-		//					presenter.publishButtonClicked();
-		//				}
-		//			};
-		//			if (presenter.hasCurrentUserPermissionToPublishOnCurrentDocument() && !presenter.isLogicallyDeleted()) {
-		//				actionMenuButtons.add(publishButton);
-		//			}
-		//
-		//			unpublishButton = new LinkButton($("DocumentContextMenu.unpublish")) {
-		//				@Override
-		//				protected void buttonClick(ClickEvent event) {
-		//					presenter.unpublishButtonClicked();
-		//				}
-		//			};
-		//			if (presenter.hasCurrentUserPermissionToPublishOnCurrentDocument() && !presenter.isLogicallyDeleted()) {
-		//				actionMenuButtons.add(unpublishButton);
-		//			}
-		//
-		//			WindowButton.WindowConfiguration publicLinkConfig = new WindowConfiguration(true, false, "75%", "125px");
-		//			publicLinkButton = new WindowButton(
-		//					$("DocumentContextMenu.publicLink"), $("DocumentContextMenu.publicLink"), publicLinkConfig) {
-		//				@Override
-		//				protected Component buildWindowContent() {
-		//					Label link = new Label(presenter.getPublicLink());
-		//					Label message = new Label($("DocumentContextMenu.publicLinkInfo"));
-		//					message.addStyleName(ValoTheme.LABEL_BOLD);
-		//					return new VerticalLayout(message, link);
-		//				}
-		//			};
-		//			actionMenuButtons.add(publicLinkButton);
-		//
-		//			//actionMenuButtons.add(sign);
-		//		}
-		//		startWorkflowButton = new StartWorkflowButton();
-		//		startWorkflowButton.setVisible(presenter.hasPermissionToStartWorkflow());
-		//
-		//		actionMenuButtons.add(labels);
-		//
-		//		actionMenuButtons.add(deleteDocumentButton);
-		//		actionMenuButtons.add(linkToDocumentButton);
-		//		actionMenuButtons.add(addAuthorizationButton);
-		//		actionMenuButtons.add(createPDFAButton);
-		//		actionMenuButtons.add(shareDocumentButton);
-		//		if (presenter.hasCurrentUserPermissionToUseCartGroup()) {
-		//			actionMenuButtons.add(addToCartButton);
-		//		} else if (presenter.hasCurrentUserPermissionToUseMyCart()){
-		//			actionMenuButtons.add(addToCartMyCartButton);
-		//		}
-		//		actionMenuButtons.add(addToOrRemoveFromSelectionButton);
-		//		actionMenuButtons.add(uploadButton);
-		//		actionMenuButtons.add(checkInButton);
-		//		actionMenuButtons.add(alertWhenAvailableButton);
-		//		actionMenuButtons.add(checkOutButton);
-		//
-		//		if (presenter.hasWritePermission()) {
-		//			actionMenuButtons.add(finalizeButton);
-		//		}
-		//
-		//		if (presenter.hasPermissionToStartWorkflow()) {
-		//			actionMenuButtons.add(startWorkflowButton);
-		//		}
-		//		actionMenuButtons.add(reportGeneratorButton);
-		//
-		//		//Extension
-		//		actionMenuButtons.addAll(presenter.getButtonsFromExtension());
+	//
+	//		checkInButton = new LinkButton($("DocumentActionsComponent.checkIn")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.checkInButtonClicked();
+	//			}
+	//		};
+	//
+	//		alertWhenAvailableButton = new LinkButton($("RMObject.alertWhenAvailable")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.alertWhenAvailableClicked();
+	//			}
+	//		};
+	//
+	//		checkOutButton = new LinkButton($("DocumentActionsComponent.checkOut")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.checkOutButtonClicked();
+	//			}
+	//		};
+	//
+	//		finalizeButton = new ConfirmDialogButton(null, $("DocumentActionsComponent.finalize")) {
+	//			@Override
+	//			protected String getConfirmDialogMessage() {
+	//				return $("DocumentActionsComponent.finalize.confirm");
+	//			}
+	//
+	//			@Override
+	//			protected void confirmButtonClick(ConfirmDialog dialog) {
+	//				presenter.finalizeButtonClicked();
+	//			}
+	//		};
+	//		finalizeButton.addStyleName(ValoTheme.BUTTON_LINK);
+	//
+	//		//		actionMenuButtons.add(editDocumentButton);
+	//
+	//		copyContentButton = new LinkButton($("DocumentContextMenu.copyContent")) {
+	//			@Override
+	//			protected void buttonClick(ClickEvent event) {
+	//				presenter.copyContentButtonClicked();
+	//			}
+	//		};
+	//
+	//		actionMenuButtons.add(copyContentButton);
+	//
+	//		reportGeneratorButton = new ReportTabButton($("SearchView.metadataReportTitle"), $("SearchView.metadataReportTitle"), presenter.getApplayerFactory(), getCollection(), false, false, presenter.buildReportPresenter(), getSessionContext()) {
+	//			@Override
+	//			public void buttonClick(ClickEvent event) {
+	//				setRecordVoList(getRecordVO());
+	//				super.buttonClick(event);
+	//			}
+	//		};
+	//
+	//		if (presenter.hasContent()) {
+	//			renameContentButton = new WindowButton($("DocumentContextMenu.renameContent"), $("DocumentContextMenu.renameContent"),
+	//					WindowConfiguration.modalDialog("40%", "100px")) {
+	//				@Override
+	//				protected Component buildWindowContent() {
+	//					final TextField title = new BaseTextField();
+	//					title.setValue(presenter.getContentTitle());
+	//					title.setWidth("100%");
+	//
+	//					Button save = new BaseButton($("DisplayDocumentView.renameContentConfirm")) {
+	//						@Override
+	//						protected void buttonClick(ClickEvent event) {
+	//							presenter.renameContentButtonClicked(title.getValue());
+	//							getWindow().close();
+	//						}
+	//					};
+	//					save.addStyleName(ValoTheme.BUTTON_PRIMARY);
+	//					save.addStyleName(BaseForm.SAVE_BUTTON);
+	//
+	//					Button cancel = new BaseButton($("DisplayDocumentView.renameContentCancel")) {
+	//						@Override
+	//						protected void buttonClick(ClickEvent event) {
+	//							getWindow().close();
+	//						}
+	//					};
+	//
+	//					HorizontalLayout form = new HorizontalLayout(title, save, cancel);
+	//					form.setExpandRatio(title, 1);
+	//					form.setSpacing(true);
+	//					form.setWidth("95%");
+	//
+	//					VerticalLayout layout = new VerticalLayout(form);
+	//					layout.setSizeFull();
+	//
+	//					return layout;
+	//				}
+	//			};
+	//
+	//			signButton = new WindowButton($("DocumentContextMenu.sign"), $("DocumentContextMenu.sign"),
+	//					WindowConfiguration.modalDialog("40%", "300px")) {
+	//				@Override
+	//				protected Component buildWindowContent() {
+	//					final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	//
+	//					final Upload certificate = new Upload($("DisplayDocumentWindow.sign.certificate"), new Receiver() {
+	//						@Override
+	//						public OutputStream receiveUpload(String filename, String mimeType) {
+	//							return stream;
+	//						}
+	//					});
+	//					certificate.addSucceededListener(new SucceededListener() {
+	//						@Override
+	//						public void uploadSucceeded(SucceededEvent event) {
+	//
+	//						}
+	//					});
+	//
+	//					final PasswordField password = new PasswordField($("DisplayDocumentWindow.sign.password"));
+	//
+	//					Button sign = new Button($("DisplayDocumentViewImpl.sign.sign"));
+	//					sign.addClickListener(new ClickListener() {
+	//						@Override
+	//						public void buttonClick(ClickEvent event) {
+	//							getWindow().close();
+	//						}
+	//					});
+	//
+	//					FileDownloader downloader = new FileDownloader(new StreamResource(new StreamSource() {
+	//						@Override
+	//						public InputStream getStream() {
+	//							return presenter.getSignatureInputStream(stream.toString(), password.getValue());
+	//						}
+	//					}, "signature.pdf"));
+	//					downloader.extend(sign);
+	//
+	//					VerticalLayout layout = new VerticalLayout(certificate, password, sign);
+	//					layout.setSpacing(true);
+	//					return layout;
+	//				}
+	//			};
+	//
+	//			actionMenuButtons.add(actionMenuButtons.indexOf(copyContentButton), renameContentButton);
+	//
+	//			publishButton = new LinkButton($("DocumentContextMenu.publish")) {
+	//				@Override
+	//				protected void buttonClick(ClickEvent event) {
+	//					presenter.publishButtonClicked();
+	//				}
+	//			};
+	//			if (presenter.hasCurrentUserPermissionToPublishOnCurrentDocument() && !presenter.isLogicallyDeleted()) {
+	//				actionMenuButtons.add(publishButton);
+	//			}
+	//
+	//			unpublishButton = new LinkButton($("DocumentContextMenu.unpublish")) {
+	//				@Override
+	//				protected void buttonClick(ClickEvent event) {
+	//					presenter.unpublishButtonClicked();
+	//				}
+	//			};
+	//			if (presenter.hasCurrentUserPermissionToPublishOnCurrentDocument() && !presenter.isLogicallyDeleted()) {
+	//				actionMenuButtons.add(unpublishButton);
+	//			}
+	//
+	//			WindowButton.WindowConfiguration publicLinkConfig = new WindowConfiguration(true, false, "75%", "125px");
+	//			publicLinkButton = new WindowButton(
+	//					$("DocumentContextMenu.publicLink"), $("DocumentContextMenu.publicLink"), publicLinkConfig) {
+	//				@Override
+	//				protected Component buildWindowContent() {
+	//					Label link = new Label(presenter.getPublicLink());
+	//					Label message = new Label($("DocumentContextMenu.publicLinkInfo"));
+	//					message.addStyleName(ValoTheme.LABEL_BOLD);
+	//					return new VerticalLayout(message, link);
+	//				}
+	//			};
+	//			actionMenuButtons.add(publicLinkButton);
+	//
+	//			//actionMenuButtons.add(sign);
+	//		}
+	//		startWorkflowButton = new StartWorkflowButton();
+	//		startWorkflowButton.setVisible(presenter.hasPermissionToStartWorkflow());
+	//
+	//		actionMenuButtons.add(labels);
+	//
+	//		actionMenuButtons.add(deleteDocumentButton);
+	//		actionMenuButtons.add(linkToDocumentButton);
+	//		actionMenuButtons.add(addAuthorizationButton);
+	//		actionMenuButtons.add(createPDFAButton);
+	//		actionMenuButtons.add(shareDocumentButton);
+	//		if (presenter.hasCurrentUserPermissionToUseCartGroup()) {
+	//			actionMenuButtons.add(addToCartButton);
+	//		} else if (presenter.hasCurrentUserPermissionToUseMyCart()){
+	//			actionMenuButtons.add(addToCartMyCartButton);
+	//		}
+	//		actionMenuButtons.add(addToOrRemoveFromSelectionButton);
+	//		actionMenuButtons.add(uploadButton);
+	//		actionMenuButtons.add(checkInButton);
+	//		actionMenuButtons.add(alertWhenAvailableButton);
+	//		actionMenuButtons.add(checkOutButton);
+	//
+	//		if (presenter.hasWritePermission()) {
+	//			actionMenuButtons.add(finalizeButton);
+	//		}
+	//
+	//		if (presenter.hasPermissionToStartWorkflow()) {
+	//			actionMenuButtons.add(startWorkflowButton);
+	//		}
+	//		actionMenuButtons.add(reportGeneratorButton);
 
 		return new RecordVOActionButtonFactory(documentVO).build();
 	}
@@ -1173,7 +1177,7 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	}
 
 	@Override
-	public DocumentVO getDocumentVO() {
+	public RecordVO getRecordVO() {
 		return documentVO;
 	}
 

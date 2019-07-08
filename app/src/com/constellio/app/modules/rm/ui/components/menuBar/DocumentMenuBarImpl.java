@@ -1,6 +1,5 @@
 package com.constellio.app.modules.rm.ui.components.menuBar;
 
-import com.constellio.app.modules.rm.ui.entities.DocumentVO;
 import com.constellio.app.modules.rm.ui.pages.document.AddEditDocumentViewImpl;
 import com.constellio.app.modules.rm.ui.pages.document.AddEditDocumentWindow;
 import com.constellio.app.modules.rm.ui.pages.document.DisplayDocumentViewImpl;
@@ -62,15 +61,34 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 	//	private boolean addToCartButtonVisible;
 	//	private boolean publishButtonVisible;
 
+	private MenuItem rootItem;
+
 	protected DocumentMenuBarPresenter presenter;
 
-	public DocumentMenuBarImpl(DocumentVO documentVO) {
-		super(true);
+	public DocumentMenuBarImpl(RecordVO documentVO) {
+		super(true, false);
+
 		presenter = newPresenter();
-		setDocumentVO(documentVO);
+		setRecordVO(documentVO);
 		if (documentVO != null) {
 			presenter.setRecordVO(documentVO);
 		}
+
+		if (isLazyLoading()) {
+			rootItem = addItem("", FontAwesome.BARS, new Command() {
+				@Override
+				public void menuSelected(MenuItem selectedItem) {
+				}
+			});
+		} else {
+			rootItem = addItem("", FontAwesome.BARS, null);
+			lazyLoadChildren(rootItem);
+		}
+	}
+
+	@Override
+	protected void lazyLoadChildren(MenuItem rootItem) {
+		presenter.lazyLoadingChildren();
 	}
 
 	protected DocumentMenuBarPresenter newPresenter() {
@@ -291,7 +309,7 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 		//					View parentView = ConstellioUI.getCurrent().getCurrentView();
 		//					ReportTabButton button = new ReportTabButton($("DocumentActionsComponent.printMetadataReport"),
 		//							$("DocumentActionsComponent.printMetadataReport"), (BaseView) parentView, true);
-		//					button.setRecordVoList(presenter.getDocumentVO());
+		//					button.setRecordVoList(presenter.getRecordVO());
 		//					button.click();
 		//				}
 		//			});
@@ -338,8 +356,8 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 	}
 
 	@Override
-	public void setDocumentVO(DocumentVO documentVO) {
-		this.recordVO = documentVO;
+	public void setRecordVO(RecordVO recordVO) {
+		this.recordVO = recordVO;
 	}
 
 	private void initUploadWindow() {
