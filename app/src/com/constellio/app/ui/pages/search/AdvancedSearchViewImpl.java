@@ -1,8 +1,6 @@
 package com.constellio.app.ui.pages.search;
 
 import com.constellio.app.modules.rm.services.RMSchemasRecordsServices;
-import com.constellio.app.modules.rm.ui.pages.cart.DefaultFavoritesTable;
-import com.constellio.app.modules.rm.wrappers.Cart;
 import com.constellio.app.services.menu.MenuItemAction;
 import com.constellio.app.services.menu.MenuItemServices;
 import com.constellio.app.services.menu.behavior.MenuItemActionBehaviorParams;
@@ -10,28 +8,18 @@ import com.constellio.app.ui.application.ConstellioUI;
 import com.constellio.app.ui.entities.RecordVO;
 import com.constellio.app.ui.framework.buttons.BaseButton;
 import com.constellio.app.ui.framework.buttons.LinkButton;
-import com.constellio.app.ui.framework.buttons.SIPButton.SIPButtonImpl;
-import com.constellio.app.ui.framework.buttons.WindowButton;
 import com.constellio.app.ui.framework.components.NewReportPresenter;
-import com.constellio.app.ui.framework.components.ReportTabButton;
 import com.constellio.app.ui.framework.components.ReportViewer.DownloadStreamResource;
 import com.constellio.app.ui.framework.components.SearchResultSimpleTable;
 import com.constellio.app.ui.framework.components.SearchResultTable;
-import com.constellio.app.ui.framework.components.fields.BaseTextField;
-import com.constellio.app.ui.framework.components.table.RecordVOTable;
 import com.constellio.app.ui.framework.containers.RecordVOLazyContainer;
 import com.constellio.app.ui.framework.data.SearchResultVODataProvider;
 import com.constellio.app.ui.framework.items.RecordVOItem;
 import com.constellio.app.ui.pages.base.BaseView;
 import com.constellio.app.ui.pages.base.ConstellioHeader;
-import com.constellio.app.ui.pages.search.batchProcessing.BatchProcessingButton;
-import com.constellio.app.ui.pages.search.batchProcessing.BatchProcessingModifyingOneMetadataButton;
-import com.constellio.app.ui.pages.search.batchProcessing.BatchProcessingView;
 import com.constellio.app.ui.pages.search.criteria.Criterion;
 import com.constellio.app.ui.params.ParamUtils;
-import com.constellio.app.ui.util.MessageUtils;
 import com.constellio.data.utils.dev.Toggle;
-import com.constellio.model.entities.enums.BatchProcessingMode;
 import com.constellio.model.entities.records.wrappers.User;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -40,45 +28,34 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import org.apache.commons.collections4.MapUtils;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.stream.Collectors;
 
 import static com.constellio.app.services.menu.MenuItemActionState.MenuItemActionStateStatus.HIDDEN;
 import static com.constellio.app.services.menu.MenuItemActionState.MenuItemActionStateStatus.VISIBLE;
 import static com.constellio.app.ui.i18n.i18n.$;
-import static com.constellio.model.entities.enums.BatchProcessingMode.ALL_METADATA_OF_SCHEMA;
-import static com.constellio.model.entities.enums.BatchProcessingMode.ONE_METADATA;
 import static java.util.Arrays.asList;
 
 public class AdvancedSearchViewImpl extends SearchViewImpl<AdvancedSearchPresenter>
-		implements AdvancedSearchView, BatchProcessingView, Observer {
+		implements AdvancedSearchView/*, BatchProcessingView, Observer*/ {
 
 	public static final String BATCH_PROCESS_BUTTONSTYLE = "searchBatchProcessButton";
 	public static final String LABELS_BUTTONSTYLE = "searchLabelsButton";
 
 	private final ConstellioHeader header;
-	private WindowButton batchProcessingButton;
-	private ReportTabButton reportButton;
-	private SIPButtonImpl sipButton;
+	//private WindowButton batchProcessingButton;
+	//private ReportTabButton reportButton;
+	//private SIPButtonImpl sipButton;
 
 	public AdvancedSearchViewImpl() {
 		presenter = new AdvancedSearchPresenter(this);
-		presenter.addObserver(this);
+		//presenter.addObserver(this);
 		presenter.resetFacetAndOrder();
 		header = ConstellioUI.getCurrent().getHeader();
 	}
@@ -107,7 +84,7 @@ public class AdvancedSearchViewImpl extends SearchViewImpl<AdvancedSearchPresent
 
 	@Override
 	public void closeBatchProcessingWindow() {
-		batchProcessingButton.getWindow().close();
+		//batchProcessingButton.getWindow().close();
 	}
 
 	@Override
@@ -266,6 +243,7 @@ public class AdvancedSearchViewImpl extends SearchViewImpl<AdvancedSearchPresent
 		return table;
 	}
 
+	/*
 	private WindowButton buildAddToCartButton() {
 		WindowButton windowButton = new WindowButton($("SearchView.addToCart"), $("SearchView.selectCart")) {
 			@Override
@@ -356,6 +334,7 @@ public class AdvancedSearchViewImpl extends SearchViewImpl<AdvancedSearchPresent
 			throw new RuntimeException("Unsupported mode " + mode);
 		}
 	}
+	*/
 
 	@Override
 	public Boolean computeStatistics() {
@@ -367,33 +346,35 @@ public class AdvancedSearchViewImpl extends SearchViewImpl<AdvancedSearchPresent
 		return $("searchResults");
 	}
 
+	/*
 	@Override
 	public void update(Observable o, Object arg) {
 		if (reportButton != null) {
 			reportButton.addRecordToVoList((RecordVO) arg);
 		}
 	}
+	*/
 
 	@Override
 	public void fireSomeRecordsSelected() {
-		if (batchProcessingButton != null) {
-			if (batchProcessingButton instanceof BatchProcessingButton) {
-				((BatchProcessingButton) batchProcessingButton).hasResultSelected(true);
-			} else if (batchProcessingButton instanceof BatchProcessingModifyingOneMetadataButton) {
-				((BatchProcessingModifyingOneMetadataButton) batchProcessingButton).hasResultSelected(true);
-			}
-		}
+		//if (batchProcessingButton != null) {
+		//	if (batchProcessingButton instanceof BatchProcessingButton) {
+		//		((BatchProcessingButton) batchProcessingButton).hasResultSelected(true);
+		//	} else if (batchProcessingButton instanceof BatchProcessingModifyingOneMetadataButton) {
+		//		((BatchProcessingModifyingOneMetadataButton) batchProcessingButton).hasResultSelected(true);
+		//	}
+		//}
 	}
 
 	@Override
 	public void fireNoRecordSelected() {
-		if (batchProcessingButton != null) {
-			if (batchProcessingButton instanceof BatchProcessingButton) {
-				((BatchProcessingButton) batchProcessingButton).hasResultSelected(false);
-			} else if (batchProcessingButton instanceof BatchProcessingModifyingOneMetadataButton) {
-				((BatchProcessingModifyingOneMetadataButton) batchProcessingButton).hasResultSelected(false);
-			}
-		}
+		//if (batchProcessingButton != null) {
+		//	if (batchProcessingButton instanceof BatchProcessingButton) {
+		//		((BatchProcessingButton) batchProcessingButton).hasResultSelected(false);
+		//	} else if (batchProcessingButton instanceof BatchProcessingModifyingOneMetadataButton) {
+		//		((BatchProcessingModifyingOneMetadataButton) batchProcessingButton).hasResultSelected(false);
+		//	}
+		//}
 	}
 
 	@Override

@@ -2,118 +2,19 @@ package com.constellio.app.modules.rm.extensions;
 
 import com.constellio.app.api.extensions.SelectionPanelExtension;
 import com.constellio.app.api.extensions.params.AvailableActionsParam;
-import com.constellio.app.api.extensions.params.EmailMessageParams;
 import com.constellio.app.modules.rm.ConstellioRMModule;
-import com.constellio.app.modules.rm.constants.RMPermissionsTo;
 import com.constellio.app.modules.rm.extensions.api.RMModuleExtensions;
 import com.constellio.app.modules.rm.services.RMSchemasRecordsServices;
-import com.constellio.app.modules.rm.services.cart.CartEmailService;
-import com.constellio.app.modules.rm.services.cart.CartEmailServiceRuntimeException;
-import com.constellio.app.modules.rm.services.decommissioning.DecommissioningService;
-import com.constellio.app.modules.rm.ui.components.folder.fields.FolderCategoryFieldImpl;
-import com.constellio.app.modules.rm.ui.components.folder.fields.FolderRetentionRuleFieldImpl;
-import com.constellio.app.modules.rm.ui.components.folder.fields.LookupFolderField;
-import com.constellio.app.modules.rm.ui.pages.pdf.ConsolidatedPdfButton;
-import com.constellio.app.modules.rm.wrappers.AdministrativeUnit;
-import com.constellio.app.modules.rm.wrappers.Category;
-import com.constellio.app.modules.rm.wrappers.Document;
-import com.constellio.app.modules.rm.wrappers.Email;
-import com.constellio.app.modules.rm.wrappers.Folder;
-import com.constellio.app.modules.rm.wrappers.RMUserFolder;
-import com.constellio.app.modules.tasks.model.wrappers.Task;
 import com.constellio.app.services.factories.AppLayerFactory;
-import com.constellio.app.services.factories.ConstellioFactories;
-import com.constellio.app.ui.application.ConstellioUI;
-import com.constellio.app.ui.entities.MetadataVO;
-import com.constellio.app.ui.entities.RecordVO;
-import com.constellio.app.ui.framework.builders.RecordToVOBuilder;
-import com.constellio.app.ui.framework.buttons.BaseButton;
-import com.constellio.app.ui.framework.buttons.BaseLink;
-import com.constellio.app.ui.framework.buttons.DeleteButton;
-import com.constellio.app.ui.framework.buttons.SIPButton.SIPButtonImpl;
-import com.constellio.app.ui.framework.buttons.WindowButton;
-import com.constellio.app.ui.framework.components.BaseWindow;
-import com.constellio.app.ui.framework.components.RMSelectionPanelReportPresenter;
-import com.constellio.app.ui.framework.components.ReportTabButton;
-import com.constellio.app.ui.framework.components.ReportViewer;
-import com.constellio.app.ui.framework.components.ReportViewer.DownloadStreamResource;
-import com.constellio.app.ui.framework.components.content.UpdateContentVersionWindowImpl;
-import com.constellio.app.ui.framework.components.fields.ListOptionGroup;
-import com.constellio.app.ui.framework.components.table.SelectionTableAdapter;
-import com.constellio.app.ui.i18n.i18n;
-import com.constellio.app.ui.util.ComponentTreeUtils;
 import com.constellio.data.io.services.facades.IOServices;
-import com.constellio.model.entities.records.Content;
-import com.constellio.model.entities.records.ContentVersion;
-import com.constellio.model.entities.records.Record;
-import com.constellio.model.entities.records.wrappers.RecordWrapper;
-import com.constellio.model.entities.records.wrappers.User;
-import com.constellio.model.entities.records.wrappers.UserDocument;
-import com.constellio.model.entities.records.wrappers.UserFolder;
-import com.constellio.model.entities.schemas.Metadata;
-import com.constellio.model.entities.schemas.MetadataSchemaType;
-import com.constellio.model.entities.schemas.MetadataSchemaTypes;
-import com.constellio.model.services.contents.ContentManager;
-import com.constellio.model.services.contents.ContentVersionDataSummary;
-import com.constellio.model.services.emails.EmailServices;
-import com.constellio.model.services.emails.EmailServices.EmailMessage;
-import com.constellio.model.services.factories.ModelLayerFactory;
-import com.constellio.model.services.migrations.ConstellioEIMConfigs;
-import com.constellio.model.services.records.RecordServices;
-import com.constellio.model.services.records.RecordServicesException;
-import com.constellio.model.services.records.RecordServicesRuntimeException;
-import com.constellio.model.services.search.SearchServices;
-import com.constellio.model.services.search.query.logical.LogicalSearchQuery;
-import com.constellio.model.services.search.query.logical.condition.LogicalSearchCondition;
-import com.constellio.model.services.search.zipContents.ZipContentsService;
-import com.constellio.model.services.search.zipContents.ZipContentsService.NoContentToZipRuntimeException;
-import com.constellio.model.services.users.UserServices;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Page;
-import com.vaadin.server.Resource;
-import com.vaadin.server.StreamResource;
-import com.vaadin.server.StreamResource.StreamSource;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
-import org.apache.commons.io.IOUtils;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.dialogs.ConfirmDialog;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.constellio.app.ui.i18n.i18n.$;
-import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class RMSelectionPanelExtension extends SelectionPanelExtension {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(RMSelectionPanelExtension.class);
 
-	private static final String ZIP_CONTENT_RESOURCE = "zipContentsFolder";
+	//private static final String ZIP_CONTENT_RESOURCE = "zipContentsFolder";
 	
 	AppLayerFactory appLayerFactory;
 	String collection;
@@ -131,6 +32,7 @@ public class RMSelectionPanelExtension extends SelectionPanelExtension {
 
 	@Override
 	public void addAvailableActions(AvailableActionsParam param) {
+		/*
 		UserServices userServices = appLayerFactory.getModelLayerFactory().newUserServices();
 		boolean hasAccessToSIP = userServices.getUserInCollection(param.getUser().getUsername(), collection)
 				.has(RMPermissionsTo.GENERATE_SIP_ARCHIVES).globally();
@@ -146,8 +48,10 @@ public class RMSelectionPanelExtension extends SelectionPanelExtension {
 		if (hasAccessToSIP) {
 			addSIPbutton(param);
 		}
+		*/
 	}
 
+	/*
 	public void addZipButton(final AvailableActionsParam param) {
 		final String zippedContentsFilename = $("SearchView.contentZip");
 		StreamSource zippedContents = new StreamSource() {
@@ -1025,4 +929,5 @@ public class RMSelectionPanelExtension extends SelectionPanelExtension {
 		}
 		return recordVOS;
 	}
+	*/
 }

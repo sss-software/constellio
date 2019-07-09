@@ -1,7 +1,6 @@
 package com.constellio.app.ui.pages.search;
 
 import com.constellio.app.modules.rm.RMTestRecords;
-import com.constellio.app.modules.rm.constants.RMPermissionsTo;
 import com.constellio.app.modules.rm.model.enums.CopyType;
 import com.constellio.app.modules.rm.services.RMSchemasRecordsServices;
 import com.constellio.app.modules.rm.wrappers.Folder;
@@ -16,7 +15,6 @@ import com.constellio.model.entities.records.wrappers.RecordWrapper;
 import com.constellio.model.entities.schemas.MetadataSchemaTypes;
 import com.constellio.model.entities.schemas.MetadataValueType;
 import com.constellio.model.entities.schemas.Schemas;
-import com.constellio.model.entities.security.Role;
 import com.constellio.model.services.records.RecordServices;
 import com.constellio.model.services.records.RecordServicesException;
 import com.constellio.model.services.schemas.MetadataSchemaTypesAlteration;
@@ -24,8 +22,6 @@ import com.constellio.model.services.schemas.MetadataSchemasManager;
 import com.constellio.model.services.schemas.builders.MetadataSchemaTypeBuilder;
 import com.constellio.model.services.schemas.builders.MetadataSchemaTypesBuilder;
 import com.constellio.model.services.search.SearchServices;
-import com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators;
-import com.constellio.model.services.security.roles.RolesManager;
 import com.constellio.sdk.tests.ConstellioTest;
 import com.constellio.sdk.tests.FakeSessionContext;
 import com.constellio.sdk.tests.setups.Users;
@@ -35,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +92,7 @@ public class AdvancedSearchPresenterAcceptanceTest extends ConstellioTest {
 		presenter = new AdvancedSearchPresenter(advancedSearchView);
 	}
 
+	/*
 	@Test
 	public void givenViewIsEnteredThenAddToCartButtonOnlyShowsWhenUserHasPermission() {
 		List<String> userRoles = users.aliceIn(zeCollection).getUserRoles();
@@ -116,6 +112,7 @@ public class AdvancedSearchPresenterAcceptanceTest extends ConstellioTest {
 		connectWithAlice();
 		assertThat(presenter.hasCurrentUserPermissionToUseCart()).isTrue();
 	}
+	*/
 
 	@Test
 	public void givenAdvanceSearchThenMetadataChoiceIsLimitedByUsedSchemas()
@@ -227,6 +224,7 @@ public class AdvancedSearchPresenterAcceptanceTest extends ConstellioTest {
 		assertThat(newMetadatas.get(0).getCode()).isEqualTo("folder_default_" + Folder.BORROWED);
 	}
 
+	/*
 	@Test
 	public void givenBatchProcessRequestedWithAccentThenProcessWithoutException() throws Exception {
 		when(advancedSearchView.getSchemaType()).thenReturn(Folder.SCHEMA_TYPE);
@@ -243,6 +241,7 @@ public class AdvancedSearchPresenterAcceptanceTest extends ConstellioTest {
 				LogicalSearchQueryOperators.fromAllSchemasIn(zeCollection).where(Schemas.DESCRIPTION_TEXT).isEqualTo("new description for givenBatchProcessRequestedWithAccentThenProcessWithoutException"))
 		).isEqualTo(1);
 	}
+	*/
 
 	private void connectWithAlice() {
 		sessionContext = FakeSessionContext.aliceInCollection(zeCollection);

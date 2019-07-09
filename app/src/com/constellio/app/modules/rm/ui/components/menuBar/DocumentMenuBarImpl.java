@@ -22,6 +22,7 @@ import com.constellio.app.ui.pages.base.UIContext;
 import com.constellio.app.ui.util.ComponentTreeUtils;
 import com.vaadin.data.Container;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
