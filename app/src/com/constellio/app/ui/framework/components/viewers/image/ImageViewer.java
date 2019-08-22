@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.UUID;
 
 @JavaScript({"theme://jquery/jquery-2.1.4.min.js", "theme://iviewer/jquery-ui.min.js", "theme://iviewer/jquery.mousewheel.min.js", "theme://iviewer/jquery.iviewer.min.js"})
 @StyleSheet("theme://iviewer/jquery.iviewer.css")
@@ -40,20 +41,23 @@ public class ImageViewer extends CustomComponent {
 
 	private File file;
 
+	private String divId;
+
+	private ResourceReference contentResourceReference;
+
 	public ImageViewer(RecordVO recordVO, String metadataCode, ContentVersionVO contentVersionVO) {
 		this.recordVO = recordVO;
 		this.metadataCode = metadataCode;
 		this.contentVersionVO = contentVersionVO;
+		init();
 	}
 
 	public ImageViewer(File file) {
 		this.file = file;
+		init();
 	}
 
-	@Override
-	public void attach() {
-		super.attach();
-
+	private void init() {
 		try {
 			int width = (int) getWidth();
 			int height = (int) getHeight();
@@ -68,8 +72,9 @@ public class ImageViewer extends CustomComponent {
 				width = maxWidth;
 			}
 
-			String id = getConnectorId();
-			String divId = id + "-viewer";
+			String id = UUID.randomUUID().toString();
+			setId(id);
+			divId = id + "-viewer";
 
 			Resource contentResource;
 			InputStream in;
@@ -80,14 +85,15 @@ public class ImageViewer extends CustomComponent {
 					ConstellioResourceHandler.isContentOversized(recordVO.getId(), metadataCode, version)) {
 					if (ConstellioResourceHandler.hasContentJpegConversion(recordVO.getId(), metadataCode, version)) {
 						contentResource = ConstellioResourceHandler.createConvertedResource(recordVO.getId(), metadataCode, version, filename);
+						in = contentVersionVO.getInputStreamProvider().getInputStream(getClass().getSimpleName());
 					} else {
-						setVisible(false);
-						return;
+						contentResource = null;
+						in = null;
 					}
 				} else {
 					contentResource = ConstellioResourceHandler.createResource(recordVO.getId(), metadataCode, version, filename);
+					in = contentVersionVO.getInputStreamProvider().getInputStream(getClass().getSimpleName());
 				}
-				in = contentVersionVO.getInputStreamProvider().getInputStream(getClass().getSimpleName());
 			} else if (file != null) {
 				contentResource = ConstellioResourceHandler.createResource(file);
 				in = new FileInputStream(file);
@@ -111,39 +117,49 @@ public class ImageViewer extends CustomComponent {
 				float heightF = (float) heightWidthRatio * height;
 				height = (int) heightF;
 
-				ResourceReference contentResourceReference = ResourceReference.create(contentResource, this, "ImageViewer.file");
-				String contentURL = contentResourceReference.getURL();
-				
+				contentResourceReference = ResourceReference.create(contentResource, this, "ImageViewer.file");
+
 //				String divHTML = "<div id=\"" + divId + "\" class=\"viewer\" style=\"position:relative; width:" + width + "px; height:"+ height + "px;\"></div>";
 				String divHTML = "<div id=\"" + divId + "\" class=\"viewer\" style=\"position:relative; width:100%; height:"+ height + "px;\"></div>";
-				StringBuffer js = new StringBuffer();
-				js.append("var $ = jQuery;");
-				js.append("\n");
-				js.append("$(document).ready(function() {");
-				js.append("\n");
-				js.append("    var iv1 = $('#" + divId + "').iviewer({");
-				js.append("\n");
-				js.append("        src: '" + contentURL + "',");
-				js.append("\n");
-				js.append("        zoom_min: '1'");
-				js.append("\n");
-				js.append("    });");
-				js.append("\n");
-				js.append("    $('#" + divId + "').bind('ivieweronfinishload', function(ev, src) { $('#" + divId + ">img').css('top', '0'); });");
-				// $('#viewer').bind('ivieweronfinishload', function(ev, src) { /* handle this */ })
-				js.append("\n");
-				js.append("});");
-				js.append("\n");
-
 				setCompositionRoot(new Label(divHTML, ContentMode.HTML));
-
-				com.vaadin.ui.JavaScript javascript = com.vaadin.ui.JavaScript.getCurrent();
-				javascript.execute("setTimeout(function() {" + js.toString() + "}, 1)");
+			} else {
+				setVisible(false);
 			}
 		} catch (Throwable t) {
 			// FIXME
 			t.printStackTrace();
 			setVisible(false);
+		}
+	}
+
+	@Override
+	public void attach() {
+		super.attach();
+
+		if (contentResourceReference != null) {
+			String contentURL = contentResourceReference.getURL();
+
+			StringBuffer js = new StringBuffer();
+			js.append("var $ = jQuery;");
+			js.append("\n");
+			js.append("$(document).ready(function() {");
+			js.append("\n");
+			js.append("    var iv1 = $('#" + divId + "').iviewer({");
+			js.append("\n");
+			js.append("        src: '" + contentURL + "',");
+			js.append("\n");
+			js.append("        zoom_min: '1'");
+			js.append("\n");
+			js.append("    });");
+			js.append("\n");
+			js.append("    $('#" + divId + "').bind('ivieweronfinishload', function(ev, src) { $('#" + divId + ">img').css('top', '0'); });");
+			// $('#viewer').bind('ivieweronfinishload', function(ev, src) { /* handle this */ })
+			js.append("\n");
+			js.append("});");
+			js.append("\n");
+
+			com.vaadin.ui.JavaScript javascript = com.vaadin.ui.JavaScript.getCurrent();
+			javascript.execute("setTimeout(function() {" + js.toString() + "}, 1)");
 		}
 	}
 
