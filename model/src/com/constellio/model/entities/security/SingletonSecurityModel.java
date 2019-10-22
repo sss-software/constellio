@@ -1,6 +1,8 @@
 package com.constellio.model.entities.security;
 
+import com.constellio.data.utils.ImpossibleRuntimeException;
 import com.constellio.data.utils.KeyListMap;
+import com.constellio.data.utils.LangUtils;
 import com.constellio.model.entities.calculators.DynamicDependencyValues;
 import com.constellio.model.entities.enums.GroupAuthorizationsInheritance;
 import com.constellio.model.entities.records.wrappers.Authorization;
@@ -184,6 +186,20 @@ public class SingletonSecurityModel implements SecurityModel {
 		} else {
 			return authorizationsByPrincipalId.get(principalId);
 		}
+	}
+
+	static int maxPrincipalIdLimit = 134_217_728;
+
+	@Override
+	public int getPrincipalIntId(String id) {
+
+		long intId = LangUtils.tryParseLong(id, -1);
+
+		if (intId >= maxPrincipalIdLimit) {
+			throw new ImpossibleRuntimeException("TODO FIX this case by using a sequential identifier between 134 217 728 and 268 435 456");
+		}
+
+		return (int) intId;
 	}
 
 	private void removeAuthWithId(String authId, List<SecurityModelAuthorization> auths) {

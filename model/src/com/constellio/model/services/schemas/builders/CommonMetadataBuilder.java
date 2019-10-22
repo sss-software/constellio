@@ -38,6 +38,8 @@ public class CommonMetadataBuilder {
 	public static final String DETACHED_AUTHORIZATIONS = "detachedauthorizations";
 	public static final String TOKENS = "tokens";
 	public static final String TOKENS_OF_HIERARCHY = "tokensHierarchy";
+	public static final String INT_ACCESS_TOKENS = "intAccessTokens";
+	public static final String INT_ACCESS_TOKENS_OF_HIERARCHY = "intAccessTokensHierarchy";
 	public static final String DENY_TOKENS = "denyTokens";
 	public static final String SHARE_TOKENS = "shareTokens";
 	public static final String SHARE_DENY_TOKENS = "shareDenyTokens";
@@ -443,6 +445,27 @@ public class CommonMetadataBuilder {
 			@Override
 			public void define(MetadataSchemaBuilder builder, MetadataSchemaTypesBuilder types) {
 				MetadataBuilder metadataBuilder = builder.createSystemReserved(HIDDEN).setType(BOOLEAN);
+				for (Language language : types.getLanguages()) {
+					metadataBuilder.addLabel(language, metadataBuilder.getLocalCode());
+				}
+			}
+		});
+
+		metadata.put(INT_ACCESS_TOKENS, new MetadataCreator() {
+			@Override
+			public void define(MetadataSchemaBuilder builder, MetadataSchemaTypesBuilder types) {
+				MetadataBuilder metadataBuilder = builder.createSystemReserved(INT_ACCESS_TOKENS).setType(INTEGER);
+				for (Language language : types.getLanguages()) {
+					metadataBuilder.addLabel(language, metadataBuilder.getLocalCode());
+				}
+			}
+		});
+
+		metadata.put(INT_ACCESS_TOKENS_OF_HIERARCHY, new MetadataCreator() {
+			@Override
+			public void define(MetadataSchemaBuilder schema, MetadataSchemaTypesBuilder types) {
+				MetadataBuilder metadataBuilder = schema.createSystemReserved(INT_ACCESS_TOKENS_OF_HIERARCHY).setType(INTEGER)
+						.setMultivalue(true).defineDataEntry().asCalculated(DefaultTokensOfHierarchyCalculator.class);
 				for (Language language : types.getLanguages()) {
 					metadataBuilder.addLabel(language, metadataBuilder.getLocalCode());
 				}

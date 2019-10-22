@@ -190,6 +190,11 @@ public class TransactionSecurityModel implements SecurityModel {
 		throw new UnsupportedOperationException("Only supported on singleton security model");
 	}
 
+	@Override
+	public int getPrincipalIntId(String userId) {
+		return nestedSecurityModel.getPrincipalIntId(userId);
+	}
+
 
 	public static boolean hasActiveOverridingAuth(List<SecurityModelAuthorization> authorizations) {
 		for (SecurityModelAuthorization auth : authorizations) {
