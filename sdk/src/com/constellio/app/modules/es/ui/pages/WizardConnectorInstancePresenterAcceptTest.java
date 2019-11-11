@@ -27,9 +27,7 @@ import java.util.List;
 import static com.constellio.app.ui.i18n.i18n.$;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class WizardConnectorInstancePresenterAcceptTest extends ConstellioTest {
 
@@ -150,7 +148,7 @@ public class WizardConnectorInstancePresenterAcceptTest extends ConstellioTest {
 
 		String id = es.getConnectorHttpInstanceWithCode("newCode").getId();
 
-		assertThat(recordServices.getDocumentById(id).get(Schemas.TITLE)).isEqualTo("new Title");
+		assertThat(recordServices.getDocumentById(id).<String>get(Schemas.TITLE)).isEqualTo("new Title");
 		assertThat(metadataSchemasManager.getSchemaTypes(zeCollection).getSchema(ConnectorHttpDocument.SCHEMA_TYPE + "_" + id))
 				.isNotNull();
 	}

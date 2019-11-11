@@ -1,18 +1,6 @@
 package com.constellio.app.modules.restapi.document;
 
-import com.constellio.app.modules.restapi.core.exception.InvalidDateCombinationException;
-import com.constellio.app.modules.restapi.core.exception.InvalidDateFormatException;
-import com.constellio.app.modules.restapi.core.exception.InvalidMetadataValueException;
-import com.constellio.app.modules.restapi.core.exception.InvalidParameterCombinationException;
-import com.constellio.app.modules.restapi.core.exception.InvalidParameterException;
-import com.constellio.app.modules.restapi.core.exception.MetadataNotFoundException;
-import com.constellio.app.modules.restapi.core.exception.MetadataNotMultivalueException;
-import com.constellio.app.modules.restapi.core.exception.MetadataReferenceNotAllowedException;
-import com.constellio.app.modules.restapi.core.exception.OptimisticLockException;
-import com.constellio.app.modules.restapi.core.exception.ParametersMustMatchException;
-import com.constellio.app.modules.restapi.core.exception.RecordLogicallyDeletedException;
-import com.constellio.app.modules.restapi.core.exception.RecordNotFoundException;
-import com.constellio.app.modules.restapi.core.exception.RequiredParameterException;
+import com.constellio.app.modules.restapi.core.exception.*;
 import com.constellio.app.modules.restapi.core.exception.mapper.RestApiErrorResponse;
 import com.constellio.app.modules.restapi.core.util.CustomHttpHeaders;
 import com.constellio.app.modules.restapi.core.util.DateUtils;
@@ -24,11 +12,7 @@ import com.constellio.app.modules.restapi.document.dto.DocumentTypeDto;
 import com.constellio.app.modules.restapi.resource.dto.AceDto;
 import com.constellio.app.modules.restapi.resource.dto.ExtendedAttributeDto;
 import com.constellio.app.modules.restapi.resource.exception.ResourceTypeNotFoundException;
-import com.constellio.app.modules.restapi.validation.exception.ExpiredSignedUrlException;
-import com.constellio.app.modules.restapi.validation.exception.InvalidSignatureException;
-import com.constellio.app.modules.restapi.validation.exception.UnallowedHostException;
-import com.constellio.app.modules.restapi.validation.exception.UnauthenticatedUserException;
-import com.constellio.app.modules.restapi.validation.exception.UnauthorizedAccessException;
+import com.constellio.app.modules.restapi.validation.exception.*;
 import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.ui.i18n.i18n;
 import com.constellio.data.utils.TimeProvider;
@@ -64,9 +48,7 @@ import static com.constellio.app.modules.restapi.core.util.Permissions.WRITE;
 import static com.constellio.app.modules.restapi.document.enumeration.VersionType.MAJOR;
 import static com.constellio.app.modules.restapi.document.enumeration.VersionType.MINOR;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
-import static com.constellio.sdk.tests.TestUtils.asSet;
-import static com.constellio.sdk.tests.TestUtils.assertThatRecord;
-import static com.constellio.sdk.tests.TestUtils.comparingListAnyOrder;
+import static com.constellio.sdk.tests.TestUtils.*;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -1096,7 +1078,7 @@ public class DocumentRestfulServicePUTAcceptanceTest extends BaseDocumentRestful
 		List<Record> documents = searchServices.search(new LogicalSearchQuery(
 				from(rm.document.schemaType()).where(Schemas.IDENTIFIER).isEqualTo(id)));
 		assertThat(documents.get(0).getTitle()).isEqualTo(minDocumentWithoutAcesToUpdate.getTitle());
-		assertThat(documents.get(0).get(rm.document.author())).isEqualTo(minDocumentToUpdate.getAuthor());
+		assertThat(documents.get(0).<String>get(rm.document.author())).isEqualTo(minDocumentToUpdate.getAuthor());
 
 		assertThat(response.getHeaderString("ETag")).isEqualTo("\"" + documents.get(0).getVersion() + "\"");
 	}

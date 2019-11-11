@@ -88,7 +88,7 @@ public class ConnectorLDAPCrawlerHelperAcceptanceTest extends ConstellioTest {
 		Entry<String, LDAPObjectAttributes> entry = new TestEntry();
 		ConnectorDocument document = crawlerHelper.wrapDocument(connectorInstance, entry, USER, "zUrl");
 		assertThat(document.getURL()).isEqualTo("zUrl");
-		assertThat(document.get(DISTINGUISHED_NAME)).isEqualTo("DN");
+		assertThat(document.<String>get(DISTINGUISHED_NAME)).isEqualTo("DN");
 	}
 
 	private class TestEntry implements Entry<String, LDAPObjectAttributes> {

@@ -47,21 +47,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static com.constellio.app.ui.i18n.i18n.$;
 import static com.constellio.model.services.search.query.logical.LogicalSearchQueryOperators.from;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DisplayFolderPresenterAcceptTest extends ConstellioTest {
 
@@ -749,7 +742,7 @@ public class DisplayFolderPresenterAcceptTest extends ConstellioTest {
 		tx.add(rm.newDocumentWithId("documentInA53").setTitle("Document in folder A53").setFolder(rmRecords.folder_A53));
 		tx.add(rm.newDocumentWithId("documentInA54").setTitle("Document in folder A54").setFolder(rmRecords.folder_A54));
 		tx.add(rm.newDocumentWithId("documentInA55").setTitle("Document in folder A55").setFolder(rmRecords.folder_A55));
-		tx.add(rmRecords.getFolder_A49().set("refToDocument", "documentInA51")
+		tx.add((Folder) rmRecords.getFolder_A49().set("refToDocument", "documentInA51")
 				.set("refToDocuments", asList("documentInA53", "documentInA54")));
 		recordServices.execute(tx);
 

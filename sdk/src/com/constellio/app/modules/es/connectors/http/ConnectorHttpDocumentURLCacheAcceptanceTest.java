@@ -12,9 +12,7 @@ import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.constellio.app.modules.es.connectors.caches.ConnectorDocumentURLCacheStatus.CURRENTLY_FETCHED;
-import static com.constellio.app.modules.es.connectors.caches.ConnectorDocumentURLCacheStatus.FETCHED;
-import static com.constellio.app.modules.es.connectors.caches.ConnectorDocumentURLCacheStatus.NOT_FETCHED;
+import static com.constellio.app.modules.es.connectors.caches.ConnectorDocumentURLCacheStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorHttpDocumentURLCacheAcceptanceTest extends ConstellioTest {
@@ -77,8 +75,8 @@ public class ConnectorHttpDocumentURLCacheAcceptanceTest extends ConstellioTest 
 				.setDigest("digest1"));
 
 		assertThat(cache.getEntry("http://www.perdu.com").getStatus()).isEqualTo(FETCHED);
-		assertThat(cache.getEntry("http://www.perdu.com").getMetadata("digest")).isEqualTo("digest1");
-		assertThat(cache.getEntry("http://www.perdu.com").getMetadata("copyOf")).isNull();
+		assertThat(cache.getEntry("http://www.perdu.com").<String>getMetadata("digest")).isEqualTo("digest1");
+		assertThat(cache.getEntry("http://www.perdu.com").<String>getMetadata("copyOf")).isNull();
 		assertThat(cache.getEntry("http://www.perdu.com").getFetchingStartTime()).isNull();
 
 		//digest url map is only constructed when reading and inserting manually
@@ -90,8 +88,8 @@ public class ConnectorHttpDocumentURLCacheAcceptanceTest extends ConstellioTest 
 		cache.onConnectorGetJobsCalled();
 
 		assertThat(cache.getEntry("http://www.perdu.com").getStatus()).isEqualTo(FETCHED);
-		assertThat(cache.getEntry("http://www.perdu.com").getMetadata("digest")).isEqualTo("digest1");
-		assertThat(cache.getEntry("http://www.perdu.com").getMetadata("copyOf")).isNull();
+		assertThat(cache.getEntry("http://www.perdu.com").<String>getMetadata("digest")).isEqualTo("digest1");
+		assertThat(cache.getEntry("http://www.perdu.com").<String>getMetadata("copyOf")).isNull();
 		assertThat(cache.getEntry("http://www.perdu.com").getFetchingStartTime()).isNull();
 
 		//digest url map is only constructed when reading and inserting manually

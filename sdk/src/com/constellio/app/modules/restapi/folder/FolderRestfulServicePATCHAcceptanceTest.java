@@ -1,41 +1,17 @@
 package com.constellio.app.modules.restapi.folder;
 
-import com.constellio.app.modules.restapi.core.exception.InvalidDateCombinationException;
-import com.constellio.app.modules.restapi.core.exception.InvalidDateFormatException;
-import com.constellio.app.modules.restapi.core.exception.InvalidMetadataValueException;
-import com.constellio.app.modules.restapi.core.exception.InvalidParameterCombinationException;
-import com.constellio.app.modules.restapi.core.exception.InvalidParameterException;
-import com.constellio.app.modules.restapi.core.exception.MetadataNotFoundException;
-import com.constellio.app.modules.restapi.core.exception.MetadataNotMultivalueException;
-import com.constellio.app.modules.restapi.core.exception.MetadataReferenceNotAllowedException;
-import com.constellio.app.modules.restapi.core.exception.OptimisticLockException;
-import com.constellio.app.modules.restapi.core.exception.ParametersMustMatchException;
-import com.constellio.app.modules.restapi.core.exception.RecordNotFoundException;
-import com.constellio.app.modules.restapi.core.exception.RequiredParameterException;
+import com.constellio.app.modules.restapi.core.exception.*;
 import com.constellio.app.modules.restapi.core.exception.mapper.RestApiErrorResponse;
 import com.constellio.app.modules.restapi.core.util.CustomHttpHeaders;
 import com.constellio.app.modules.restapi.core.util.DateUtils;
 import com.constellio.app.modules.restapi.core.util.HttpMethods;
-import com.constellio.app.modules.restapi.folder.dto.AdministrativeUnitDto;
-import com.constellio.app.modules.restapi.folder.dto.CategoryDto;
-import com.constellio.app.modules.restapi.folder.dto.ContainerDto;
-import com.constellio.app.modules.restapi.folder.dto.FolderDto;
-import com.constellio.app.modules.restapi.folder.dto.FolderTypeDto;
-import com.constellio.app.modules.restapi.folder.dto.RetentionRuleDto;
+import com.constellio.app.modules.restapi.folder.dto.*;
 import com.constellio.app.modules.restapi.resource.dto.AceDto;
 import com.constellio.app.modules.restapi.resource.dto.ExtendedAttributeDto;
 import com.constellio.app.modules.restapi.resource.exception.ResourceTypeNotFoundException;
-import com.constellio.app.modules.restapi.validation.exception.ExpiredSignedUrlException;
-import com.constellio.app.modules.restapi.validation.exception.InvalidSignatureException;
-import com.constellio.app.modules.restapi.validation.exception.UnallowedHostException;
-import com.constellio.app.modules.restapi.validation.exception.UnauthenticatedUserException;
-import com.constellio.app.modules.restapi.validation.exception.UnauthorizedAccessException;
+import com.constellio.app.modules.restapi.validation.exception.*;
 import com.constellio.app.modules.rm.model.enums.CopyType;
-import com.constellio.app.modules.rm.wrappers.AdministrativeUnit;
-import com.constellio.app.modules.rm.wrappers.Category;
-import com.constellio.app.modules.rm.wrappers.ContainerRecord;
-import com.constellio.app.modules.rm.wrappers.Folder;
-import com.constellio.app.modules.rm.wrappers.RetentionRule;
+import com.constellio.app.modules.rm.wrappers.*;
 import com.constellio.app.modules.rm.wrappers.type.FolderType;
 import com.constellio.app.ui.i18n.i18n;
 import com.constellio.data.utils.TimeProvider;
@@ -1011,7 +987,7 @@ public class FolderRestfulServicePATCHAcceptanceTest extends BaseFolderRestfulSe
 		List<Record> Folders = searchServices.search(new LogicalSearchQuery(
 				from(rm.folder.schemaType()).where(Schemas.IDENTIFIER).isEqualTo(id)));
 		assertThat(Folders.get(0).getTitle()).isEqualTo("title2");
-		assertThat(Folders.get(0).get(rm.folder.description())).isEqualTo("an other fake description");
+		assertThat(Folders.get(0).<String>get(rm.folder.description())).isEqualTo("an other fake description");
 
 		assertThat(response.getHeaderString("ETag")).isEqualTo("\"" + Folders.get(0).getVersion() + "\"");
 	}
