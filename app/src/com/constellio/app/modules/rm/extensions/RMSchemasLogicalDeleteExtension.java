@@ -196,9 +196,9 @@ public class RMSchemasLogicalDeleteExtension extends RecordExtension {
 	private ValidationErrors isContainerLogicallyDeletable(RecordLogicalDeletionValidationEvent event) {
 		ValidationErrors validationErrors = new ValidationErrors();
 		List<Record> tasks = searchServices.search(filteredQueryForErrorMessages(from(rm.userTask.schemaType())
-						.where(rm.userTask.linkedContainers()).isContaining(asList(event.getRecord().getId()))
-						.andWhere(taskSchemas.userTask.status()).isNotIn(taskSchemas.getFinishedOrClosedStatuses())
-						.andWhere(Schemas.LOGICALLY_DELETED_STATUS).isFalseOrNull()
+				.where(rm.userTask.linkedContainers()).isContaining(asList(event.getRecord().getId()))
+				.andWhere(taskSchemas.userTask.status()).isNotIn(taskSchemas.getFinishedOrClosedStatuses())
+				.andWhere(Schemas.LOGICALLY_DELETED_STATUS).isFalseOrNull()
 		));
 		if (!tasks.isEmpty()) {
 			validationErrors.add(RMSchemasLogicalDeleteExtension.class, "containerLinkedToTask", toRecordsParameter(tasks));

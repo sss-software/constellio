@@ -23,6 +23,11 @@ public class QueryCounter extends BigVaultServerExtension {
 		dataLayerFactory.getExtensions().getSystemWideExtensions().bigVaultServerExtension.add(this);
 	}
 
+	public QueryCounter(DataLayerFactory dataLayerFactory) {
+		this.filter = (AfterQueryParams p) -> true;
+		dataLayerFactory.getExtensions().getSystemWideExtensions().bigVaultServerExtension.add(this);
+	}
+
 	@Override
 	public void afterQuery(AfterQueryParams params) {
 		if (!isAlwaysExcludedQueryName(params.getQueryName()) && filter.apply(params)) {
