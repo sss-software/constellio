@@ -36,10 +36,13 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import elemental.json.JsonArray;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
@@ -49,7 +52,7 @@ import static com.constellio.app.ui.i18n.i18n.$;
 @Slf4j
 public class PdfTronViewer extends VerticalLayout implements ViewChangeListener {
 
-	public static final String[] SUPPORTED_EXTENTION = {"pdf", "pdf/a", "xfdf", "fdf", "docx", "xlsx", "pptx", "jpg", "png"};
+	public static final String[] SUPPORTED_EXTENSIONS = {"pdf", "pdf/a", "xfdf", "fdf", "docx", "xlsx", "pptx", "jpg", "png"};
 	private static final String CONTENT_RESOURCE_KEY_PREFIX = "document.file.";
 	private static final String ANNOTATION_RESOURCE_KEY = "document.annotation";
 	public static final String PDFTRON_CANVAS_ID = "pdftron-canvas";
@@ -73,8 +76,6 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 	private Label anOtherUserIdEditing;
 	private Label anOtherPageIsEdtting;
 
-	private VerticalLayout mainLayout;
-
 	private boolean userHasRightToEditOtherUserAnnotation;
 	private String documentContentUrl;
 	private String documentAnnotationUrl;
@@ -86,7 +87,6 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 	private Button topRightButton = null;
 
 	private String searchTerm = null;
-
 
 	public PdfTronViewer(String recordId, ContentVersionVO contentVersion, String metadataCode, boolean readOnlyMode,
 						 String license) {
@@ -109,15 +109,13 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 		ResourceReference documentAnnotationResourceReference = ResourceReference.create(documentAnnotationResource, current, documentAnnotationResourceKey);
 		documentAnnotationUrl = documentAnnotationResourceReference.getURL();
 
-		canvasId = PDFTRON_CANVAS_ID + RandomStringUtils.random(13, true, true);
-
 		this.pdfTronPresenter = new PdfTronPresenter(this, this.recordId, metadataCode, contentVersion);
 
 		this.userHasRightToEditOtherUserAnnotation = pdfTronPresenter.hasEditAllAnnotation();
 
 		setWidth("100%");
-		setHeight("800px");
-		mainLayout = new VerticalLayout();
+		setHeight("100%");
+		//		setHeight("800px");
 
 		isViewerInReadOnly = !pdfTronPresenter.doesCurrentPageHaveLock();
 
@@ -200,21 +198,17 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 		buttonLayout2.addComponent(enableDisableAnnotation);
 
 		buttonLayout2.setComponentAlignment(enableDisableAnnotation, Alignment.MIDDLE_RIGHT);
-		mainLayout.setSizeFull();
-
-		canvas = new Label();
-		canvas.setId(canvasId);
-		canvas.setHeight("100%");
 
 		ensureRequestHandler();
 
-		mainLayout.addComponent(getAnnotationOfOtherVersionLayout);
-		mainLayout.addComponent(buttonLayout2);
-		mainLayout.addComponents(canvas);
-		mainLayout.setExpandRatio(canvas, 1);
-		addComponent(mainLayout);
+		addComponent(getAnnotationOfOtherVersionLayout);
+		addComponent(buttonLayout2);
 	}
 
+	public static boolean isSupported(String fileName) {
+		String extension = StringUtils.lowerCase(FilenameUtils.getExtension(fileName));
+		return Arrays.asList(SUPPORTED_EXTENSIONS).contains(extension);
+	}
 
 	public void setSearchTerm(String searchTerm) {
 		this.searchTerm = searchTerm;
@@ -364,7 +358,7 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 		if (someOneElseIsEditingAnnotations) {
 			anOtherUserIdEditing = new BaseLabel($("pdfTronViewer.someOneElseIdEditingAnnotation",
 					pdfTronPresenter.getUserName(currentAnnotationLockUser)));
-			mainLayout.addComponent(anOtherUserIdEditing, 0);
+			addComponent(anOtherUserIdEditing, 0);
 
 			if (showNotification) {
 				Notification.show($("pdfTronViewer.errorAnOtherUserHasAnnotationLock"), Type.WARNING_MESSAGE);
@@ -373,7 +367,7 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 			editAnnotationBtn.setEnabled(false);
 		} else if (pdfTronPresenter.doesUserHaveLock() && !pdfTronPresenter.doesCurrentPageHaveLock()) {
 			anOtherPageIsEdtting = new BaseLabel($("pdfTronViewer.anOtherPageIsEditting"));
-			mainLayout.addComponent(anOtherPageIsEdtting, 0);
+			addComponent(anOtherPageIsEdtting, 0);
 			editAnnotationBtn.setEnabled(false);
 
 			if (showNotification) {
@@ -398,13 +392,23 @@ public class PdfTronViewer extends VerticalLayout implements ViewChangeListener 
 	}
 
 	public void showWebViewer() {
+		if (canvas != null) {
+			removeComponent(canvas);
+		}
+
+		canvasId = PDFTRON_CANVAS_ID + RandomStringUtils.random(13, true, true);
+		canvas = new Label();
+		canvas.setId(canvasId);
+		//		canvas.setHeight("100%");
+		addComponent(canvas);
+		//		setExpandRatio(canvas, 1);
+		
 		pdfTronPresenter.releaseAnnotationLockIfUserhasIt();
 		stopThreadAndDontReleaseLock();
 
 		ConstellioUI current = ConstellioUI.getCurrent();
 		UserVO currentUser = current.getSessionContext().getCurrentUser();
 		String userFirstNameAndLastName = currentUser.getFirstName() + " " + currentUser.getLastName();
-
 
 		String saveButtonCallbackURL = pdfTronViewerRequestHandler.getCallbackURL();
 
