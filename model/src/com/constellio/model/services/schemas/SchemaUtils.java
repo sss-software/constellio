@@ -527,7 +527,7 @@ public class SchemaUtils {
 		MetadataSchemaType schemaType = allSchemaTypes.getSchemaType(schemaTypeCode);
 		for (Metadata metadata : schemaType.getAllMetadatas()) {
 			if (metadata.isChildOfRelationship() || metadata.isTaxonomyRelationship()) {
-				String referencedSchemaType = metadata.getReferencedSchemaType();
+				String referencedSchemaType = metadata.getReferencedSchemaTypeCode();
 				if (schemaTypesInHierarchy.add(referencedSchemaType)) {
 					schemaTypesInHierarchy
 							.addAll(getSchemaTypesInHierarchyOf(referencedSchemaType, allSchemaTypes, schemaTypesInHierarchy));
@@ -543,7 +543,7 @@ public class SchemaUtils {
 
 		List<Metadata> returnedMetadatas = new ArrayList<>();
 		for (Metadata metadata : metadatas) {
-			if (metadata.getType() == REFERENCE && typesWithSummaryCache.contains(metadata.getReferencedSchemaType())) {
+			if (metadata.getType() == REFERENCE && typesWithSummaryCache.contains(metadata.getReferencedSchemaTypeCode())) {
 				returnedMetadatas.add(metadata);
 			}
 		}

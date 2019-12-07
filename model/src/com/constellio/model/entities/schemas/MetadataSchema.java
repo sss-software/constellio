@@ -66,6 +66,8 @@ public class MetadataSchema implements Serializable {
 
 	private List<Metadata> referencesToSummaryCachedType;
 
+	private MetadataSchemaType schemaType;
+
 	public MetadataSchema(short typeId, short id, String localCode, String code, CollectionInfo collectionInfo,
 						  Map<Language, String> labels,
 						  List<Metadata> metadatas,
@@ -98,7 +100,18 @@ public class MetadataSchema implements Serializable {
 		this.cacheIndexMetadatas = new SchemaUtils().buildListOfCacheIndexMetadatas(metadatas);
 		this.referencesToSummaryCachedType = new SchemaUtils().buildListOfReferencesToSummaryCachedType(metadatas, typesWithSummaryCache);
 		this.hasEagerTransientMetadata = metadatas.stream().anyMatch((m) -> m.getTransiency() == MetadataTransiency.TRANSIENT_EAGER);
+		for (Metadata metadata : metadatas) {
+			metadata.setBuiltSchema(this);
+		}
 
+	}
+
+
+	public void setBuiltSchemaType(MetadataSchemaType schemaType) {
+		if (this.schemaType != null) {
+			throw new IllegalStateException("Schematype already");
+		}
+		this.schemaType = schemaType;
 	}
 
 	public short getTypeId() {
@@ -260,12 +273,12 @@ public class MetadataSchema implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "schemaValidators", "calculatedInfos");
+		return HashCodeBuilder.reflectionHashCode(this, "schemaValidators", "calculatedInfos", "schemaType");
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, "schemaValidators", "calculatedInfos");
+		return EqualsBuilder.reflectionEquals(this, obj, "schemaValidators", "calculatedInfos", "schemaType");
 	}
 
 	@Override
@@ -317,4 +330,7 @@ public class MetadataSchema implements Serializable {
 		return active;
 	}
 
+	public MetadataSchemaType getSchemaType() {
+		return schemaType;
+	}
 }

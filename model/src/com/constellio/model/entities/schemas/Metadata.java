@@ -88,6 +88,9 @@ public class Metadata implements DataStoreField {
 
 	final boolean secured;
 
+	MetadataSchema schema;
+	MetadataSchemaType referencedSchemaType;
+
 	Metadata(int id, String localCode, MetadataValueType type, boolean multivalue) {
 		this(id, "global_default", localCode, type, multivalue, false);
 	}
@@ -152,6 +155,13 @@ public class Metadata implements DataStoreField {
 		this.secured = getAccessRestrictions() != null && getAccessRestrictions().getRequiredReadRoles() != null &&
 					   !getAccessRestrictions().getRequiredReadRoles().isEmpty();
 
+	}
+
+	public void setBuiltSchema(MetadataSchema schema) {
+		if (this.schema != null) {
+			throw new IllegalStateException("Schematype already");
+		}
+		this.schema = schema;
 	}
 
 	public boolean isFilteredByAny(List<MetadataFilter> metadataFilterList) {
@@ -342,8 +352,15 @@ public class Metadata implements DataStoreField {
 		return type;
 	}
 
-	public String getReferencedSchemaType() {
+	public String getReferencedSchemaTypeCode() {
 		return getAllowedReferences().getTypeWithAllowedSchemas();
+	}
+
+	public MetadataSchemaType getReferencedSchemaType() {
+		if (referencedSchemaType == null) {
+			referencedSchemaType = schema.getSchemaType().getSchemaTypes().getSchemaType(getReferencedSchemaTypeCode());
+		}
+		return referencedSchemaType;
 	}
 
 	public AllowedReferences getAllowedReferences() {
@@ -472,13 +489,13 @@ public class Metadata implements DataStoreField {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "dataEntry", "structureFactory", "encryptionServicesFactory");
+		return HashCodeBuilder.reflectionHashCode(this, "dataEntry", "structureFactory", "encryptionServicesFactory", "schema");
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj, "dataEntry", "recordMetadataValidators", "structureFactory",
-				"encryptionServicesFactory");
+				"encryptionServicesFactory", "schema");
 	}
 
 	@Override
@@ -641,5 +658,18 @@ public class Metadata implements DataStoreField {
 
 	public Short getTypeId() {
 		return typeId;
+	}
+
+	public MetadataSchema getSchema() {
+		return schema;
+	}
+
+	public MetadataSchemaType getSchemaType() {
+		return schema.getSchemaType();
+	}
+
+	public boolean isStoredInSummaryCache() {
+		return SchemaUtils.isSummary(this);
+
 	}
 }
