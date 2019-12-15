@@ -65,7 +65,12 @@ public abstract class LazyResultsIterator<T> extends LazyIterator<T> implements 
 		if (currentBatchIndex < currentBatch.size()) {
 			RecordDTO recordDTO = currentBatch.get(currentBatchIndex++);
 			lastId = recordDTO.getId();
-			return convert(recordDTO);
+			String collection = recordDTO.getCollection();
+			if (collection != null) {
+				return convert(recordDTO);
+			} else {
+				return getNextOrNull();
+			}
 		} else {
 			return null;
 		}

@@ -22,6 +22,8 @@ public class UnionMetadataAggregationHandler implements MetadataAggregationHandl
 
 		for (SearchAggregatedValuesParamsQuery searchQuery : params.getQueries()) {
 			LogicalSearchQuery query = new LogicalSearchQuery(searchQuery.getQuery());
+
+			//because
 			boolean areAllMetadatasInSummary = params.getInputMetadatas().stream().allMatch(SchemaUtils::isSummary);
 			query.setReturnedMetadatas(areAllMetadatasInSummary ?
 									   ReturnedMetadatasFilter.onlySummaryFields() :
