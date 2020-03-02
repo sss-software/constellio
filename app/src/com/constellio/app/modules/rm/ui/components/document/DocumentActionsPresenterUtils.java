@@ -19,7 +19,6 @@ import com.constellio.app.modules.rm.wrappers.Document;
 import com.constellio.app.modules.rm.wrappers.Folder;
 import com.constellio.app.services.factories.ConstellioFactories;
 import com.constellio.app.ui.application.ConstellioUI;
-import com.constellio.app.ui.entities.AuthorizationVO;
 import com.constellio.app.ui.entities.ContentVersionVO;
 import com.constellio.app.ui.entities.RecordVO;
 import com.constellio.app.ui.entities.RecordVO.VIEW_MODE;
@@ -43,7 +42,6 @@ import com.constellio.model.entities.records.wrappers.SearchEvent;
 import com.constellio.model.entities.records.wrappers.User;
 import com.constellio.model.entities.schemas.Schemas;
 import com.constellio.model.entities.schemas.entries.DataEntryType;
-import com.constellio.model.entities.security.global.AuthorizationModificationRequest;
 import com.constellio.model.extensions.ModelLayerCollectionExtensions;
 import com.constellio.model.frameworks.validation.ValidationErrors;
 import com.constellio.model.services.contents.ContentConversionManager;
@@ -66,7 +64,6 @@ import static com.constellio.app.ui.i18n.i18n.$;
 import static com.constellio.app.ui.pages.search.SearchPresenter.CURRENT_SEARCH_EVENT;
 import static com.constellio.app.ui.pages.search.SearchPresenter.SEARCH_EVENT_DWELL_TIME;
 import static com.constellio.model.entities.schemas.Schemas.LEGACY_ID;
-import static com.constellio.model.entities.security.global.AuthorizationModificationRequest.modifyAuthorizationOnRecord;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
@@ -312,37 +309,6 @@ public class DocumentActionsPresenterUtils<T extends DocumentActionsComponent> i
 		} else {
 			MessageUtils.getCannotDeleteWindow(validateDeleteDocumentPossibleExtensively()).openWindow();
 		}
-	}
-
-	public void unshareDocumentButtonClicked(Map<String, String> params) {
-
-		Authorization authorization = rmSchemasRecordsServices.getSolrAuthorizationDetails(getCurrentUser(), documentVO.getId());
-		try {
-			rmSchemasRecordsServices.getModelLayerFactory()
-					.newAuthorizationsServices().execute(toAuthorizationModificationRequest(authorization, documentVO.getId()));
-		} catch (RecordServicesRuntimeException.RecordServicesRuntimeException_CannotLogicallyDeleteRecord e) {
-			actionsComponent.showMessage(MessageUtils.toMessage(e));
-			return;
-		}
-		actionsComponent.navigate().to().recordsManagement();
-	}
-
-	private AuthorizationModificationRequest toAuthorizationModificationRequest(Authorization authorization,
-																				String recordId) {
-		String authId = authorization.getId();
-
-		AuthorizationModificationRequest request = modifyAuthorizationOnRecord(authId, currentUser.getCollection(), recordId);
-		request = request.withNewAccessAndRoles(authorization.getRoles());
-		request = request.withNewStartDate(authorization.getStartDate());
-		request = request.withNewEndDate(authorization.getEndDate());
-
-		List<String> principals = new ArrayList<>();
-		principals.addAll(authorization.getPrincipals());
-		request = request.withNewPrincipalIds(principals);
-		request = request.setExecutedBy(getCurrentUser());
-
-		return request;
-
 	}
 
 	public void linkToDocumentButtonClicked() {

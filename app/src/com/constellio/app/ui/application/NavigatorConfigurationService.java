@@ -41,6 +41,7 @@ import com.constellio.app.ui.pages.management.authorizations.ListContentRoleAuth
 import com.constellio.app.ui.pages.management.authorizations.ListPrincipalAccessAuthorizationsViewImpl;
 import com.constellio.app.ui.pages.management.authorizations.PublishDocumentViewImpl;
 import com.constellio.app.ui.pages.management.authorizations.ShareContentListViewImpl;
+import com.constellio.app.ui.pages.management.authorizations.ShareContentModifyImpl;
 import com.constellio.app.ui.pages.management.authorizations.ShareContentViewImpl;
 import com.constellio.app.ui.pages.management.bagInfo.AddEditBagInfo.AddEditBagInfoViewImpl;
 import com.constellio.app.ui.pages.management.bagInfo.DisplayBagInfo.DisplayBagInfoViewImpl;
@@ -284,7 +285,7 @@ public class NavigatorConfigurationService implements Serializable {
 		viewProviders.add(new ClassBasedViewProvider(LIST_OBJECT_ACCESS_AND_ROLE_AUTHORIZATIONS,
 				ListContentAccessAndRoleAuthorizationsViewImpl.class));
 		viewProviders.add(new ClassBasedViewProvider(SHARE_CONTENT, ShareContentViewImpl.class));
-		viewProviders.add(new ClassBasedViewProvider(MODIFY_SHARE, ShareContentViewImpl.class));
+		viewProviders.add(new ClassBasedViewProvider(MODIFY_SHARE, ShareContentModifyImpl.class));
 		viewProviders.add(new ClassBasedViewProvider(PUBLISH_DOCUMENT, PublishDocumentViewImpl.class));
 		viewProviders.add(new ClassBasedViewProvider(COLLECTION_USER_LIST, ListCollectionUserViewImpl.class));
 		viewProviders.add(new ClassBasedViewProvider(COLLECTION_USER, CollectionUserViewImpl.class));

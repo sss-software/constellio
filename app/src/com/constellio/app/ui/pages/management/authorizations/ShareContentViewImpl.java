@@ -19,15 +19,15 @@ import com.vaadin.ui.Component;
 import static com.constellio.app.ui.i18n.i18n.$;
 
 public class ShareContentViewImpl extends BaseViewImpl implements ShareContentView {
-	private final ShareContentPresenter presenter;
-	private RecordVO record;
+	protected final ShareContentPresenter presenter;
+	protected RecordVO record;
 
-	@PropertyId("users") private ListAddRemoveRecordLookupField users;
-	@PropertyId("groups") private ListAddRemoveRecordLookupField groups;
-	@PropertyId("accessRoles") private ListOptionGroup accessRoles;
-	@PropertyId("userRoles") private ListOptionGroup userRoles;
-	@PropertyId("startDate") private JodaDateField startDate;
-	@PropertyId("endDate") private JodaDateField endDate;
+	@PropertyId("users") protected ListAddRemoveRecordLookupField users;
+	@PropertyId("groups") protected ListAddRemoveRecordLookupField groups;
+	@PropertyId("accessRoles") protected ListOptionGroup accessRoles;
+	@PropertyId("userRoles") protected ListOptionGroup userRoles;
+	@PropertyId("startDate") protected JodaDateField startDate;
+	@PropertyId("endDate") protected JodaDateField endDate;
 
 	public ShareContentViewImpl() {
 		presenter = new ShareContentPresenter(this);
@@ -59,36 +59,21 @@ public class ShareContentViewImpl extends BaseViewImpl implements ShareContentVi
 		buildAccessField();
 		buildRolesField();
 		buildDateFields();
-		AuthorizationVO shareVO = presenter.getShareAuthorization(record.getRecord());
-		if (shareVO != null) {
-			return new BaseForm<AuthorizationVO>(
-					shareVO, this, users, groups, accessRoles, userRoles, startDate, endDate) {
-				@Override
-				protected void saveButtonClick(AuthorizationVO authorization)
-						throws ValidationException {
-					presenter.authorizationModifyRequested(authorization);
-				}
 
-				@Override
-				protected void cancelButtonClick(AuthorizationVO authorization) {
-					returnFromPage();
-				}
-			};
-		} else {
-			return new BaseForm<AuthorizationVO>(
-					AuthorizationVO.forContent(record.getId()), this, users, groups, accessRoles, userRoles, startDate, endDate) {
-				@Override
-				protected void saveButtonClick(AuthorizationVO authorization)
-						throws ValidationException {
-					presenter.authorizationCreationRequested(authorization);
-				}
+		return new BaseForm<AuthorizationVO>(
+				AuthorizationVO.forContent(record.getId()), this, users, groups, accessRoles, userRoles, startDate, endDate) {
+			@Override
+			protected void saveButtonClick(AuthorizationVO authorization)
+					throws ValidationException {
+				presenter.authorizationCreationRequested(authorization);
+			}
 
-				@Override
-				protected void cancelButtonClick(AuthorizationVO authorization) {
-					returnFromPage();
-				}
-			};
-		}
+			@Override
+			protected void cancelButtonClick(AuthorizationVO authorization) {
+				returnFromPage();
+			}
+		};
+
 	}
 
 	@Override
@@ -96,7 +81,7 @@ public class ShareContentViewImpl extends BaseViewImpl implements ShareContentVi
 		presenter.backButtonClicked();
 	}
 
-	private void buildUsersAndGroupsField() {
+	protected void buildUsersAndGroupsField() {
 		users = new ListAddRemoveRecordLookupField(User.SCHEMA_TYPE);
 		users.setCaption($("AuthorizationsView.users"));
 		users.setId("users");
@@ -106,7 +91,7 @@ public class ShareContentViewImpl extends BaseViewImpl implements ShareContentVi
 		groups.setId("groups");
 	}
 
-	private void buildAccessField() {
+	protected void buildAccessField() {
 		accessRoles = new ListOptionGroup($("AuthorizationsView.access"));
 		for (String accessCode : presenter.getAllowedAccesses()) {
 			accessRoles.addItem(accessCode);
@@ -117,7 +102,7 @@ public class ShareContentViewImpl extends BaseViewImpl implements ShareContentVi
 		accessRoles.setId("accessRoles");
 	}
 
-	private void buildRolesField() {
+	protected void buildRolesField() {
 		userRoles = new ListOptionGroup($("AuthorizationsView.userRoles"));
 		for (String roleCode : presenter.getAllowedRoles()) {
 			userRoles.addItem(roleCode);
@@ -129,7 +114,7 @@ public class ShareContentViewImpl extends BaseViewImpl implements ShareContentVi
 		userRoles.setId("userRoles");
 	}
 
-	private void buildDateFields() {
+	protected void buildDateFields() {
 		startDate = new JodaDateField();
 		startDate.setCaption($("AuthorizationsView.startDate"));
 		startDate.setId("startDate");

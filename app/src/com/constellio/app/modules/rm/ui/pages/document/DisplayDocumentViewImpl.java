@@ -40,6 +40,7 @@ import com.constellio.app.ui.framework.components.splitpanel.CollapsibleHorizont
 import com.constellio.app.ui.framework.components.table.ContentVersionVOTable;
 import com.constellio.app.ui.framework.components.table.RecordVOTable;
 import com.constellio.app.ui.framework.components.table.columns.EventVOTableColumnsManager;
+import com.constellio.app.ui.framework.components.table.columns.SharesVOTableColumnsManager;
 import com.constellio.app.ui.framework.components.table.columns.TableColumnsManager;
 import com.constellio.app.ui.framework.components.table.columns.TaskVOTableColumnsManager;
 import com.constellio.app.ui.framework.components.viewers.ContentViewer;
@@ -107,6 +108,7 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	private ContentVersionVOTable versionTable;
 	private Component tasksComponent;
 	private Component eventsComponent;
+	private Component sharesComponent;
 	private UpdateContentVersionWindowImpl uploadWindow;
 	private DisplayButton displayDocumentButton;
 	private LinkButton openDocumentButton;
@@ -115,6 +117,8 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	private ConfirmDialogButton deleteSelectedVersions;
 	private boolean isContentViewerInSplitPanel = false;
 	private boolean isInSeparateTab = false;
+
+	private RecordVODataProvider sharesDataProvider;
 
 	private boolean contentViewerInitiallyVisible;
 	private boolean waitForContentViewerToBecomeVisible;
@@ -317,7 +321,9 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 		tabSheet.addTab(tasksComponent, $("DisplayDocumentView.tabs.tasks"));
 
 		eventsComponent = new CustomComponent();
+		sharesComponent = new CustomComponent();
 		tabSheet.addTab(eventsComponent, $("DisplayDocumentView.tabs.logs"));
+		tabSheet.addTab(sharesComponent, $("DisplayFolderView.tabs.shares"));
 		if (presenter.hasCurrentUserPermissionToViewEvents()) {
 			tabSheet.getTab(eventsComponent).setEnabled(true);
 		} else {
@@ -332,6 +338,9 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 
 				} else if (event.getTabSheet().getSelectedTab() == tasksComponent) {
 					presenter.tasksTabSelected();
+
+				} else if (event.getTabSheet().getSelectedTab() == sharesComponent) {
+					presenter.sharesTabSelected();
 
 				} else if (event.getTabSheet().getSelectedTab() == contentViewer) {
 					contentViewer.refresh();
@@ -820,6 +829,39 @@ public class DisplayDocumentViewImpl extends BaseViewImpl implements DisplayDocu
 	@Override
 	public void setTaxonomyCode(String taxonomyCode) {
 		this.taxonomyCode = taxonomyCode;
+	}
+
+	@Override
+	public void setShares(RecordVODataProvider dataProvider) {
+		this.sharesDataProvider = dataProvider;
+	}
+
+	@Override
+	public void selectSharesTab() {
+		if (!(sharesComponent instanceof Table)) {
+			RecordVOTable table = new RecordVOTable($("DisplayDocumentView.tabs.logs"),
+					new RecordVOLazyContainer(sharesDataProvider, false)) {
+				@Override
+				protected TableColumnsManager newColumnsManager() {
+					return new SharesVOTableColumnsManager();
+				}
+			};
+			table.setSizeFull();
+			tabSheet.replaceComponent(sharesComponent, table);
+			table.addItemClickListener(new ItemClickListener() {
+				@Override
+				public void itemClick(ItemClickEvent event) {
+
+					RecordVOItem recordVOItem = (RecordVOItem) event.getItem();
+
+					if (recordVOItem != null) {
+						presenter.modifyShare(recordVOItem.getRecord().getId());
+					}
+				}
+			});
+			sharesComponent = table;
+		}
+		tabSheet.setSelectedTab(sharesComponent);
 	}
 
 	public void addTabSheetDecorator(TabSheetDecorator decorator) {

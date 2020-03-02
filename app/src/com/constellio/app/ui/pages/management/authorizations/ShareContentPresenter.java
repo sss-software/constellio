@@ -138,6 +138,15 @@ public class ShareContentPresenter extends BasePresenter<ShareContentView> {
 		return null;
 	}
 
+	public AuthorizationVO getAuthorization(Record authorization) {
+		AuthorizationToVOBuilder builder = new AuthorizationToVOBuilder(this.modelLayerFactory);
+		Authorization auth = authorizationsServices().getAuthorization(collection, authorization.getId());
+		if (auth != null) {
+			return builder.build(auth);
+		}
+		return null;
+	}
+
 	private AuthorizationsServices authorizationsServices() {
 		if (authorizationsServices == null) {
 			authorizationsServices = modelLayerFactory.newAuthorizationsServices();

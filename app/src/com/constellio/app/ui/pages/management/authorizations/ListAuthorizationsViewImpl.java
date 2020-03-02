@@ -336,7 +336,7 @@ public abstract class ListAuthorizationsViewImpl extends BaseViewImpl implements
 
 	private Table buildDocumentTable(List<DocumentVO> documentVOS) {
 		Container container = buildDocumentContainer(documentVOS);
-		String tableCaption = $("ListContentShareView.nombreGlobalLinks", container.size());
+		String tableCaption = $("ListContentShareView.globalLinksCount", container.size());
 
 		Table table = new BaseTable(getClass().getName(), tableCaption, container);
 		table.setPageLength(container.size());

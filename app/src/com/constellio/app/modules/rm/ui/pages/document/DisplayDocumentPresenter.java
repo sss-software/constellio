@@ -26,6 +26,7 @@ import com.constellio.app.ui.entities.ContentVersionVO;
 import com.constellio.app.ui.entities.MetadataSchemaVO;
 import com.constellio.app.ui.entities.RecordVO;
 import com.constellio.app.ui.entities.RecordVO.VIEW_MODE;
+import com.constellio.app.ui.framework.builders.AuthorizationToVOBuilder;
 import com.constellio.app.ui.framework.builders.ContentVersionToVOBuilder;
 import com.constellio.app.ui.framework.builders.EventToVOBuilder;
 import com.constellio.app.ui.framework.builders.MetadataSchemaToVOBuilder;
@@ -53,6 +54,7 @@ import com.constellio.model.services.search.query.logical.FunctionLogicalSearchQ
 import com.constellio.model.services.search.query.logical.LogicalSearchQuery;
 import com.constellio.model.services.search.query.logical.LogicalSearchQuerySort;
 import com.constellio.model.services.search.query.logical.QueryExecutionMethod;
+import com.constellio.model.services.security.AuthorizationsServices;
 import com.constellio.model.services.trash.TrashServices;
 import com.vaadin.ui.Button;
 import org.apache.commons.lang3.ObjectUtils;
@@ -78,9 +80,11 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 	private MetadataSchemaToVOBuilder schemaVOBuilder = new MetadataSchemaToVOBuilder();
 	private RecordVODataProvider tasksDataProvider;
 	private RecordVODataProvider eventsDataProvider;
+	private RecordVODataProvider sharesDataProvider;
 	private RMSchemasRecordsServices rm;
 	private boolean hasWriteAccess;
 	private TrashServices trashServices;
+	private AuthorizationsServices authorizationsServices;
 	private Record record;
 	private MetadataSchemaVO tasksSchemaVO;
 
@@ -134,6 +138,7 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 		if (recordVO != null && params == null) {
 			forParams(recordVO.getId());
 		}
+		this.authorizationsServices = new AuthorizationsServices(appLayerFactory.getModelLayerFactory());
 	}
 
 	public String getFavGroupId() {
@@ -162,6 +167,14 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 
 	public Record getRecord() {
 		return record;
+	}
+
+	public AuthorizationsServices getAuthorizationsServices() {
+
+		if (authorizationsServices == null) {
+			this.authorizationsServices = new AuthorizationsServices(appLayerFactory.getModelLayerFactory());
+		}
+		return authorizationsServices;
 	}
 
 	public boolean hasPageAccess(User user) {
@@ -238,10 +251,13 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 			}
 		};
 
+		sharesDataProvider = getSharedAuthDataProvider();
 		ContentVersionVO contentVersionVO = documentVO.getContent();
 		lastKnownContentVersionNumber = contentVersionVO != null ? contentVersionVO.getVersion() : null;
 		lastKnownCheckoutUserId = contentVersionVO != null ? contentVersionVO.getCheckoutUserId() : null;
 		lastKnownLength = contentVersionVO != null ? contentVersionVO.getLength() : null;
+
+		view.setShares(sharesDataProvider);
 	}
 
 	public int getTaskCount() {
@@ -329,6 +345,22 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 				return new BetaWorkflowServices(view.getCollection(), appLayerFactory).getWorkflowsQuery();
 			}
 		};
+	}
+
+	public RecordVODataProvider getSharedAuthDataProvider() {
+		final MetadataSchemaVO authorizationVo = schemaVOBuilder
+				.build(getAuthorizationsServices().getAuthorizationSchema(collection), VIEW_MODE.TABLE, view.getSessionContext());
+		return new RecordVODataProvider(authorizationVo, new AuthorizationToVOBuilder(modelLayerFactory),
+				modelLayerFactory, view.getSessionContext()) {
+			@Override
+			public LogicalSearchQuery getQuery() {
+				return getAuthorizationsServices().getRecordSharedAuthorizationsQuery(collection, documentVO.getId());
+			}
+		};
+	}
+
+	void sharesTabSelected() {
+		view.selectSharesTab();
 	}
 
 	public void workflowStartRequested(RecordVO record) {
@@ -546,5 +578,9 @@ public class DisplayDocumentPresenter extends SingleSchemaBasePresenter<DisplayD
 
 	public void eventsTabSelected() {
 		view.setEvents(getEventsDataProvider());
+	}
+
+	public void modifyShare(String id) {
+		view.navigate().to().modifyShare(id);
 	}
 }

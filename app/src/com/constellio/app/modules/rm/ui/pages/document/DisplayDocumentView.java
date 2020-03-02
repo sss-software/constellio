@@ -31,4 +31,8 @@ public interface DisplayDocumentView extends BaseView, RecordsManagementViewGrou
 
 	void setTaxonomyCode(String taxonomyCode);
 
+	void setShares(RecordVODataProvider dataProvider);
+
+	void selectSharesTab();
+
 }

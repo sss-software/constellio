@@ -234,21 +234,6 @@ public class DocumentMenuBarImpl extends BaseMenuBar implements DocumentMenuBar 
 			});
 		}
 
-		if (unshareDocumentButtonVisible) {
-			MenuItem deleteDocumentItem = rootItem.addItem($("DocumentContextMenu.deleteDocument"), FontAwesome.REPLY, null);
-			deleteDocumentItem.setCommand(new ConfirmDialogMenuBarItemCommand(DialogMode.WARNING) {
-				@Override
-				protected String getConfirmDialogMessage() {
-					return $("ConfirmDialog.confirmUnshare");
-				}
-
-				@Override
-				protected void confirmButtonClick(ConfirmDialog dialog) {
-					presenter.unshareDocumentButtonClicked(ParamUtils.getCurrentParams());
-				}
-			});
-		}
-
 		if (uploadButtonVisible) {
 			MenuItem uploadItem = rootItem.addItem($("DocumentContextMenu.upload"), FontAwesome.UPLOAD, null);
 			uploadItem.setCommand(new Command() {

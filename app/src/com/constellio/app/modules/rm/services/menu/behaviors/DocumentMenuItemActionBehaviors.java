@@ -398,11 +398,6 @@ public class DocumentMenuItemActionBehaviors {
 		updateSearchResultClicked(document.getWrappedRecord());
 	}
 
-	public void modifyShare(Document document, MenuItemActionBehaviorParams params) {
-		params.getView().navigate().to().shareContent(document.getId());
-		updateSearchResultClicked(document.getWrappedRecord());
-	}
-
 	public void unshare(Document document, MenuItemActionBehaviorParams params) {
 
 		Button unshareDocumentButton = new DeleteButton($("DisplayDocumentView.deleteDocument")) {

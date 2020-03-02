@@ -773,9 +773,7 @@ public class AuthorizationsServices {
 					LOGGER.error("Missing authorization '" + authId + "'");
 				}
 			}
-
 		}
-
 
 		return authorizations;
 	}
