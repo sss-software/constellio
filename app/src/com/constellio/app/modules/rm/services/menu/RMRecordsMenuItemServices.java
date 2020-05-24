@@ -387,10 +387,8 @@ public class RMRecordsMenuItemServices {
 					}
 					possibleCount += actionPossible ? 1 : 0;
 				}
-				return calculateCorrectActionState(possibleCount - ignoredCount,
-						ignoredCount == possibleCount && ignoredCount != 0 ? ignoredCount : (records.size() - possibleCount),
+				return calculateCorrectActionState(possibleCount, records.size() - possibleCount,
 						$("RMRecordsMenuItemServices.actionImpossible"));
-
 				//TODO Merge - Recovered from 9.0.3, deleted in 9.1
 //			case RMRECORDS_CHECKOUT:
 //				int ignoredCount = 0;
@@ -706,6 +704,7 @@ public class RMRecordsMenuItemServices {
 		RMRECORDS_BATCH_DELETE(asList(Document.SCHEMA_TYPE, Folder.SCHEMA_TYPE, ContainerRecord.SCHEMA_TYPE), 100000, true),
 		RMRECORDS_CONSULT_LINK(asList(RMTask.SCHEMA_TYPE, Document.SCHEMA_TYPE, Folder.SCHEMA_TYPE,
 				ContainerRecord.SCHEMA_TYPE, StorageSpace.SCHEMA_TYPE), 10000, true),
+		//TODO merge : Est-ce que CHECKOUT devrait être disponible ? Si oui remettre
 		//RMRECORDS_CHECKOUT(asList(Document.SCHEMA_TYPE), 25, false),
 		RMRECORDS_CHECKIN(asList(Document.SCHEMA_TYPE), 25, false),
 		RMRECORDS_CREATE_TASK(asList(Document.SCHEMA_TYPE, Folder.SCHEMA_TYPE), 10000, false),

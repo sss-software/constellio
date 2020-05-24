@@ -52,19 +52,20 @@ public class FolderDocumentContainerBreadcrumbTrail extends TitleBreadcrumbTrail
 			recordId = null;
 		} else if (item instanceof SearchResultsBreadcrumbItem) {
 			recordId = null;
-		} else if(item instanceof ContainerBreadcrumbItem) {
+		} else if (item instanceof ContainerBreadcrumbItem) {
 			recordId = ((ContainerBreadcrumbItem) item).getContainerId();
 		} else if (item instanceof ViewGroupBreadcrumbItem) {
 			recordId = null;
 		} else if (item instanceof IntermediateBreadCrumbTailItem) {
 			recordId = null;
 		} else if (item instanceof GroupFavoritesBreadcrumbItem) {
-			recordId = ((GroupFavoritesBreadcrumbItem)item).getFavoriteGroupId();
+			recordId = ((GroupFavoritesBreadcrumbItem) item).getFavoriteGroupId();
 		} else if (item instanceof FavoritesBreadcrumbItem) {
 			recordId = null;
 		} else if (item instanceof TriggerManagerBreadcrumbItem) {
 			recordId = null;
 		} else if (item instanceof TriggerFormBreadcrumbItem) {
+			recordId = null;
 		} else if (item instanceof FavoritesBreadcrumbItem) {
 			recordId = null;
 		} else if (item instanceof LastViewedFoldersDocumentsBreadcrumbItem) {

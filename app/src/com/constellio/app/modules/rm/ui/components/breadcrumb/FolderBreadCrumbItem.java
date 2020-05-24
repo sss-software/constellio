@@ -47,25 +47,25 @@ public class FolderBreadCrumbItem implements BreadcrumbItem {
 	}
 
 	//TODO Merge : Version from 9.1 which was discarded
-//	@Override
-//	public boolean isEnabled() {
-//		boolean enabled;
-//		if (folderId.equals(recordId) && !this.forceEnableBaseItem) {
-//			enabled = false;
-//		} else {
-//			Record record = schemaPresenterUtils.getRecord(folderId);
-//			User user = schemaPresenterUtils.getCurrentUser();
-//			enabled = user.hasReadAccess().on(record);
-//		}
-//		return enabled;
-//	}
+	//	@Override
+	//	public boolean isEnabled() {
+	//		boolean enabled;
+	//		if (folderId.equals(recordId) && !this.forceEnableBaseItem) {
+	//			enabled = false;
+	//		} else {
+	//			Record record = schemaPresenterUtils.getRecord(folderId);
+	//			User user = schemaPresenterUtils.getCurrentUser();
+	//			enabled = user.hasReadAccess().on(record);
+	//		}
+	//		return enabled;
+	//	}
 
 	public Boolean getForcedEnabled() {
-		return forcedEnabled;
+		return forceEnableBaseItem;
 	}
 
 	public FolderBreadCrumbItem setForcedEnabled(Boolean forcedEnabled) {
-		this.forcedEnabled = forcedEnabled;
+		this.forceEnableBaseItem = forcedEnabled;
 		return this;
 	}
 }
