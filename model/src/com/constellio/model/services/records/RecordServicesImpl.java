@@ -649,6 +649,7 @@ public class RecordServicesImpl extends BaseRecordServices {
 		return recordDao.documentsCount();
 	}
 
+
 	@Override
 	public Record getRecordByMetadata(Metadata metadata, String value) {
 		return getRecordByMetadata(metadata, value, false);
@@ -783,6 +784,7 @@ public class RecordServicesImpl extends BaseRecordServices {
 			throw new RecordServicesRuntimeException.NoSuchRecordWithId(id, DataStore.RECORDS, e);
 		}
 	}
+
 
 	public Record getById(String dataStore, String id, boolean callExtensions) {
 		try {
