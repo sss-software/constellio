@@ -2,6 +2,7 @@ package com.constellio.app.modules.restapi.certification;
 
 import com.constellio.app.modules.restapi.certification.dto.CertificationDto;
 import com.constellio.app.modules.restapi.certification.dto.RectangleDto;
+import com.constellio.app.modules.restapi.certification.dto.SignatureDto;
 import com.constellio.app.modules.restapi.core.exception.AtLeastOneParameterRequiredException;
 import com.constellio.app.modules.restapi.core.exception.InvalidParameterException;
 import com.constellio.app.modules.restapi.core.exception.RequiredParameterException;
@@ -17,7 +18,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.inject.Inject;
@@ -33,7 +33,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.List;
 
 @Path("certification")
@@ -83,19 +82,15 @@ public class CertificationRestfulService extends ResourceRestfulService {
 		if (certification.getDocumentId() == null) {
 			throw new RequiredParameterException("certification.documentId");
 		}
-
-		List<String> documentIdsToMerge = null;
-		if (StringUtils.isNotBlank(mergeSourceIds)) {
-			documentIdsToMerge = Arrays.asList(mergeSourceIds.split(","));
+		if (certification.getFileAsStr() == null) {
+			throw new RequiredParameterException("certification.fileAsStr");
 		}
 
 		validateCertification(certification);
 
-		CertificationDto createdCertification = //CollectionUtils.isEmpty(documentIdsToMerge) ?
+		CertificationDto createdCertification =
 				certificationService.create(host, documentId, serviceKey, method, date, expiration,
-						signature, certification, flush, isUrlValidated()); //:
-		//certificationService.merge(host, documentId, serviceKey, method, date, expiration,
-		//		signature, certification, documentIdsToMerge, flush, isUrlValidated());
+						signature, certification, flush, isUrlValidated());
 
 		return Response.status(Response.Status.CREATED).entity(createdCertification).tag(createdCertification.getETag()).build();
 	}
@@ -104,7 +99,14 @@ public class CertificationRestfulService extends ResourceRestfulService {
 		if (Strings.isNullOrEmpty(certification.getImageData())) {
 			throw new AtLeastOneParameterRequiredException("type.id", "type.code");
 		}
-		validateRectangle(certification.getPosition());
+		validateSignatures(certification.getSignatures());
+
+	}
+
+	private void validateSignatures(List<SignatureDto> signatures) {
+		for (SignatureDto signature : signatures) {
+			validateRectangle(signature.getPosition());
+		}
 	}
 
 	protected void validateRectangle(RectangleDto rectangle) {

@@ -2,6 +2,7 @@ package com.constellio.app.modules.restapi.certification.dao;
 
 import com.constellio.app.modules.restapi.certification.dto.CertificationDto;
 import com.constellio.app.modules.restapi.certification.dto.RectangleDto;
+import com.constellio.app.modules.restapi.certification.dto.SignatureDto;
 import com.constellio.app.modules.restapi.document.exception.DocumentContentNotFoundException;
 import com.constellio.app.modules.restapi.resource.dao.ResourceDao;
 import com.constellio.app.modules.rm.wrappers.Document;
@@ -23,9 +24,10 @@ public class CertificationDao extends ResourceDao {
 
 	private PdfDocumentCertifyService pdfService;
 
-	public PdfSignatureAnnotation createCertification(User user, CertificationDto certification, String flush,
-													  Record document) throws Exception {
+	public List<PdfSignatureAnnotation> createCertification(User user, CertificationDto certification, String flush,
+															Record document) throws Exception {
 		Content content = getMetadataValue(document, Document.CONTENT);
+		List<PdfSignatureAnnotation> listSignature = new ArrayList<>();
 		if (content == null) {
 			throw new DocumentContentNotFoundException(document.getId(), LAST_VERSION);
 		}
@@ -35,13 +37,14 @@ public class CertificationDao extends ResourceDao {
 			pdfService = new PdfDocumentCertifyService(this.appLayerFactory, document.getCollection(), document.getId(), document.getTypeCode(),
 					contentVersionVO, user);
 		}
-		PdfSignatureAnnotation certified = new PdfSignatureAnnotation(certification.getPage(), convertRectangle(certification.getPosition()),
-				certification.getUserId(), certification.getUsername(), certification.getImageData());
-		List<PdfSignatureAnnotation> listSignature = new ArrayList<>();
-		listSignature.add(certified);
-		pdfService.certifyAndSign("", listSignature);
+		for (SignatureDto signature : certification.getSignatures()) {
+			PdfSignatureAnnotation certified = new PdfSignatureAnnotation(signature.getPage(), convertRectangle(signature.getPosition()),
+					certification.getUserId(), certification.getUsername(), certification.getImageData());
+			listSignature.add(certified);
+		}
+		pdfService.certifyAndSign(certification.getFileAsStr(), listSignature);
 
-		return certified;
+		return listSignature;
 	}
 
 	private Rectangle convertRectangle(RectangleDto rectangleDto) {

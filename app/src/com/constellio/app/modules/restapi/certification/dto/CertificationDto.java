@@ -6,21 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-import javax.validation.Valid;
+import java.util.List;
 
 @Data
 @Builder
 @JsonRootName("Certification")
 public class CertificationDto {
 
-	private String id;
+	//private String id;
+	private List<SignatureDto> signatures;
 	private String documentId;
-	private int page;
+	private String imageData;
+	private String fileAsStr;
 	private String userId;
 	private String username;
-	private String imageData;
-	@Valid
-	private RectangleDto position;
+
 	@JsonIgnore @Getter(onMethod = @__(@JsonIgnore))
 	private String eTag;
 }
