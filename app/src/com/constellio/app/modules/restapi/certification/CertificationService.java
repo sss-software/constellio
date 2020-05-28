@@ -13,6 +13,7 @@ import com.constellio.model.entities.records.wrappers.User;
 import com.constellio.model.services.pdftron.PdfSignatureAnnotation;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class CertificationService extends ResourceService {
 
@@ -45,7 +46,7 @@ public class CertificationService extends ResourceService {
 												 Record document) throws Exception {
 		try {
 
-			PdfSignatureAnnotation pdfSignatureAnnotation = certificationDao.createCertification(user, certification, flushMode, document);
+			List<PdfSignatureAnnotation> pdfSignatureAnnotation = certificationDao.createCertification(user, certification, flushMode, document);
 
 			return new CertificationAdaptor().adapt(pdfSignatureAnnotation, document.getId());
 
