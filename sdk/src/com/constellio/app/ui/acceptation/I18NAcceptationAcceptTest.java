@@ -16,6 +16,7 @@ import com.constellio.model.entities.schemas.MetadataSchemaTypes;
 import com.constellio.model.entities.schemas.Schemas;
 import com.constellio.model.services.records.RecordServices;
 import com.constellio.model.utils.EnumWithSmallCodeUtils;
+import com.constellio.model.utils.TenantUtils;
 import com.constellio.model.utils.i18n.Utf8ResourceBundles;
 import com.constellio.sdk.dev.tools.CompareI18nKeys;
 import com.constellio.sdk.tests.ConstellioTest;
@@ -35,6 +36,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.constellio.app.ui.i18n.i18n.$;
 import static java.util.Arrays.asList;
@@ -114,6 +116,22 @@ public class I18NAcceptationAcceptTest extends ConstellioTest {
 		findMissingKeys();
 
 		assertThat(missingKeys).isEmpty();
+	}
+
+	@Test
+	public void givenMulticulturalTenantsThenAllBundlesFound() {
+		givenMultiCulturalTenantsSystem();
+
+		TenantUtils.setTenant("1");
+		assertThat(i18n.getDefaultBundle()).extracting("bundleName")
+				.containsOnly("baseView", "imports", "managementViews", "model", "schemasManagementViews", "search", "security", "usersAndGroupsManagementViews", "userViews", "webservices", "i18n", "i18n", "audits", "decommissioningViews", "demo", "foldersAndDocuments", "managementViews", "model", "reports", "storageAndContainers", "userViews", "i18n", "model", "views", "workflowBeta", "guide");
+
+
+		TenantUtils.setTenant("2");
+		assertThat(i18n.getDefaultBundle()).extracting("bundleName")
+				.containsOnly("baseView", "imports", "managementViews", "model", "schemasManagementViews", "search", "security", "usersAndGroupsManagementViews", "userViews", "webservices", "i18n", "i18n", "audits", "decommissioningViews", "demo", "foldersAndDocuments", "managementViews", "model", "reports", "storageAndContainers", "userViews", "i18n", "model", "views", "workflowBeta", "guide");
+
+
 	}
 
 	//@Test
@@ -258,6 +276,28 @@ public class I18NAcceptationAcceptTest extends ConstellioTest {
 		setupPlugins();
 		i18n.setLocale(new Locale("ar"));
 		locale = new Locale("ar");
+	}
+
+	protected void givenMultiCulturalTenantsSystem() {
+		givenTwoTenants();
+		Stream.of("1", "2").forEach(tenantId -> {
+
+			String codeLang = tenantId.equals("1") ? "fr" : "en";
+			TenantUtils.setTenant(tenantId);
+
+			givenSystemLanguageIs(codeLang);
+
+			givenCollectionWithTitle(zeCollection, asList(codeLang), "Collection de test tenant " + tenantId).withMockedAvailableModules(false)
+					.withConstellioRMModule().withAllTestUsers()
+					.withConstellioESModule().withRobotsModule();
+			setupPlugins();
+			i18n.setLocale(new Locale(codeLang));
+			locale = new Locale(codeLang);
+
+			TenantUtils.setTenant(null);
+			System.out.println("Finished tenant " + tenantId);
+		});
+
 	}
 
 	protected void setupPlugins() {

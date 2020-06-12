@@ -9,6 +9,7 @@ import com.constellio.model.entities.Language;
 import com.constellio.model.frameworks.validation.ValidationError;
 import com.constellio.model.frameworks.validation.ValidationErrors;
 import com.constellio.model.frameworks.validation.ValidationException;
+import com.constellio.model.services.tenant.TenantLocal;
 import com.constellio.model.utils.i18n.Utf8ResourceBundles;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.jexl3.JexlBuilder;
@@ -41,11 +42,16 @@ public class i18n {
 
 	private static List<Utf8ResourceBundles> registeredBundles = new ArrayList<>();
 
+	private static TenantLocal<Locale> tenantLocal = new TenantLocal<>();
 
 	public static Locale getLocale() {
 		try {
 			ConstellioUI constellioUI = ConstellioUI.getCurrent();
 			SessionContext context = constellioUI == null ? null : constellioUI.getSessionContext();
+			Locale localeTenant = tenantLocal.get();
+			if (localeTenant != null) {
+				return localeTenant;
+			}
 			if (context != null) {
 				return context.getCurrentLocale();
 			}
@@ -60,6 +66,7 @@ public class i18n {
 		try {
 			ConstellioUI constellioUI = ConstellioUI.getCurrent();
 			SessionContext context = constellioUI == null ? null : constellioUI.getSessionContext();
+			tenantLocal.set(locale);
 			if (context != null) {
 				context.setCurrentLocale(locale);
 			}
