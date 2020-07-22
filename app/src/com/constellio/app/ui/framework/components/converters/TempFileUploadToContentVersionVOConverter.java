@@ -70,7 +70,7 @@ public class TempFileUploadToContentVersionVOConverter implements Converter<Obje
 		IOServices ioServices = constellioFactories.getIoServicesFactory().newIOServices();
 		ContentManager contentManager = constellioFactories.getModelLayerFactory().getContentManager();
 
-		File tempFile = tempFileUpload.getTempFile();
+		File tempFile = getTempFile(tempFileUpload);
 		try {
 			InputStream tempFileIn = ioServices.newFileInputStream(tempFile, "TempFileUploadToContentVersionVOConverter.toContentVO");
 			ContentManager.ContentVersionDataSummaryResponse uploadResponse = contentManager.upload(tempFileIn, fileName);
@@ -103,5 +103,9 @@ public class TempFileUploadToContentVersionVOConverter implements Converter<Obje
 
 	protected boolean shouldSetHashForTemporaryFiles() {
 		return false;
+	}
+
+	protected File getTempFile(final TempFileUpload tempFileUpload) {
+		return tempFileUpload.getTempFile();
 	}
 }
