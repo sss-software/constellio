@@ -43,4 +43,11 @@ public class TempFileUpload implements Serializable {
 		FileUtils.deleteQuietly(tempFile);
 	}
 
+	public void replaceTempFile(File newFile) {
+		delete();
+
+		this.fileName = newFile.getName();
+		this.length = newFile.length();
+		this.tempFile = newFile;
+	}
 }

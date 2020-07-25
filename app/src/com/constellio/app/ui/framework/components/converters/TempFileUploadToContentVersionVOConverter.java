@@ -61,7 +61,7 @@ public class TempFileUploadToContentVersionVOConverter implements Converter<Obje
 		return Object.class;
 	}
 
-	private ContentVersionVO toContentVO(final TempFileUpload tempFileUpload) {
+	protected ContentVersionVO toContentVO(final TempFileUpload tempFileUpload) {
 		String fileName = tempFileUpload.getFileName();
 		String mimeType = tempFileUpload.getMimeType();
 		long length = tempFileUpload.getLength();
@@ -70,7 +70,7 @@ public class TempFileUploadToContentVersionVOConverter implements Converter<Obje
 		IOServices ioServices = constellioFactories.getIoServicesFactory().newIOServices();
 		ContentManager contentManager = constellioFactories.getModelLayerFactory().getContentManager();
 
-		File tempFile = getTempFile(tempFileUpload);
+		File tempFile = tempFileUpload.getTempFile();
 		try {
 			InputStream tempFileIn = ioServices.newFileInputStream(tempFile, "TempFileUploadToContentVersionVOConverter.toContentVO");
 			ContentManager.ContentVersionDataSummaryResponse uploadResponse = contentManager.upload(tempFileIn, fileName);
@@ -103,9 +103,5 @@ public class TempFileUploadToContentVersionVOConverter implements Converter<Obje
 
 	protected boolean shouldSetHashForTemporaryFiles() {
 		return false;
-	}
-
-	protected File getTempFile(final TempFileUpload tempFileUpload) {
-		return tempFileUpload.getTempFile();
 	}
 }
